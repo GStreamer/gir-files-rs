@@ -2595,6 +2595,12 @@ return to upstream/caller (indicating either GST_FLOW_ERROR or GST_FLOW_OK).</do
         </parameter>
       </parameters>
     </function-macro>
+    <constant name="VIDEO_DMA_DRM_CAPS_MAKE" value="video/x-raw(memory:DMABuf), format = (string) DMA_DRM, width = " c:type="GST_VIDEO_DMA_DRM_CAPS_MAKE" version="1.24">
+      <doc xml:space="preserve">Generic caps string for video wit DMABuf(GST_CAPS_FEATURE_MEMORY_DMABUF)
+feature, for use in pad templates. As drm-format is supposed to be defined
+at run-time it's not predefined here.</doc>
+      <type name="utf8" c:type="gchar*"/>
+    </constant>
     <function-macro name="VIDEO_ENCODER" c:identifier="GST_VIDEO_ENCODER" introspectable="0">
       <parameters>
         <parameter name="obj">
@@ -2699,8 +2705,26 @@ return to upstream/caller (indicating either GST_FLOW_ERROR or GST_FLOW_OK).</do
         </parameter>
       </parameters>
     </function-macro>
-    <constant name="VIDEO_FORMATS_ALL" value="{ ABGR64_BE, BGRA64_BE, AYUV64, ARGB64_BE, ARGB64, RGBA64_BE, ABGR64_LE, BGRA64_LE, ARGB64_LE, RGBA64_LE, GBRA_12BE, GBRA_12LE, Y412_BE, Y412_LE, A444_10BE, GBRA_10BE, A444_10LE, GBRA_10LE, A422_10BE, A422_10LE, A420_10BE, A420_10LE, Y410, RGB10A2_LE, BGR10A2_LE, GBRA, ABGR, VUYA, BGRA, AYUV, ARGB, RGBA, A420, AV12, Y444_16BE, Y444_16LE, v216, P016_BE, P016_LE, Y444_12BE, GBR_12BE, Y444_12LE, GBR_12LE, I422_12BE, I422_12LE, Y212_BE, Y212_LE, I420_12BE, I420_12LE, P012_BE, P012_LE, Y444_10BE, GBR_10BE, Y444_10LE, GBR_10LE, r210, I422_10BE, I422_10LE, NV16_10LE32, Y210, v210, UYVP, I420_10BE, I420_10LE, P010_10BE, P010_10LE, NV12_10LE32, NV12_10LE40, NV12_10BE_8L128, NV12_10LE40_4L4, Y444, RGBP, GBR, BGRP, NV24, xBGR, BGRx, xRGB, RGBx, BGR, IYU2, v308, RGB, Y42B, NV61, NV16, VYUY, UYVY, YVYU, YUY2, I420, YV12, NV21, NV12, NV12_8L128, NV12_64Z32, NV12_4L4, NV12_32L32, NV12_16L32S, Y41B, IYU1, YVU9, YUV9, RGB16, BGR16, RGB15, BGR15, RGB8P, GRAY16_BE, GRAY16_LE, GRAY10_LE32, GRAY8 }" c:type="GST_VIDEO_FORMATS_ALL">
+    <constant name="VIDEO_FORMATS_ALL" value="{ " c:type="GST_VIDEO_FORMATS_ALL">
       <doc xml:space="preserve">List of all video formats, for use in template caps strings.
+
+Formats are sorted by decreasing "quality", using these criteria by priority:
+  - number of components
+  - depth
+  - subsampling factor of the width
+  - subsampling factor of the height
+  - number of planes
+  - native endianness preferred
+  - pixel stride
+  - poffset
+  - prefer non-complex formats
+  - prefer YUV formats over RGB ones
+  - prefer I420 over YV12
+  - format name</doc>
+      <type name="utf8" c:type="gchar*"/>
+    </constant>
+    <constant name="VIDEO_FORMATS_ALL_STR" value="ABGR64_BE, BGRA64_BE, AYUV64, ARGB64_BE, ARGB64, RGBA64_BE, ABGR64_LE, BGRA64_LE, ARGB64_LE, RGBA64_LE, GBRA_12BE, GBRA_12LE, Y412_BE, Y412_LE, A444_10BE, GBRA_10BE, A444_10LE, GBRA_10LE, A422_10BE, A422_10LE, A420_10BE, A420_10LE, Y410, RGB10A2_LE, BGR10A2_LE, GBRA, ABGR, VUYA, BGRA, AYUV, ARGB, RGBA, A420, AV12, Y444_16BE, Y444_16LE, v216, P016_BE, P016_LE, Y444_12BE, GBR_12BE, Y444_12LE, GBR_12LE, I422_12BE, I422_12LE, Y212_BE, Y212_LE, I420_12BE, I420_12LE, P012_BE, P012_LE, Y444_10BE, GBR_10BE, Y444_10LE, GBR_10LE, r210, I422_10BE, I422_10LE, NV16_10LE32, Y210, v210, UYVP, I420_10BE, I420_10LE, P010_10BE, P010_10LE, NV12_10LE32, NV12_10LE40, NV12_10BE_8L128, NV12_10LE40_4L4, Y444, RGBP, GBR, BGRP, NV24, xBGR, BGRx, xRGB, RGBx, BGR, IYU2, v308, RGB, Y42B, NV61, NV16, VYUY, UYVY, YVYU, YUY2, I420, YV12, NV21, NV12, NV12_8L128, NV12_64Z32, NV12_4L4, NV12_32L32, NV12_16L32S, Y41B, IYU1, YVU9, YUV9, RGB16, BGR16, RGB15, BGR15, RGB8P, GRAY16_BE, GRAY16_LE, GRAY10_LE32, GRAY8" c:type="GST_VIDEO_FORMATS_ALL_STR" version="1.24">
+      <doc xml:space="preserve">Declare all video formats as a string.
 
 Formats are sorted by decreasing "quality", using these criteria by priority:
   - number of components
@@ -9454,6 +9478,12 @@ per channel.</doc>
         <doc xml:space="preserve">@GST_VIDEO_FORMAT_NV12_10LE40 with 4x4 pixels tiles (5 bytes
  per tile row). This format is produced by Verisilicon/Hantro decoders.</doc>
       </member>
+      <member name="dma_drm" value="114" c:identifier="GST_VIDEO_FORMAT_DMA_DRM" version="1.24" glib:nick="dma-drm" glib:name="GST_VIDEO_FORMAT_DMA_DRM">
+        <doc xml:space="preserve">@GST_VIDEO_FORMAT_DMA_DRM represent the DMA DRM special format. It's
+only used with memory:DMABuf #GstCapsFeatures, where an extra
+parameter (drm-format) is required to define the image format and
+its memory layout.</doc>
+      </member>
       <function name="from_fourcc" c:identifier="gst_video_format_from_fourcc">
         <doc xml:space="preserve">Converts a FOURCC value into the corresponding #GstVideoFormat.
 If the FOURCC cannot be represented by #GstVideoFormat,
@@ -10676,8 +10706,8 @@ gst_video_info_dma_drm_new()</doc>
       </method>
       <method name="to_caps" c:identifier="gst_video_info_dma_drm_to_caps" version="1.24">
         <doc xml:space="preserve">Convert the values of @drm_info into a #GstCaps. Please note that the
-@caps returned will be a dma drm caps which does not contain format field,
-but contains a drm-format field instead. The value of drm-format field is
+@caps returned will be a dma drm caps which sets format field to DMA_DRM,
+and contains a new drm-format field. The value of drm-format field is
 composed of a drm fourcc and a modifier, such as NV12:0x0100000000000002.</doc>
         <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a new #GstCaps containing the
@@ -10694,7 +10724,7 @@ info in @drm_info.</doc>
       <method name="to_video_info" c:identifier="gst_video_info_dma_drm_to_video_info" version="1.24">
         <doc xml:space="preserve">Convert the #GstVideoInfoDmaDrm into a traditional #GstVideoInfo with
 recognized video format. For DMA kind memory, the non linear DMA format
-should be recognized as #GST_VIDEO_FORMAT_ENCODED. This helper function
+should be recognized as #GST_VIDEO_FORMAT_DMA_DRM. This helper function
 sets @info's video format into the default value according to @drm_info's
 drm_fourcc field.</doc>
         <return-value transfer-ownership="none">

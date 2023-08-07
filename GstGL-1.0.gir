@@ -1461,6 +1461,19 @@ The glcolorconvertelement provides a GStreamer element that uses
           </parameter>
         </parameters>
       </function>
+      <function name="swizzle_shader_string" c:identifier="gst_gl_color_convert_swizzle_shader_string" version="1.24">
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a shader string that can be used to swizzle vec
+components in a GLSL shader.</doc>
+          <type name="utf8" c:type="gchar*"/>
+        </return-value>
+        <parameters>
+          <parameter name="context" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstGLContext</doc>
+            <type name="GLContext" c:type="GstGLContext*"/>
+          </parameter>
+        </parameters>
+      </function>
       <function name="transform_caps" c:identifier="gst_gl_color_convert_transform_caps" version="1.6">
         <doc xml:space="preserve">Provides an implementation of #GstBaseTransformClass.transform_caps()</doc>
         <return-value transfer-ownership="full">
@@ -1483,6 +1496,26 @@ The glcolorconvertelement provides a GStreamer element that uses
           <parameter name="filter" transfer-ownership="none">
             <doc xml:space="preserve">a set of filter #GstCaps</doc>
             <type name="Gst.Caps" c:type="GstCaps*"/>
+          </parameter>
+        </parameters>
+      </function>
+      <function name="yuv_to_rgb_shader_string" c:identifier="gst_gl_color_convert_yuv_to_rgb_shader_string" version="1.24">
+        <doc xml:space="preserve">The returned glsl function has declaration:
+
+`vec3 yuv_to_rgb (vec3 rgb, vec3 offset, vec3 ycoeff, vec3 ucoeff, vec3 vcoeff);`
+
+The Y component is placed in the 0th index of the returned value, The U component in the
+1st, and the V component in the 2nd.  offset, ycoeff, ucoeff, and vcoeff are the
+specific coefficients and offset used for the conversion.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a glsl function that can be used to convert from
+yuv to rgb</doc>
+          <type name="utf8" c:type="gchar*"/>
+        </return-value>
+        <parameters>
+          <parameter name="context" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstGLContext</doc>
+            <type name="GLContext" c:type="GstGLContext*"/>
           </parameter>
         </parameters>
       </function>
@@ -3712,6 +3745,18 @@ See also: gst_gl_filter_render_to_target()</doc>
           </parameter>
           <parameter name="format" transfer-ownership="none">
             <doc xml:space="preserve">the #GstGLFormat to check is supported by @context</doc>
+            <type name="GLFormat" c:type="GstGLFormat"/>
+          </parameter>
+        </parameters>
+      </function>
+      <function name="n_components" c:identifier="gst_gl_format_n_components" version="1.24">
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the number of components in a #GstGLFormat</doc>
+          <type name="guint" c:type="guint"/>
+        </return-value>
+        <parameters>
+          <parameter name="gl_format" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstGLFormat</doc>
             <type name="GLFormat" c:type="GstGLFormat"/>
           </parameter>
         </parameters>
@@ -10132,6 +10177,18 @@ The returned #GstGLContext will be shared with a GStreamer created OpenGL contex
         </parameter>
       </parameters>
     </function>
+    <function name="gl_format_n_components" c:identifier="gst_gl_format_n_components" moved-to="GLFormat.n_components" version="1.24">
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">the number of components in a #GstGLFormat</doc>
+        <type name="guint" c:type="guint"/>
+      </return-value>
+      <parameters>
+        <parameter name="gl_format" transfer-ownership="none">
+          <doc xml:space="preserve">the #GstGLFormat</doc>
+          <type name="GLFormat" c:type="GstGLFormat"/>
+        </parameter>
+      </parameters>
+    </function>
     <function name="gl_format_type_from_sized_gl_format" c:identifier="gst_gl_format_type_from_sized_gl_format" moved-to="GLFormat.type_from_sized_gl_format" version="1.16">
       <doc xml:space="preserve">Get the unsized format and type from @format for usage in glReadPixels,
 glTex{Sub}Image*, glTexImage* and similar functions.</doc>
@@ -10572,6 +10629,30 @@ NDC coordinates in @matrix.</doc>
         <type name="GType" c:type="GType"/>
       </return-value>
     </function>
+    <function name="gl_swizzle_invert" c:identifier="gst_gl_swizzle_invert" version="1.24">
+      <doc xml:space="preserve">Given @swizzle, produce @inversion such that:
+
+@swizzle[@inversion[i]] == identity[i] where:
+- identity = {0, 1, 2,...}
+- unset fields are marked by -1</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="swizzle" transfer-ownership="none">
+          <doc xml:space="preserve">input swizzle</doc>
+          <array zero-terminated="0" c:type="gint*" fixed-size="4">
+            <type name="gint" c:type="gint"/>
+          </array>
+        </parameter>
+        <parameter name="inversion" direction="out" caller-allocates="0" transfer-ownership="full">
+          <doc xml:space="preserve">resulting inversion</doc>
+          <array zero-terminated="0" c:type="gint*" fixed-size="4">
+            <type name="gint" c:type="gint"/>
+          </array>
+        </parameter>
+      </parameters>
+    </function>
     <function name="gl_sync_meta_api_get_type" c:identifier="gst_gl_sync_meta_api_get_type">
       <return-value transfer-ownership="none">
         <type name="GType" c:type="GType"/>
@@ -10710,6 +10791,34 @@ NDC coordinates in @matrix.</doc>
         <parameter name="min" transfer-ownership="none">
           <doc xml:space="preserve">the minor GL version</doc>
           <type name="gint" c:type="gint"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="gl_video_format_swizzle" c:identifier="gst_gl_video_format_swizzle" version="1.24">
+      <doc xml:space="preserve">Calculates the swizzle indices for @video_format and @gl_format in order to
+access a texture such that accessing a texel from a texture through the swizzle
+index produces values in the order (R, G, B, A) or (Y, U, V, A).
+
+For multi-planer formats, the swizzle index uses the same component order (RGBA/YUVA)
+and should be applied after combining multiple planes into a single rgba/yuva value.
+e.g. sampling from a NV12 format would have Y from one texture and UV from
+another texture into a (Y, U, V) value.  Add an Aplha component and then
+perform swizzling.  Sampling from NV21 would produce (Y, V, U) which is then
+swizzled to (Y, U, V).</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">whether valid swizzle indices could be found</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="video_format" transfer-ownership="none">
+          <doc xml:space="preserve">the #GstVideoFormat in use</doc>
+          <type name="GstVideo.VideoFormat" c:type="GstVideoFormat"/>
+        </parameter>
+        <parameter name="swizzle" direction="out" caller-allocates="0" transfer-ownership="full">
+          <doc xml:space="preserve">the returned swizzle indices</doc>
+          <array zero-terminated="0" c:type="int*" fixed-size="4">
+            <type name="gint" c:type="int"/>
+          </array>
         </parameter>
       </parameters>
     </function>

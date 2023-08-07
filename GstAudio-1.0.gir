@@ -9145,7 +9145,7 @@ in a more readable fashion.</doc>
         <doc xml:space="preserve">32 DSD bits in 4 bytes, native endianness</doc>
       </member>
       <function name="from_string" c:identifier="gst_dsd_format_from_string" version="1.24">
-        <doc xml:space="preserve">Convert the @format string to its #GstDsdFormat.</doc>
+        <doc xml:space="preserve">Convert the DSD format string @str to its #GstDsdFormat.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">the #GstDsdFormat for @format or GST_DSD_FORMAT_UNKNOWN when the
 string is not a known format.</doc>
@@ -9153,6 +9153,7 @@ string is not a known format.</doc>
         </return-value>
         <parameters>
           <parameter name="str" transfer-ownership="none">
+            <doc xml:space="preserve">a DSD format string</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
@@ -9359,8 +9360,11 @@ Note: This initializes @info first, no values are preserved.</doc>
             <doc xml:space="preserve">the number of channels</doc>
             <type name="gint" c:type="gint"/>
           </parameter>
-          <parameter name="positions" transfer-ownership="none">
-            <type name="AudioChannelPosition" c:type="const GstAudioChannelPosition*"/>
+          <parameter name="positions" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">the channel positions</doc>
+            <array zero-terminated="0" c:type="const GstAudioChannelPosition*" fixed-size="64">
+              <type name="AudioChannelPosition" c:type="GstAudioChannelPosition"/>
+            </array>
           </parameter>
         </parameters>
       </method>
@@ -10898,13 +10902,14 @@ are ignored.</doc>
           <doc xml:space="preserve">Number of channels (must be at least 1)</doc>
           <type name="gint" c:type="gint"/>
         </parameter>
-        <parameter name="reverse_bytes" transfer-ownership="none">
+        <parameter name="reverse_byte_bits" transfer-ownership="none">
+          <doc xml:space="preserve">If TRUE, reverse the bits in each DSD byte</doc>
           <type name="gboolean" c:type="gboolean"/>
         </parameter>
       </parameters>
     </function>
     <function name="dsd_format_from_string" c:identifier="gst_dsd_format_from_string" moved-to="DsdFormat.from_string" version="1.24">
-      <doc xml:space="preserve">Convert the @format string to its #GstDsdFormat.</doc>
+      <doc xml:space="preserve">Convert the DSD format string @str to its #GstDsdFormat.</doc>
       <return-value transfer-ownership="none">
         <doc xml:space="preserve">the #GstDsdFormat for @format or GST_DSD_FORMAT_UNKNOWN when the
 string is not a known format.</doc>
@@ -10912,6 +10917,7 @@ string is not a known format.</doc>
       </return-value>
       <parameters>
         <parameter name="str" transfer-ownership="none">
+          <doc xml:space="preserve">a DSD format string</doc>
           <type name="utf8" c:type="const gchar*"/>
         </parameter>
       </parameters>
