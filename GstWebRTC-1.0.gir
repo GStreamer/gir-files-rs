@@ -703,7 +703,7 @@ for more information.</doc>
         <doc xml:space="preserve">Get HTTP Proxy to be used when connecting to TURN server.</doc>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">URI of the HTTP proxy of the form
-  http://[username:password@]hostname[:port]
+  http://[username:password@]hostname[:port][?alpn=&lt;alpn&gt;]
 
 Get HTTP Proxy to be used when connecting to TURN server.</doc>
           <type name="utf8" c:type="gchar*"/>
@@ -828,7 +828,7 @@ Get HTTP Proxy to be used when connecting to TURN server.</doc>
           </instance-parameter>
           <parameter name="uri" transfer-ownership="none">
             <doc xml:space="preserve">URI of the HTTP proxy of the form
-  http://[username:password@]hostname[:port]</doc>
+  http://[username:password@]hostname[:port][?alpn=&lt;alpn&gt;]</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
@@ -1062,7 +1062,7 @@ Get HTTP Proxy to be used when connecting to TURN server.</doc>
       <method name="get_http_proxy" c:identifier="gst_webrtc_ice_get_http_proxy" version="1.22">
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">URI of the HTTP proxy of the form
-  http://[username:password@]hostname[:port]
+  http://[username:password@]hostname[:port][?alpn=&lt;alpn&gt;]
 
 Get HTTP Proxy to be used when connecting to TURN server.</doc>
           <type name="utf8" c:type="gchar*"/>
@@ -1197,7 +1197,7 @@ Get HTTP Proxy to be used when connecting to TURN server.</doc>
           </instance-parameter>
           <parameter name="uri" transfer-ownership="none">
             <doc xml:space="preserve">URI of the HTTP proxy of the form
-  http://[username:password@]hostname[:port]</doc>
+  http://[username:password@]hostname[:port][?alpn=&lt;alpn&gt;]</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
@@ -1717,7 +1717,7 @@ stops automatic ICE gathering.</doc>
             </parameter>
             <parameter name="uri" transfer-ownership="none">
               <doc xml:space="preserve">URI of the HTTP proxy of the form
-  http://[username:password@]hostname[:port]</doc>
+  http://[username:password@]hostname[:port][?alpn=&lt;alpn&gt;]</doc>
               <type name="utf8" c:type="const gchar*"/>
             </parameter>
           </parameters>
@@ -1727,7 +1727,7 @@ stops automatic ICE gathering.</doc>
         <callback name="get_http_proxy">
           <return-value transfer-ownership="full">
             <doc xml:space="preserve">URI of the HTTP proxy of the form
-  http://[username:password@]hostname[:port]
+  http://[username:password@]hostname[:port][?alpn=&lt;alpn&gt;]
 
 Get HTTP Proxy to be used when connecting to TURN server.</doc>
             <type name="utf8" c:type="gchar*"/>
