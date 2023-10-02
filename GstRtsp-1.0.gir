@@ -77,6 +77,29 @@ and/or use gtk-doc annotations.  -->
     <record name="RTSPConnection" c:type="GstRTSPConnection" disguised="1" opaque="1">
       <doc xml:space="preserve">This object manages the RTSP connection to the server. It provides function
 to receive and send bytes and messages.</doc>
+      <method name="add_extra_http_request_header" c:identifier="gst_rtsp_connection_add_extra_http_request_header" version="1.24">
+        <doc xml:space="preserve">Add header to be appended to any HTTP request made by connection.
+If the header already exists then the old header is replaced by the new header.
+
+Only applicable in HTTP tunnel mode.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="conn" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstRTSPConnection</doc>
+            <type name="RTSPConnection" c:type="GstRTSPConnection*"/>
+          </instance-parameter>
+          <parameter name="key" transfer-ownership="none">
+            <doc xml:space="preserve">HTTP header name</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="value" transfer-ownership="none">
+            <doc xml:space="preserve">HTTP header value</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="clear_auth_params" c:identifier="gst_rtsp_connection_clear_auth_params">
         <doc xml:space="preserve">Clear the list of authentication directives stored in @conn.</doc>
         <return-value transfer-ownership="none">
