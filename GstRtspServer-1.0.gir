@@ -3542,6 +3542,32 @@ g_object_unref() after usage.</doc>
           </instance-parameter>
         </parameters>
       </method>
+      <method name="get_ensure_keyunit_on_start" c:identifier="gst_rtsp_media_get_ensure_keyunit_on_start" glib:get-property="ensure-keyunit-on-start" version="1.24">
+        <doc xml:space="preserve">Get ensure-keyunit-on-start flag.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">The ensure-keyunit-on-start flag.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="media" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstRTSPMedia</doc>
+            <type name="RTSPMedia" c:type="GstRTSPMedia*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_ensure_keyunit_on_start_timeout" c:identifier="gst_rtsp_media_get_ensure_keyunit_on_start_timeout" glib:get-property="ensure-keyunit-on-start-timeout" version="1.24">
+        <doc xml:space="preserve">Get ensure-keyunit-on-start-timeout time.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">The ensure-keyunit-on-start-timeout time.</doc>
+          <type name="guint" c:type="guint"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="media" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstRTSPMedia</doc>
+            <type name="RTSPMedia" c:type="GstRTSPMedia*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
       <method name="get_latency" c:identifier="gst_rtsp_media_get_latency" glib:get-property="latency">
         <doc xml:space="preserve">Get the latency that is used for receiving media.</doc>
         <return-value transfer-ownership="none">
@@ -4152,6 +4178,46 @@ INADDR_ANY.</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="set_ensure_keyunit_on_start" c:identifier="gst_rtsp_media_set_ensure_keyunit_on_start" glib:set-property="ensure-keyunit-on-start" version="1.24">
+        <doc xml:space="preserve">Set whether or not a keyunit should be ensured when a client connects. It
+will also configure the streams to drop delta units to ensure that they start
+on a keyunit.
+
+Note that this will only affect non-shared medias for now.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="media" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstRTSPMedia</doc>
+            <type name="RTSPMedia" c:type="GstRTSPMedia*"/>
+          </instance-parameter>
+          <parameter name="ensure_keyunit_on_start" transfer-ownership="none">
+            <doc xml:space="preserve">the new value</doc>
+            <type name="gboolean" c:type="gboolean"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_ensure_keyunit_on_start_timeout" c:identifier="gst_rtsp_media_set_ensure_keyunit_on_start_timeout" glib:set-property="ensure-keyunit-on-start-timeout" version="1.24">
+        <doc xml:space="preserve">Sets the maximum allowed time before the first keyunit is considered
+expired.
+
+Note that this will only have an effect when ensure-keyunit-on-start is
+enabled.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="media" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstRTSPMedia</doc>
+            <type name="RTSPMedia" c:type="GstRTSPMedia*"/>
+          </instance-parameter>
+          <parameter name="timeout" transfer-ownership="none">
+            <doc xml:space="preserve">the new value</doc>
+            <type name="guint" c:type="guint"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="set_eos_shutdown" c:identifier="gst_rtsp_media_set_eos_shutdown" glib:set-property="eos-shutdown">
         <doc xml:space="preserve">Set or unset if an EOS event will be sent to the pipeline for @media before
 it is unprepared.</doc>
@@ -4569,6 +4635,22 @@ when the media was not in the suspended state.</doc>
       </property>
       <property name="element" writable="1" construct-only="1" transfer-ownership="none" getter="get_element">
         <type name="Gst.Element"/>
+      </property>
+      <property name="ensure-keyunit-on-start" version="1.24" writable="1" transfer-ownership="none" setter="set_ensure_keyunit_on_start" getter="get_ensure_keyunit_on_start" default-value="FALSE">
+        <doc xml:space="preserve">Whether or not a keyunit should be ensured when a client connects. It
+will also configure the streams to drop delta units to ensure that they start
+on a keyunit.
+
+Note that this will only affect non-shared medias for now.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </property>
+      <property name="ensure-keyunit-on-start-timeout" version="1.24" writable="1" transfer-ownership="none" setter="set_ensure_keyunit_on_start_timeout" getter="get_ensure_keyunit_on_start_timeout" default-value="100">
+        <doc xml:space="preserve">The maximum allowed time before the first keyunit is considered
+expired.
+
+Note that this will only have an effect when ensure-keyunit-on-start is
+enabled.</doc>
+        <type name="guint" c:type="guint"/>
       </property>
       <property name="eos-shutdown" writable="1" transfer-ownership="none" setter="set_eos_shutdown" default-value="FALSE">
         <type name="gboolean" c:type="gboolean"/>
@@ -5244,6 +5326,32 @@ of all medias created from this factory.</doc>
           </instance-parameter>
         </parameters>
       </method>
+      <method name="get_ensure_keyunit_on_start" c:identifier="gst_rtsp_media_factory_get_ensure_keyunit_on_start" glib:get-property="ensure-keyunit-on-start" version="1.24">
+        <doc xml:space="preserve">Get ensure-keyunit-on-start flag.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">The ensure-keyunit-on-start flag.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="factory" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstRTSPMediaFactory</doc>
+            <type name="RTSPMediaFactory" c:type="GstRTSPMediaFactory*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_ensure_keyunit_on_start_timeout" c:identifier="gst_rtsp_media_factory_get_ensure_keyunit_on_start_timeout" glib:get-property="ensure-keyunit-on-start-timeout" version="1.24">
+        <doc xml:space="preserve">Get ensure-keyunit-on-start-timeout time.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">The ensure-keyunit-on-start-timeout time.</doc>
+          <type name="guint" c:type="guint"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="factory" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstRTSPMediaFactory</doc>
+            <type name="RTSPMediaFactory" c:type="GstRTSPMediaFactory*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
       <method name="get_latency" c:identifier="gst_rtsp_media_factory_get_latency" glib:get-property="latency">
         <doc xml:space="preserve">Get the latency that is used for receiving media</doc>
         <return-value transfer-ownership="none">
@@ -5580,6 +5688,39 @@ receiving media</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="set_ensure_keyunit_on_start" c:identifier="gst_rtsp_media_factory_set_ensure_keyunit_on_start" glib:set-property="ensure-keyunit-on-start" version="1.24">
+        <doc xml:space="preserve">If media from this factory should ensure a key unit when a client connects.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="factory" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstRTSPMediaFactory</doc>
+            <type name="RTSPMediaFactory" c:type="GstRTSPMediaFactory*"/>
+          </instance-parameter>
+          <parameter name="ensure_keyunit_on_start" transfer-ownership="none">
+            <doc xml:space="preserve">the new value</doc>
+            <type name="gboolean" c:type="gboolean"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_ensure_keyunit_on_start_timeout" c:identifier="gst_rtsp_media_factory_set_ensure_keyunit_on_start_timeout" glib:set-property="ensure-keyunit-on-start-timeout" version="1.24">
+        <doc xml:space="preserve">Configures medias from this factory to consider keyunits older than timeout
+to be expired. Expired keyunits will be discarded.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="factory" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstRTSPMediaFactory</doc>
+            <type name="RTSPMediaFactory" c:type="GstRTSPMediaFactory*"/>
+          </instance-parameter>
+          <parameter name="timeout" transfer-ownership="none">
+            <doc xml:space="preserve">the new value</doc>
+            <type name="guint" c:type="guint"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="set_eos_shutdown" c:identifier="gst_rtsp_media_factory_set_eos_shutdown" glib:set-property="eos-shutdown">
         <doc xml:space="preserve">Configure if media created from this factory will have an EOS sent to the
 pipeline before shutdown.</doc>
@@ -5848,6 +5989,25 @@ when a client disconnects without sending TEARDOWN.</doc>
       <property name="enable-rtcp" version="1.20" writable="1" transfer-ownership="none" setter="set_enable_rtcp" default-value="TRUE">
         <doc xml:space="preserve">Whether the created media should send and receive RTCP</doc>
         <type name="gboolean" c:type="gboolean"/>
+      </property>
+      <property name="ensure-keyunit-on-start" version="1.24" writable="1" transfer-ownership="none" setter="set_ensure_keyunit_on_start" getter="get_ensure_keyunit_on_start" default-value="FALSE">
+        <doc xml:space="preserve">If media from this factory should ensure a key unit when a client connects.
+
+This property will ensure that the stream always starts on a key unit
+instead of a delta unit which the client would not be able to decode.
+
+Note that this will only affect non-shared medias for now.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </property>
+      <property name="ensure-keyunit-on-start-timeout" version="1.24" writable="1" transfer-ownership="none" setter="set_ensure_keyunit_on_start_timeout" getter="get_ensure_keyunit_on_start_timeout" default-value="100">
+        <doc xml:space="preserve">Timeout in milliseconds used to determine if a keyunit should be discarded
+when a client connects.
+
+If the timeout has been reached a new keyframe will be forced, otherwise
+the currently blocking keyframe will be used.
+
+This options is only relevant when ensure-keyunit-on-start is enabled.</doc>
+        <type name="guint" c:type="guint"/>
       </property>
       <property name="eos-shutdown" writable="1" transfer-ownership="none" setter="set_eos_shutdown" default-value="FALSE">
         <type name="gboolean" c:type="gboolean"/>

@@ -2856,7 +2856,7 @@ a #GstGLDisplay.
 There are a number of environment variables that influence the choice of
 platform and window system specific functionality.
 - GST_GL_WINDOW influences the window system to use.  Common values are
-  'x11', 'wayland', 'win32' or 'cocoa'.
+  'x11', 'wayland', 'surfaceless', 'win32' or 'cocoa'.
 - GST_GL_PLATFORM influences the OpenGL platform to use.  Common values are
   'egl', 'glx', 'wgl' or 'cgl'.
 - GST_GL_API influences the OpenGL API requested by the OpenGL platform.
@@ -3272,6 +3272,10 @@ display's object lock held.</doc>
       </member>
       <member name="android" value="2048" c:identifier="GST_GL_DISPLAY_TYPE_ANDROID" version="1.20" glib:nick="android" glib:name="GST_GL_DISPLAY_TYPE_ANDROID">
         <doc xml:space="preserve">Android display.</doc>
+      </member>
+      <member name="egl_surfaceless" value="4096" c:identifier="GST_GL_DISPLAY_TYPE_EGL_SURFACELESS" version="1.24" glib:nick="egl-surfaceless" glib:name="GST_GL_DISPLAY_TYPE_EGL_SURFACELESS">
+        <doc xml:space="preserve">Mesa3D surfaceless display using the EGL_PLATFORM_SURFACELESS_MESA
+extension.</doc>
       </member>
       <member name="any" value="4294967295" c:identifier="GST_GL_DISPLAY_TYPE_ANY" glib:nick="any" glib:name="GST_GL_DISPLAY_TYPE_ANY">
         <doc xml:space="preserve">any display type</doc>
@@ -7011,6 +7015,31 @@ A #GstGLUpload can be created with gst_gl_upload_new()</doc>
           <type name="Gst.Caps" c:type="GstCaps*"/>
         </return-value>
       </function>
+      <method name="fixate_caps" c:identifier="gst_gl_upload_fixate_caps" version="1.24">
+        <doc xml:space="preserve">Fixate the @othercaps based on the information of the @caps.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">the fixated caps</doc>
+          <type name="Gst.Caps" c:type="GstCaps*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="upload" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstGLUpload</doc>
+            <type name="GLUpload" c:type="GstGLUpload*"/>
+          </instance-parameter>
+          <parameter name="direction" transfer-ownership="none">
+            <doc xml:space="preserve">the pad #GstPadDirection</doc>
+            <type name="Gst.PadDirection" c:type="GstPadDirection"/>
+          </parameter>
+          <parameter name="caps" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstCaps as the reference</doc>
+            <type name="Gst.Caps" c:type="GstCaps*"/>
+          </parameter>
+          <parameter name="othercaps" transfer-ownership="full">
+            <doc xml:space="preserve">a #GstCaps to fixate</doc>
+            <type name="Gst.Caps" c:type="GstCaps*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="get_caps" c:identifier="gst_gl_upload_get_caps">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>

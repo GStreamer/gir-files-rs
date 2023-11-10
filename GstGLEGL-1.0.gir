@@ -20,6 +20,14 @@ through the provided API</doc>
           <type name="GLDisplayEGL" c:type="GstGLDisplayEGL*"/>
         </return-value>
       </constructor>
+      <constructor name="new_surfaceless" c:identifier="gst_gl_display_egl_new_surfaceless" version="1.24">
+        <doc xml:space="preserve">Create a new surfaceless #GstGLDisplayEGL using the Mesa3D
+EGL_PLATFORM_SURFACELESS_MESA extension.</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">a new #GstGLDisplayEGL or %NULL</doc>
+          <type name="GLDisplayEGL" c:type="GstGLDisplayEGL*"/>
+        </return-value>
+      </constructor>
       <constructor name="new_with_egl_display" c:identifier="gst_gl_display_egl_new_with_egl_display">
         <return-value transfer-ownership="none">
           <type name="GLDisplayEGL" c:type="GstGLDisplayEGL*"/>
@@ -48,8 +56,8 @@ This function will return the same value for multiple calls with the same
       </function>
       <function name="get_from_native" c:identifier="gst_gl_display_egl_get_from_native" version="1.12">
         <doc xml:space="preserve">Attempts to create a new `EGLDisplay` from @display.  If @type is
-%GST_GL_DISPLAY_TYPE_ANY, then @display must be 0. @type must not be
-%GST_GL_DISPLAY_TYPE_NONE.</doc>
+%GST_GL_DISPLAY_TYPE_ANY or %GST_GL_DISPLAY_TYPE_EGL_SURFACELESS, then
+@display must be 0. @type must not be %GST_GL_DISPLAY_TYPE_NONE.</doc>
         <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">A `EGLDisplay` or `EGL_NO_DISPLAY`</doc>
           <type name="gpointer" c:type="gpointer"/>
@@ -155,8 +163,8 @@ This function will return the same value for multiple calls with the same
     </function-macro>
     <docsection name="gstgldisplay_egl">
       <doc xml:space="preserve">#GstGLDisplayEGL represents a connection to an EGL `EGLDisplay` handle created
-internally (gst_gl_display_egl_new()) or wrapped by the application
-(gst_gl_display_egl_new_with_egl_display())</doc>
+internally (gst_gl_display_egl_new() or gst_gl_display_egl_new_surfaceless())
+or wrapped by the application (gst_gl_display_egl_new_with_egl_display())</doc>
     </docsection>
     <docsection name="gstgldisplay_egl_device">
       <doc xml:space="preserve">#GstGLDisplayEGLDevice represents a `EGLDeviceEXT` handle created internally
