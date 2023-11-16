@@ -4170,6 +4170,42 @@ else FALSE.</doc>
         </parameter>
       </parameters>
     </callback>
+    <record name="FrameCompositionMeta" c:type="GESFrameCompositionMeta" version="1.24">
+      <doc xml:space="preserve">Metadata type that holds information about the positioning, size,
+transparency and composition operator of a video frame in the timeline
+composition.</doc>
+      <field name="meta" writable="1">
+        <doc xml:space="preserve">the parent #GstMeta.</doc>
+        <type name="Gst.Meta" c:type="GstMeta"/>
+      </field>
+      <field name="alpha" writable="1">
+        <type name="gdouble" c:type="gdouble"/>
+      </field>
+      <field name="posx" writable="1">
+        <doc xml:space="preserve">The desired x position.</doc>
+        <type name="gint" c:type="gint"/>
+      </field>
+      <field name="posy" writable="1">
+        <doc xml:space="preserve">The desired y position.</doc>
+        <type name="gint" c:type="gint"/>
+      </field>
+      <field name="height" writable="1">
+        <doc xml:space="preserve">The desired height of the video.</doc>
+        <type name="gint" c:type="gint"/>
+      </field>
+      <field name="width" writable="1">
+        <doc xml:space="preserve">The desired width of the video.</doc>
+        <type name="gint" c:type="gint"/>
+      </field>
+      <field name="zorder" writable="1">
+        <doc xml:space="preserve">The desired z order.</doc>
+        <type name="guint" c:type="guint"/>
+      </field>
+      <field name="operator" writable="1">
+        <doc xml:space="preserve">The blending operator for the source.</doc>
+        <type name="gint" c:type="gint"/>
+      </field>
+    </record>
     <class name="Group" c:symbol-prefix="group" c:type="GESGroup" parent="Container" glib:type-name="GESGroup" glib:get-type="ges_group_get_type" glib:type-struct="GroupClass">
       <doc xml:space="preserve">A #GESGroup controls one or more #GESContainer-s (usually #GESClip-s,
 but it can also control other #GESGroup-s). Its children must share
@@ -15303,6 +15339,19 @@ for later use.</doc>
         </parameter>
         <parameter name="recurse" transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="buffer_add_frame_composition_meta" c:identifier="ges_buffer_add_frame_composition_meta" version="1.24">
+      <doc xml:space="preserve">Attaches positioning metadata to a #GstBuffer.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">a pointer to the added #GESFrameCompositionMeta.</doc>
+        <type name="FrameCompositionMeta" c:type="GESFrameCompositionMeta*"/>
+      </return-value>
+      <parameters>
+        <parameter name="buffer" transfer-ownership="none">
+          <doc xml:space="preserve">#GstBuffer to which protection metadata should be added.</doc>
+          <type name="Gst.Buffer" c:type="GstBuffer*"/>
         </parameter>
       </parameters>
     </function>
