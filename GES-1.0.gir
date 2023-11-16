@@ -15407,6 +15407,12 @@ formatter asset.</doc>
         </parameter>
       </parameters>
     </function>
+    <function name="frame_composition_meta_api_get_type" c:identifier="ges_frame_composition_meta_api_get_type">
+      <attribute name="doc.skip" value="true"/>
+      <return-value transfer-ownership="none">
+        <type name="GType" c:type="GType"/>
+      </return-value>
+    </function>
     <docsection name="ges.h">
       <doc xml:space="preserve">GES needs to be initialized after GStreamer itself. This section
 contains the various functions to do so.</doc>
