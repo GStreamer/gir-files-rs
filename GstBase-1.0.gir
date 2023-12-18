@@ -5682,7 +5682,7 @@ blocking operation should be unblocked with the unlock vmethod.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="set_automatic_eos" c:identifier="gst_base_src_set_automatic_eos" version="1.4">
+      <method name="set_automatic_eos" c:identifier="gst_base_src_set_automatic_eos" glib:set-property="automatic-eos" version="1.4">
         <doc xml:space="preserve">If @automatic_eos is %TRUE, @src will automatically go EOS if a buffer
 after the total size is returned. By default this is %TRUE but sources
 that can't return an authoritative size and only know that they're EOS
@@ -5906,6 +5906,10 @@ continue. Any other return value should be returned from the create vmethod.</do
           </instance-parameter>
         </parameters>
       </method>
+      <property name="automatic-eos" version="1.24" writable="1" transfer-ownership="none" setter="set_automatic_eos" default-value="TRUE">
+        <doc xml:space="preserve">See gst_base_src_set_automatic_eos()</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </property>
       <property name="blocksize" writable="1" transfer-ownership="none" setter="set_blocksize" getter="get_blocksize" default-value="4096">
         <type name="guint" c:type="guint"/>
       </property>
