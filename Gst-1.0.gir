@@ -21446,15 +21446,6 @@ was created.</doc>
 In hindsight, this tag should have been called "memory-layout".</doc>
       <type name="utf8" c:type="gchar*"/>
     </constant>
-    <function-macro name="META_TRANSFORM_IS_CLEAR" c:identifier="GST_META_TRANSFORM_IS_CLEAR" version="1.24" introspectable="0">
-      <doc xml:space="preserve">Check if the transform type is clearing the content of the meta without
-freeing it.</doc>
-      <parameters>
-        <parameter name="type">
-          <doc xml:space="preserve">a transform type</doc>
-        </parameter>
-      </parameters>
-    </function-macro>
     <function-macro name="META_TRANSFORM_IS_COPY" c:identifier="GST_META_TRANSFORM_IS_COPY" introspectable="0">
       <doc xml:space="preserve">Check if the transform type is a copy transform</doc>
       <parameters>
@@ -25178,48 +25169,24 @@ transform function.</doc>
           </parameter>
         </parameters>
       </function>
-      <function name="register_serializable" c:identifier="gst_meta_register_serializable" version="1.24" introspectable="0">
-        <doc xml:space="preserve">Same as gst_meta_register() but also set serialize/deserialize functions.</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">a #GstMetaInfo that can be used to access metadata.</doc>
-          <type name="MetaInfo" c:type="const GstMetaInfo*"/>
-        </return-value>
-        <parameters>
-          <parameter name="api" transfer-ownership="none">
-            <doc xml:space="preserve">the type of the #GstMeta API</doc>
-            <type name="GType" c:type="GType"/>
-          </parameter>
-          <parameter name="impl" transfer-ownership="none">
-            <doc xml:space="preserve">the name of the #GstMeta implementation</doc>
-            <type name="utf8" c:type="const gchar*"/>
-          </parameter>
-          <parameter name="size" transfer-ownership="none">
-            <doc xml:space="preserve">the size of the #GstMeta structure</doc>
-            <type name="gsize" c:type="gsize"/>
-          </parameter>
-          <parameter name="init_func" transfer-ownership="none">
-            <doc xml:space="preserve">a #GstMetaInitFunction</doc>
-            <type name="MetaInitFunction" c:type="GstMetaInitFunction"/>
-          </parameter>
-          <parameter name="free_func" transfer-ownership="none">
-            <doc xml:space="preserve">a #GstMetaFreeFunction</doc>
-            <type name="MetaFreeFunction" c:type="GstMetaFreeFunction"/>
-          </parameter>
-          <parameter name="transform_func" transfer-ownership="none">
-            <doc xml:space="preserve">a #GstMetaTransformFunction</doc>
-            <type name="MetaTransformFunction" c:type="GstMetaTransformFunction"/>
-          </parameter>
-          <parameter name="serialize_func" transfer-ownership="none">
-            <doc xml:space="preserve">a #GstMetaSerializeFunction</doc>
-            <type name="MetaSerializeFunction" c:type="GstMetaSerializeFunction"/>
-          </parameter>
-          <parameter name="deserialize_func" transfer-ownership="none">
-            <doc xml:space="preserve">a #GstMetaDeserializeFunction</doc>
-            <type name="MetaDeserializeFunction" c:type="GstMetaDeserializeFunction"/>
-          </parameter>
-        </parameters>
-      </function>
     </record>
+    <callback name="MetaClearFunction" c:type="GstMetaClearFunction" version="1.24">
+      <doc xml:space="preserve">Clears the content of the meta. This will be called by the GstBufferPool
+when a pooled buffer is returned.</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="buffer" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstBuffer</doc>
+          <type name="Buffer" c:type="GstBuffer*"/>
+        </parameter>
+        <parameter name="meta" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstMeta</doc>
+          <type name="Meta" c:type="GstMeta*"/>
+        </parameter>
+      </parameters>
+    </callback>
     <callback name="MetaDeserializeFunction" c:type="GstMetaDeserializeFunction" version="1.24">
       <doc xml:space="preserve">Recreate a #GstMeta from serialized data returned by
 #GstMetaSerializeFunction and add it to @buffer.</doc>
@@ -25320,6 +25287,12 @@ meta.</doc>
 meta.</doc>
         <type name="MetaDeserializeFunction" c:type="GstMetaDeserializeFunction"/>
       </field>
+      <field name="clear_func" version="1.24" writable="1">
+        <doc xml:space="preserve">Function for clearing the metadata, or %NULL if not supported by this
+meta. This is called by the buffer pool when a buffer is returned for
+pooled metas.</doc>
+        <type name="MetaClearFunction" c:type="GstMetaClearFunction"/>
+      </field>
       <method name="is_custom" c:identifier="gst_meta_info_is_custom" version="1.20">
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">whether @info was registered as a #GstCustomMeta with
@@ -25332,6 +25305,73 @@ meta.</doc>
           </instance-parameter>
         </parameters>
       </method>
+      <method name="register" c:identifier="gst_meta_info_register" version="1.24">
+        <doc xml:space="preserve">Registers a new meta.
+
+Use the structure returned by gst_meta_info_new(), it consumes it and the
+structure shouldnt be used after. The one returned by the function can be
+kept.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the registered meta</doc>
+          <type name="MetaInfo" c:type="const GstMetaInfo*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="info" transfer-ownership="full">
+            <doc xml:space="preserve">a new #GstMetaInfo created by gst_meta_info_new()</doc>
+            <type name="MetaInfo" c:type="GstMetaInfo*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <function name="new" c:identifier="gst_meta_info_new" version="1.24" introspectable="0">
+        <doc xml:space="preserve">Creates a new structure that needs to be filled before being
+registered.  This structure should filled and then registered with
+gst_meta_info_register().
+
+Example:
+```c
+const GstMetaInfo *
+gst_my_meta_get_info (void)
+{
+  static const GstMetaInfo *meta_info = NULL;
+
+  if (g_once_init_enter ((GstMetaInfo **) &amp; meta_info)) {
+    GstMetaInfo *info = gst_meta_info_new (
+      gst_my_meta_api_get_type (),
+        "GstMyMeta",
+       sizeof (GstMyMeta));
+    const GstMetaInfo *meta = NULL;
+
+    info-&gt;init_func = my_meta_init;
+    info-&gt;free_func = my_meta_free;
+    info-&gt;transform_func = my_meta_transform;
+    info-&gt;serialize_func = my_meta_serialize;
+    info-&gt;deserialize_func = my_meta_deserialize;
+    meta = gst_meta_info_register (info);
+    g_once_init_leave ((GstMetaInfo **) &amp; meta_info, (GstMetaInfo *) meta);
+  }
+
+  return meta_info;
+}
+```</doc>
+        <return-value>
+          <doc xml:space="preserve">a new #GstMetaInfo that needs to be filled</doc>
+          <type name="MetaInfo" c:type="GstMetaInfo*"/>
+        </return-value>
+        <parameters>
+          <parameter name="api" transfer-ownership="none">
+            <doc xml:space="preserve">the type of the #GstMeta API</doc>
+            <type name="GType" c:type="GType"/>
+          </parameter>
+          <parameter name="impl" transfer-ownership="none">
+            <doc xml:space="preserve">the name of the #GstMeta implementation</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="size" transfer-ownership="none">
+            <doc xml:space="preserve">the size of the #GstMeta structure</doc>
+            <type name="gsize" c:type="gsize"/>
+          </parameter>
+        </parameters>
+      </function>
     </record>
     <callback name="MetaInitFunction" c:type="GstMetaInitFunction">
       <doc xml:space="preserve">Function called when @meta is initialized in @buffer.</doc>
@@ -50107,47 +50147,6 @@ transform function.</doc>
         <parameter name="name" transfer-ownership="none">
           <doc xml:space="preserve">the name of the #GstMeta implementation</doc>
           <type name="utf8" c:type="const gchar*"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="meta_register_serializable" c:identifier="gst_meta_register_serializable" moved-to="Meta.register_serializable" version="1.24" introspectable="0">
-      <doc xml:space="preserve">Same as gst_meta_register() but also set serialize/deserialize functions.</doc>
-      <return-value transfer-ownership="none">
-        <doc xml:space="preserve">a #GstMetaInfo that can be used to access metadata.</doc>
-        <type name="MetaInfo" c:type="const GstMetaInfo*"/>
-      </return-value>
-      <parameters>
-        <parameter name="api" transfer-ownership="none">
-          <doc xml:space="preserve">the type of the #GstMeta API</doc>
-          <type name="GType" c:type="GType"/>
-        </parameter>
-        <parameter name="impl" transfer-ownership="none">
-          <doc xml:space="preserve">the name of the #GstMeta implementation</doc>
-          <type name="utf8" c:type="const gchar*"/>
-        </parameter>
-        <parameter name="size" transfer-ownership="none">
-          <doc xml:space="preserve">the size of the #GstMeta structure</doc>
-          <type name="gsize" c:type="gsize"/>
-        </parameter>
-        <parameter name="init_func" transfer-ownership="none">
-          <doc xml:space="preserve">a #GstMetaInitFunction</doc>
-          <type name="MetaInitFunction" c:type="GstMetaInitFunction"/>
-        </parameter>
-        <parameter name="free_func" transfer-ownership="none">
-          <doc xml:space="preserve">a #GstMetaFreeFunction</doc>
-          <type name="MetaFreeFunction" c:type="GstMetaFreeFunction"/>
-        </parameter>
-        <parameter name="transform_func" transfer-ownership="none">
-          <doc xml:space="preserve">a #GstMetaTransformFunction</doc>
-          <type name="MetaTransformFunction" c:type="GstMetaTransformFunction"/>
-        </parameter>
-        <parameter name="serialize_func" transfer-ownership="none">
-          <doc xml:space="preserve">a #GstMetaSerializeFunction</doc>
-          <type name="MetaSerializeFunction" c:type="GstMetaSerializeFunction"/>
-        </parameter>
-        <parameter name="deserialize_func" transfer-ownership="none">
-          <doc xml:space="preserve">a #GstMetaDeserializeFunction</doc>
-          <type name="MetaDeserializeFunction" c:type="GstMetaDeserializeFunction"/>
         </parameter>
       </parameters>
     </function>
