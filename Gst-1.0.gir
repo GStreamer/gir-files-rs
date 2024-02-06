@@ -25996,6 +25996,34 @@ last ref and @obj is about to be freed.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <function-macro name="OBJECT_AUTO_LOCK" c:identifier="GST_OBJECT_AUTO_LOCK" version="1.24.0" introspectable="0">
+      <doc xml:space="preserve">Declare a #GMutexLocker variable with g_autoptr() and lock the object. The
+mutex will be unlocked automatically when leaving the scope.
+
+``` c
+{
+  GST_OBJECT_AUTO_LOCK (obj, locker);
+
+  obj-&gt;stuff_with_lock();
+  if (cond) {
+    // No need to unlock
+    return;
+  }
+
+  // Unlock before end of scope
+  g_clear_pointer (&amp;locker, g_mutex_locker_free);
+  obj-&gt;stuff_without_lock();
+}
+```</doc>
+      <parameters>
+        <parameter name="obj">
+          <doc xml:space="preserve">a #GstObject to lock</doc>
+        </parameter>
+        <parameter name="var">
+          <doc xml:space="preserve">a variable name to be declared</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
     <function-macro name="OBJECT_CAST" c:identifier="GST_OBJECT_CAST" introspectable="0">
       <parameters>
         <parameter name="obj">
@@ -27462,6 +27490,34 @@ queries explicitly if your element supports multiple scheduling modes.</doc>
       <parameters>
         <parameter name="pad">
           <doc xml:space="preserve">a #GstPad</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="PAD_STREAM_AUTO_LOCK" c:identifier="GST_PAD_STREAM_AUTO_LOCK" version="1.24.0" introspectable="0">
+      <doc xml:space="preserve">Declare a #GRecMutexLocker variable with g_autoptr() and lock the pad. The
+recursive mutex will be unlocked automatically when leaving the scope.
+
+``` c
+{
+  GST_PAD_STREAM_AUTO_LOCK (pad, locker);
+
+  gst_pad_push_event(pad, event1);
+  if (cond) {
+    // No need to unlock
+    return;
+  }
+
+  // Unlock before end of scope
+  g_clear_pointer (&amp;locker, g_rec_mutex_locker_free);
+  gst_pad_push_event(pad, event2);
+}
+```</doc>
+      <parameters>
+        <parameter name="pad">
+          <doc xml:space="preserve">a #GstPad</doc>
+        </parameter>
+        <parameter name="var">
+          <doc xml:space="preserve">a variable name to be declared</doc>
         </parameter>
       </parameters>
     </function-macro>
@@ -31581,6 +31637,22 @@ clock, even if the pipeline is not in the PLAYING state.</doc>
           </instance-parameter>
         </parameters>
       </method>
+      <method name="get_configured_latency" c:identifier="gst_pipeline_get_configured_latency" version="1.24">
+        <doc xml:space="preserve">Return the configured latency on @pipeline.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">@pipeline configured latency, or %GST_CLOCK_TIME_NONE if none has been configured
+because @pipeline did not reach the PLAYING state yet.
+
+MT safe.</doc>
+          <type name="ClockTime" c:type="GstClockTime"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="pipeline" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPipeline</doc>
+            <type name="Pipeline" c:type="GstPipeline*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
       <method name="get_delay" c:identifier="gst_pipeline_get_delay" glib:get-property="delay">
         <doc xml:space="preserve">Get the configured delay (see gst_pipeline_set_delay()).</doc>
         <return-value transfer-ownership="none">
@@ -31618,6 +31690,21 @@ clock, even if the pipeline is not in the PLAYING state.</doc>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">a #GstClock, unref after usage.</doc>
           <type name="Clock" c:type="GstClock*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="pipeline" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPipeline</doc>
+            <type name="Pipeline" c:type="GstPipeline*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="is_live" c:identifier="gst_pipeline_is_live" version="1.24">
+        <doc xml:space="preserve">Check if @pipeline is live.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if @pipeline is live, %FALSE if not or if it did not reach the PAUSED state yet.
+
+MT safe.</doc>
+          <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
           <instance-parameter name="pipeline" transfer-ownership="none">
@@ -51914,6 +52001,19 @@ element or %NULL if nothing was found</doc>
         </parameter>
       </parameters>
     </function>
+    <function name="util_ceil_log2" c:identifier="gst_util_ceil_log2" version="1.24">
+      <doc xml:space="preserve">Return a max num of log2.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">a computed #guint val.</doc>
+        <type name="guint" c:type="guint"/>
+      </return-value>
+      <parameters>
+        <parameter name="v" transfer-ownership="none">
+          <doc xml:space="preserve">a #guint32 value.</doc>
+          <type name="guint32" c:type="guint32"/>
+        </parameter>
+      </parameters>
+    </function>
     <function name="util_double_to_fraction" c:identifier="gst_util_double_to_fraction">
       <doc xml:space="preserve">Transforms a #gdouble to a fraction and simplifies
 the result.</doc>
@@ -51962,6 +52062,22 @@ the result.</doc>
         <parameter name="size" transfer-ownership="none">
           <doc xml:space="preserve">the size of the memory block to dump</doc>
           <type name="guint" c:type="guint"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="util_filename_compare" c:identifier="gst_util_filename_compare" version="1.24">
+      <doc xml:space="preserve">Compares the given filenames using natural ordering.</doc>
+      <return-value transfer-ownership="none">
+        <type name="gint" c:type="gint"/>
+      </return-value>
+      <parameters>
+        <parameter name="a" transfer-ownership="none">
+          <doc xml:space="preserve">a filename to compare with @b</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </parameter>
+        <parameter name="b" transfer-ownership="none">
+          <doc xml:space="preserve">a filename to compare with @a</doc>
+          <type name="utf8" c:type="const gchar*"/>
         </parameter>
       </parameters>
     </function>
