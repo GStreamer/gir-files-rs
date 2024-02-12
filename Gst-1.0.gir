@@ -39552,7 +39552,7 @@ a-struct, nested=[nested-struct, nested=true]
 ```
 
 &gt; *note*: gst_structure_to_string() won't use that syntax for backward
-&gt; compatibility reason, gst_structure_serialize() has been added for
+&gt; compatibility reason, gst_structure_serialize_full() has been added for
 &gt; that purpose.</doc>
       <field name="type" writable="1">
         <doc xml:space="preserve">the GType of a structure</doc>
@@ -40938,7 +40938,7 @@ argument is ignored.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="serialize" c:identifier="gst_structure_serialize" version="1.20">
+      <method name="serialize" c:identifier="gst_structure_serialize" version="1.20" deprecated="1">
         <doc xml:space="preserve">Converts @structure to a human-readable string representation.
 
 This version of the caps serialization function introduces support for nested
@@ -40946,8 +40946,32 @@ structures and caps but the resulting strings won't be parsable with
 GStreamer prior to 1.20 unless #GST_SERIALIZE_FLAG_BACKWARD_COMPAT is passed
 as @flag.
 
+%GST_SERIALIZE_FLAG_STRICT flags is not allowed because it would make this
+function nullable which is an API break for bindings.
+Use gst_structure_serialize_full() instead.
+
 Free-function: g_free</doc>
+        <doc-deprecated xml:space="preserve">Use gst_structure_serialize_full() instead.</doc-deprecated>
         <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a pointer to string allocated by g_malloc().
+    g_free() after usage.</doc>
+          <type name="utf8" c:type="gchar*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="const GstStructure*"/>
+          </instance-parameter>
+          <parameter name="flags" transfer-ownership="none">
+            <doc xml:space="preserve">The flags to use to serialize structure</doc>
+            <type name="SerializeFlags" c:type="GstSerializeFlags"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="serialize_full" c:identifier="gst_structure_serialize_full" version="1.24">
+        <doc xml:space="preserve">Alias for gst_structure_serialize() but with nullable annotation because it
+can return %NULL when %GST_SERIALIZE_FLAG_STRICT flag is set.</doc>
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a pointer to string allocated by g_malloc().
     g_free() after usage.</doc>
           <type name="utf8" c:type="gchar*"/>
@@ -41144,7 +41168,7 @@ This prints the structure in human readable form.
 
 This function will lead to unexpected results when there are nested #GstCaps
 / #GstStructure deeper than one level, you should user
-gst_structure_serialize() instead for those cases.
+gst_structure_serialize_full() instead for those cases.
 
 Free-function: g_free</doc>
         <return-value transfer-ownership="full">
@@ -41435,6 +41459,13 @@ attachment)</doc>
     </constant>
     <constant name="TAG_CONTAINER_FORMAT" value="container-format" c:type="GST_TAG_CONTAINER_FORMAT">
       <doc xml:space="preserve">container format the data is stored in (string)</doc>
+      <type name="utf8" c:type="gchar*"/>
+    </constant>
+    <constant name="TAG_CONTAINER_SPECIFIC_TRACK_ID" value="container-specific-track-id" c:type="GST_TAG_CONTAINER_SPECIFIC_TRACK_ID" version="1.24">
+      <doc xml:space="preserve">Unique identifier for the audio, video or text track this tag is associated
+with. The mappings for several container formats are defined in the [Sourcing
+In-band Media Resource Tracks from Media Containers into HTML
+specification](https://dev.w3.org/html5/html-sourcing-inband-tracks/).</doc>
       <type name="utf8" c:type="gchar*"/>
     </constant>
     <constant name="TAG_COPYRIGHT" value="copyright" c:type="GST_TAG_COPYRIGHT">
@@ -47171,7 +47202,7 @@ determine a order for the two provided values.</doc>
       <doc xml:space="preserve">The major version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MICRO" value="0" c:type="GST_VERSION_MICRO">
+    <constant name="VERSION_MICRO" value="1" c:type="GST_VERSION_MICRO">
       <doc xml:space="preserve">The micro version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
@@ -52073,11 +52104,11 @@ the result.</doc>
       <parameters>
         <parameter name="a" transfer-ownership="none">
           <doc xml:space="preserve">a filename to compare with @b</doc>
-          <type name="utf8" c:type="const gchar*"/>
+          <type name="filename" c:type="const gchar*"/>
         </parameter>
         <parameter name="b" transfer-ownership="none">
           <doc xml:space="preserve">a filename to compare with @a</doc>
-          <type name="utf8" c:type="const gchar*"/>
+          <type name="filename" c:type="const gchar*"/>
         </parameter>
       </parameters>
     </function>
