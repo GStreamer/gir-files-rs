@@ -26973,6 +26973,14 @@ the elements contained in that bin.</doc>
 after gst_deinit() has been called and so should be ignored by leak
 detection tools. (Since: 1.10)</doc>
       </member>
+      <member name="constructed" value="2" c:identifier="GST_OBJECT_FLAG_CONSTRUCTED" version="1.24" glib:nick="constructed" glib:name="GST_OBJECT_FLAG_CONSTRUCTED">
+        <doc xml:space="preserve">Flag that's set when the object has been constructed. This can be used by
+API such as base class setters to differentiate between the case where
+they're called from a subclass's instance init function (and where the
+object isn't fully constructed yet, and so one shouldn't do anything but
+set values in the instance structure), and the case where the object is
+constructed.</doc>
+      </member>
       <member name="last" value="16" c:identifier="GST_OBJECT_FLAG_LAST" glib:nick="last" glib:name="GST_OBJECT_FLAG_LAST">
         <doc xml:space="preserve">subclasses can add additional flags starting from this flag</doc>
       </member>
@@ -32182,6 +32190,51 @@ arguments separated by predefined delimiters (see above).</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="add_status_error" c:identifier="gst_plugin_add_status_error" version="1.24">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="plugin" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPlugin</doc>
+            <type name="Plugin" c:type="GstPlugin*"/>
+          </instance-parameter>
+          <parameter name="message" transfer-ownership="none">
+            <doc xml:space="preserve">the status error message</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="add_status_info" c:identifier="gst_plugin_add_status_info" version="1.24">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="plugin" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPlugin</doc>
+            <type name="Plugin" c:type="GstPlugin*"/>
+          </instance-parameter>
+          <parameter name="message" transfer-ownership="none">
+            <doc xml:space="preserve">the status info message</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="add_status_warning" c:identifier="gst_plugin_add_status_warning" version="1.24">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="plugin" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPlugin</doc>
+            <type name="Plugin" c:type="GstPlugin*"/>
+          </instance-parameter>
+          <parameter name="message" transfer-ownership="none">
+            <doc xml:space="preserve">the status warning message</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="get_cache_data" c:identifier="gst_plugin_get_cache_data">
         <doc xml:space="preserve">Gets the plugin specific data cache. If it is %NULL there is no cached data
 stored. This is the case when the registry is getting rebuilt.</doc>
@@ -32305,6 +32358,48 @@ available.</doc>
         <parameters>
           <instance-parameter name="plugin" transfer-ownership="none">
             <doc xml:space="preserve">plugin to get the source of</doc>
+            <type name="Plugin" c:type="GstPlugin*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_status_errors" c:identifier="gst_plugin_get_status_errors" version="1.24">
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">an array of plugin status error messages, or NULL</doc>
+          <array c:type="gchar**">
+            <type name="utf8"/>
+          </array>
+        </return-value>
+        <parameters>
+          <instance-parameter name="plugin" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPlugin</doc>
+            <type name="Plugin" c:type="GstPlugin*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_status_infos" c:identifier="gst_plugin_get_status_infos" version="1.24">
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">an array of plugin status info messages, or NULL</doc>
+          <array c:type="gchar**">
+            <type name="utf8"/>
+          </array>
+        </return-value>
+        <parameters>
+          <instance-parameter name="plugin" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPlugin</doc>
+            <type name="Plugin" c:type="GstPlugin*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_status_warnings" c:identifier="gst_plugin_get_status_warnings" version="1.24">
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">an array of plugin status warning messages, or NULL</doc>
+          <array c:type="gchar**">
+            <type name="utf8"/>
+          </array>
+        </return-value>
+        <parameters>
+          <instance-parameter name="plugin" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPlugin</doc>
             <type name="Plugin" c:type="GstPlugin*"/>
           </instance-parameter>
         </parameters>
@@ -47202,7 +47297,7 @@ determine a order for the two provided values.</doc>
       <doc xml:space="preserve">The major version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MICRO" value="1" c:type="GST_VERSION_MICRO">
+    <constant name="VERSION_MICRO" value="90" c:type="GST_VERSION_MICRO">
       <doc xml:space="preserve">The micro version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
@@ -47210,7 +47305,7 @@ determine a order for the two provided values.</doc>
       <doc xml:space="preserve">The minor version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_NANO" value="1" c:type="GST_VERSION_NANO">
+    <constant name="VERSION_NANO" value="0" c:type="GST_VERSION_NANO">
       <doc xml:space="preserve">The nano version of GStreamer at compile time:
 Actual releases have 0, GIT versions have 1, prerelease versions have 2-...</doc>
       <type name="gint" c:type="gint"/>
@@ -49704,7 +49799,16 @@ which is then encapsulated in a GstProtectionMeta object and attached to
 the corresponding output buffer using the gst_buffer_add_protection_meta()
 function. The information in this attached GstProtectionMeta would be
 used by a downstream decrypter element to recover the original unencrypted
-frame.</doc>
+frame.
+
+In addition to the #GstProtectionMeta demuxers signal encrypted streams with
+specific caps. The caps #GstStructure name will usually depend on the
+encryption scheme, for instance Common Encryption will be signaled with
+`application/x-cenc`. To prevent loss of information the media type of the
+decrypted stream will be stored in a `original-media-type` string field.
+Downstream elements can re-use that information, for instance decryptors can
+set their source pad caps according to the `original-media-type` received on
+their sink pad.</doc>
     </docsection>
     <docsection name="gststreams">
       <doc xml:space="preserve">A #GstStream is a high-level object defining a stream of data which is, or
@@ -50170,6 +50274,56 @@ not allow to determine that size, @consumed is set to 0.</doc>
         <parameter name="impl" transfer-ownership="none">
           <doc xml:space="preserve">the name</doc>
           <type name="utf8" c:type="const gchar*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="meta_info_new" c:identifier="gst_meta_info_new" moved-to="MetaInfo.new" version="1.24" introspectable="0">
+      <doc xml:space="preserve">Creates a new structure that needs to be filled before being
+registered.  This structure should filled and then registered with
+gst_meta_info_register().
+
+Example:
+```c
+const GstMetaInfo *
+gst_my_meta_get_info (void)
+{
+  static const GstMetaInfo *meta_info = NULL;
+
+  if (g_once_init_enter ((GstMetaInfo **) &amp; meta_info)) {
+    GstMetaInfo *info = gst_meta_info_new (
+      gst_my_meta_api_get_type (),
+        "GstMyMeta",
+       sizeof (GstMyMeta));
+    const GstMetaInfo *meta = NULL;
+
+    info-&gt;init_func = my_meta_init;
+    info-&gt;free_func = my_meta_free;
+    info-&gt;transform_func = my_meta_transform;
+    info-&gt;serialize_func = my_meta_serialize;
+    info-&gt;deserialize_func = my_meta_deserialize;
+    meta = gst_meta_info_register (info);
+    g_once_init_leave ((GstMetaInfo **) &amp; meta_info, (GstMetaInfo *) meta);
+  }
+
+  return meta_info;
+}
+```</doc>
+      <return-value>
+        <doc xml:space="preserve">a new #GstMetaInfo that needs to be filled</doc>
+        <type name="MetaInfo" c:type="GstMetaInfo*"/>
+      </return-value>
+      <parameters>
+        <parameter name="api" transfer-ownership="none">
+          <doc xml:space="preserve">the type of the #GstMeta API</doc>
+          <type name="GType" c:type="GType"/>
+        </parameter>
+        <parameter name="impl" transfer-ownership="none">
+          <doc xml:space="preserve">the name of the #GstMeta implementation</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </parameter>
+        <parameter name="size" transfer-ownership="none">
+          <doc xml:space="preserve">the size of the #GstMeta structure</doc>
+          <type name="gsize" c:type="gsize"/>
         </parameter>
       </parameters>
     </function>

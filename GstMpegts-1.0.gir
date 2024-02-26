@@ -4656,9 +4656,9 @@ profiles defined in Annex A for service-compatible stereoscopic 3D services</doc
       <member name="c3780" value="8" c:identifier="GST_MPEGTS_TRANSMISSION_MODE_C3780">
       </member>
     </enumeration>
-    <function name="buffer_add_mpegts_pes_metadata_meta" c:identifier="gst_buffer_add_mpegts_pes_metadata_meta" version="1.24" introspectable="0">
+    <function name="buffer_add_mpegts_pes_metadata_meta" c:identifier="gst_buffer_add_mpegts_pes_metadata_meta" version="1.24">
       <doc xml:space="preserve">Creates and adds a #GstMpegtsPESMetadataMeta to a @buffer.</doc>
-      <return-value transfer-ownership="full">
+      <return-value transfer-ownership="none">
         <doc xml:space="preserve">a newly created #GstMpegtsPESMetadataMeta</doc>
         <type name="PESMetadataMeta" c:type="GstMpegtsPESMetadataMeta*"/>
       </return-value>
