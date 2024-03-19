@@ -13488,8 +13488,8 @@ As an example, you may define the element named "stream-filter"
 with the namespace `my` as following:
 
 ```
-#define _pre_register_init \
-  my_stream_filter_pre_register (plugin);
+#define _pre_register_init  *   my_stream_filter_pre_register (plugin);
+;
 GST_ELEMENT_REGISTER_DEFINE_WITH_CODE (stream_filter, "stream-filter", GST_RANK_PRIMARY, MY_TYPE_STREAM_FILTER, _pre_register_init)
 ```</doc>
       <parameters>
@@ -37412,8 +37412,8 @@ This can be used in pad templates.</doc>
 structure.
 Example:
 |[&lt;!-- language="C" --&gt;
-static GstStaticPadTemplate my_src_template = \
-  GST_STATIC_PAD_TEMPLATE("src", GST_PAD_SRC, GST_PAD_ALWAYS,
+static GstStaticPadTemplate my_src_template =  *   GST_STATIC_PAD_TEMPLATE("src", GST_PAD_SRC, GST_PAD_ALWAYS,
+,
                           GST_STATIC_CAPS_ANY);
 ]|</doc>
       <parameters>
@@ -47297,15 +47297,15 @@ determine a order for the two provided values.</doc>
       <doc xml:space="preserve">The major version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MICRO" value="90" c:type="GST_VERSION_MICRO">
+    <constant name="VERSION_MICRO" value="0" c:type="GST_VERSION_MICRO">
       <doc xml:space="preserve">The micro version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MINOR" value="23" c:type="GST_VERSION_MINOR">
+    <constant name="VERSION_MINOR" value="24" c:type="GST_VERSION_MINOR">
       <doc xml:space="preserve">The minor version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_NANO" value="0" c:type="GST_VERSION_NANO">
+    <constant name="VERSION_NANO" value="1" c:type="GST_VERSION_NANO">
       <doc xml:space="preserve">The nano version of GStreamer at compile time:
 Actual releases have 0, GIT versions have 1, prerelease versions have 2-...</doc>
       <type name="gint" c:type="gint"/>
