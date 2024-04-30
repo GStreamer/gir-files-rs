@@ -385,6 +385,7 @@ channel object.</doc>
 for modifying the color balance implemented by an element providing the
 #GstColorBalance interface. For example, Hue or Saturation.</doc>
       <virtual-method name="value_changed">
+        <doc xml:space="preserve">default handler for value changed notification</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -437,6 +438,7 @@ for modifying the color balance implemented by an element providing the
         <type name="GObject.ObjectClass" c:type="GObjectClass"/>
       </field>
       <field name="value_changed">
+        <doc xml:space="preserve">default handler for value changed notification</doc>
         <callback name="value_changed">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -464,6 +466,7 @@ for modifying the color balance implemented by an element providing the
         <type name="GObject.TypeInterface" c:type="GTypeInterface"/>
       </field>
       <field name="list_channels">
+        <doc xml:space="preserve">list handled channels</doc>
         <callback name="list_channels">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">A
@@ -483,6 +486,7 @@ for modifying the color balance implemented by an element providing the
         </callback>
       </field>
       <field name="set_value">
+        <doc xml:space="preserve">set a channel value</doc>
         <callback name="set_value">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -504,6 +508,7 @@ for modifying the color balance implemented by an element providing the
         </callback>
       </field>
       <field name="get_value">
+        <doc xml:space="preserve">get a channel value</doc>
         <callback name="get_value">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">The current value of the channel.</doc>
@@ -522,6 +527,7 @@ for modifying the color balance implemented by an element providing the
         </callback>
       </field>
       <field name="get_balance_type">
+        <doc xml:space="preserve">implementation type</doc>
         <callback name="get_balance_type">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">A the #GstColorBalanceType.</doc>
@@ -536,6 +542,7 @@ for modifying the color balance implemented by an element providing the
         </callback>
       </field>
       <field name="value_changed">
+        <doc xml:space="preserve">default handler for value changed notification</doc>
         <callback name="value_changed">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -904,6 +911,32 @@ Shift and Alt).</doc>
         <parameters>
           <parameter name="button" transfer-ownership="none">
             <doc xml:space="preserve">The number of the released mouse button.</doc>
+            <type name="gint" c:type="gint"/>
+          </parameter>
+          <parameter name="x" transfer-ownership="none">
+            <doc xml:space="preserve">The x coordinate of the mouse cursor.</doc>
+            <type name="gdouble" c:type="gdouble"/>
+          </parameter>
+          <parameter name="y" transfer-ownership="none">
+            <doc xml:space="preserve">The y coordinate of the mouse cursor.</doc>
+            <type name="gdouble" c:type="gdouble"/>
+          </parameter>
+          <parameter name="state" transfer-ownership="none">
+            <doc xml:space="preserve">a bit-mask representing the state of the modifier keys (e.g. Control,
+Shift and Alt).</doc>
+            <type name="NavigationModifierType" c:type="GstNavigationModifierType"/>
+          </parameter>
+        </parameters>
+      </function>
+      <function name="event_new_mouse_double_click" c:identifier="gst_navigation_event_new_mouse_double_click" version="1.26">
+        <doc xml:space="preserve">Create a new navigation event for the given key mouse double click.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a new #GstEvent</doc>
+          <type name="Gst.Event" c:type="GstEvent*"/>
+        </return-value>
+        <parameters>
+          <parameter name="button" transfer-ownership="none">
+            <doc xml:space="preserve">The number of the pressed mouse button.</doc>
             <type name="gint" c:type="gint"/>
           </parameter>
           <parameter name="x" transfer-ownership="none">
@@ -1761,7 +1794,7 @@ implementing the #GstNavigation interface.</doc>
           </instance-parameter>
           <parameter name="event" transfer-ownership="none">
             <doc xml:space="preserve">The type of mouse event, as a text string. Recognised values are
-"mouse-button-press", "mouse-button-release" and "mouse-move".</doc>
+"mouse-button-press", "mouse-button-release", "mouse-move" and "mouse-double-click".</doc>
             <type name="utf8" c:type="const char*"/>
           </parameter>
           <parameter name="button" transfer-ownership="none">
@@ -1946,6 +1979,11 @@ from the event.</doc>
       <member name="touch_cancel" value="12" c:identifier="GST_NAVIGATION_EVENT_TOUCH_CANCEL" version="1.22" glib:nick="touch-cancel" glib:name="GST_NAVIGATION_EVENT_TOUCH_CANCEL">
         <doc xml:space="preserve">An event cancelling all currently active touch points.</doc>
       </member>
+      <member name="mouse_double_click" value="13" c:identifier="GST_NAVIGATION_EVENT_MOUSE_DOUBLE_CLICK" version="1.26" glib:nick="mouse-double-click" glib:name="GST_NAVIGATION_EVENT_MOUSE_DOUBLE_CLICK">
+        <doc xml:space="preserve">A mouse button double click event.
+Use gst_navigation_event_parse_mouse_button_event() to extract the details
+from the event.</doc>
+      </member>
     </enumeration>
     <record name="NavigationInterface" c:type="GstNavigationInterface" glib:is-gtype-struct-for="Navigation">
       <doc xml:space="preserve">Navigation interface.</doc>
@@ -1954,6 +1992,7 @@ from the event.</doc>
         <type name="GObject.TypeInterface" c:type="GTypeInterface"/>
       </field>
       <field name="send_event">
+        <doc xml:space="preserve">sending a navigation event</doc>
         <callback name="send_event">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -1969,6 +2008,7 @@ from the event.</doc>
         </callback>
       </field>
       <field name="send_event_simple">
+        <doc xml:space="preserve">sending a navigation event (Since: 1.22)</doc>
         <callback name="send_event_simple">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -3132,6 +3172,10 @@ Return the width of one tile in pixels, zero if its not an integer.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <constant name="VIDEO_FORMAT_LAST" value="134" c:type="GST_VIDEO_FORMAT_LAST" version="1.26">
+      <doc xml:space="preserve">Number of video formats in #GstVideoFormat.</doc>
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="VIDEO_FPS_RANGE" value="(fraction) [ 0, max ]" c:type="GST_VIDEO_FPS_RANGE">
       <type name="utf8" c:type="gchar*"/>
     </constant>
@@ -4066,6 +4110,12 @@ VideoAggregator will do colorspace conversion.
 Zorder for each input stream can be configured on the
 #GstVideoAggregatorPad.</doc>
       <virtual-method name="aggregate_frames">
+        <doc xml:space="preserve">Lets subclasses aggregate frames that are ready. Subclasses
+                           should iterate the GstElement.sinkpads and use the already
+                           mapped #GstVideoFrame from gst_video_aggregator_pad_get_prepared_frame()
+                           or directly use the #GstBuffer from gst_video_aggregator_pad_get_current_buffer()
+                           if it needs to map the buffer in a special way. The result of the
+                           aggregation should land in @outbuffer.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -4079,6 +4129,9 @@ Zorder for each input stream can be configured on the
         </parameters>
       </virtual-method>
       <virtual-method name="create_output_buffer">
+        <doc xml:space="preserve">Optional.
+                           Lets subclasses provide a #GstBuffer to be used as @outbuffer of
+                           the #aggregate_frames vmethod.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -4111,6 +4164,9 @@ Zorder for each input stream can be configured on the
         </parameters>
       </virtual-method>
       <virtual-method name="update_caps">
+        <doc xml:space="preserve">Optional.
+                           Lets subclasses update the #GstCaps representing
+                           the src pad caps before usage.  Return %NULL to indicate failure.</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Caps" c:type="GstCaps*"/>
         </return-value>
@@ -4170,6 +4226,9 @@ srcpad caps.</doc>
         <type name="GstBase.AggregatorClass" c:type="GstAggregatorClass"/>
       </field>
       <field name="update_caps">
+        <doc xml:space="preserve">Optional.
+                           Lets subclasses update the #GstCaps representing
+                           the src pad caps before usage.  Return %NULL to indicate failure.</doc>
         <callback name="update_caps">
           <return-value transfer-ownership="full">
             <type name="Gst.Caps" c:type="GstCaps*"/>
@@ -4185,6 +4244,12 @@ srcpad caps.</doc>
         </callback>
       </field>
       <field name="aggregate_frames">
+        <doc xml:space="preserve">Lets subclasses aggregate frames that are ready. Subclasses
+                           should iterate the GstElement.sinkpads and use the already
+                           mapped #GstVideoFrame from gst_video_aggregator_pad_get_prepared_frame()
+                           or directly use the #GstBuffer from gst_video_aggregator_pad_get_current_buffer()
+                           if it needs to map the buffer in a special way. The result of the
+                           aggregation should land in @outbuffer.</doc>
         <callback name="aggregate_frames">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -4200,6 +4265,9 @@ srcpad caps.</doc>
         </callback>
       </field>
       <field name="create_output_buffer">
+        <doc xml:space="preserve">Optional.
+                           Lets subclasses provide a #GstBuffer to be used as @outbuffer of
+                           the #aggregate_frames vmethod.</doc>
         <callback name="create_output_buffer">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -4215,6 +4283,8 @@ srcpad caps.</doc>
         </callback>
       </field>
       <field name="find_best_format">
+        <doc xml:space="preserve">Optional.
+                           Lets subclasses decide of the best common format to use.</doc>
         <callback name="find_best_format">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -4320,6 +4390,7 @@ update for any changes that have happened.</doc>
     <record name="VideoAggregatorConvertPadPrivate" c:type="GstVideoAggregatorConvertPadPrivate" disguised="1" opaque="1"/>
     <class name="VideoAggregatorPad" c:symbol-prefix="video_aggregator_pad" c:type="GstVideoAggregatorPad" version="1.16" parent="GstBase.AggregatorPad" glib:type-name="GstVideoAggregatorPad" glib:get-type="gst_video_aggregator_pad_get_type" glib:type-struct="VideoAggregatorPadClass">
       <virtual-method name="clean_frame">
+        <doc xml:space="preserve">clean the frame previously prepared in prepare_frame</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -4336,6 +4407,9 @@ update for any changes that have happened.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="prepare_frame">
+        <doc xml:space="preserve">Prepare the frame from the pad buffer and sets it to prepared_frame.
+     Implementations should always return TRUE.  Returning FALSE will cease
+     iteration over subsequent pads.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4403,6 +4477,8 @@ If overriden, `prepare_frame_finish` must also be overriden.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="update_conversion_info">
+        <doc xml:space="preserve">Called when either the input or output formats
+                         have changed.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -4515,6 +4591,8 @@ or from the #GstVideoAggregatorPadClass::prepare_frame virtual method of the agg
         <type name="GstBase.AggregatorPadClass" c:type="GstAggregatorPadClass"/>
       </field>
       <field name="update_conversion_info">
+        <doc xml:space="preserve">Called when either the input or output formats
+                         have changed.</doc>
         <callback name="update_conversion_info">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -4527,6 +4605,9 @@ or from the #GstVideoAggregatorPadClass::prepare_frame virtual method of the agg
         </callback>
       </field>
       <field name="prepare_frame">
+        <doc xml:space="preserve">Prepare the frame from the pad buffer and sets it to prepared_frame.
+     Implementations should always return TRUE.  Returning FALSE will cease
+     iteration over subsequent pads.</doc>
         <callback name="prepare_frame">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4548,6 +4629,7 @@ or from the #GstVideoAggregatorPadClass::prepare_frame virtual method of the agg
         </callback>
       </field>
       <field name="clean_frame">
+        <doc xml:space="preserve">clean the frame previously prepared in prepare_frame</doc>
         <callback name="clean_frame">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -6293,6 +6375,9 @@ The bare minimum that a functional subclass needs to implement is:
   * Accept data in @handle_frame and provide decoded results to
      @gst_video_decoder_finish_frame, or call @gst_video_decoder_drop_frame.</doc>
       <virtual-method name="close">
+        <doc xml:space="preserve">Optional.
+                 Called when the element changes to GST_STATE_NULL.
+                 Allows closing external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6303,6 +6388,12 @@ The bare minimum that a functional subclass needs to implement is:
         </parameters>
       </virtual-method>
       <virtual-method name="decide_allocation">
+        <doc xml:space="preserve">Optional.
+                    Setup the allocation parameters for allocating output
+                    buffers. The passed in query contains the result of the
+                    downstream allocation query.
+                    Subclasses should chain up to the parent implementation to
+                    invoke the default handler.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6316,6 +6407,11 @@ The bare minimum that a functional subclass needs to implement is:
         </parameters>
       </virtual-method>
       <virtual-method name="drain">
+        <doc xml:space="preserve">Optional.
+                 Called to request subclass to decode any data it can at this
+                 point, but that more data may arrive after. (e.g. at segment end).
+                 Sub-classes should be prepared to handle new data afterward,
+                 or seamless segment processing will break. Since: 1.6</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -6326,6 +6422,9 @@ The bare minimum that a functional subclass needs to implement is:
         </parameters>
       </virtual-method>
       <virtual-method name="finish">
+        <doc xml:space="preserve">Optional.
+                 Called to request subclass to dispatch any pending remaining
+                 data at EOS. Sub-classes can refuse to decode new data after.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -6336,6 +6435,9 @@ The bare minimum that a functional subclass needs to implement is:
         </parameters>
       </virtual-method>
       <virtual-method name="flush">
+        <doc xml:space="preserve">Optional.
+                     Flush all remaining data from the decoder without
+                     pushing it downstream. Since: 1.2</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6346,6 +6448,11 @@ The bare minimum that a functional subclass needs to implement is:
         </parameters>
       </virtual-method>
       <virtual-method name="getcaps">
+        <doc xml:space="preserve">Optional.
+                 Allows for a custom sink getcaps implementation.
+                 If not implemented, default returns
+                 gst_video_decoder_proxy_getcaps
+                 applied to sink template caps.</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Caps" c:type="GstCaps*"/>
         </return-value>
@@ -6409,6 +6516,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="open">
+        <doc xml:space="preserve">Optional.
+                 Called when the element changes to GST_STATE_READY.
+                 Allows opening external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6419,6 +6529,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="parse">
+        <doc xml:space="preserve">Required for non-packetized input.
+                 Allows chopping incoming data into manageable units (frames)
+                 for subsequent decoding.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -6438,6 +6551,10 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="propose_allocation">
+        <doc xml:space="preserve">Optional.
+                     Propose buffer allocation parameters for upstream elements.
+                     Subclasses should chain up to the parent implementation to
+                     invoke the default handler.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6451,6 +6568,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="reset">
+        <doc xml:space="preserve">Optional.
+                 Allows subclass (decoder) to perform post-seek semantics reset.
+                 Deprecated.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6464,6 +6584,7 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="set_format">
+        <doc xml:space="preserve">Notifies subclass of incoming data format (caps).</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6477,6 +6598,12 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="sink_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the sink pad. This function should return
+                 TRUE if the event was handled and should be discarded
+                 (i.e. not unref'ed).
+                 Subclasses should chain up to the parent implementation to
+                 invoke the default handler.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6490,6 +6617,11 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="sink_query">
+        <doc xml:space="preserve">Optional.
+                 Query handler on the sink pad. This function should
+                 return TRUE if the query could be performed. Subclasses
+                 should chain up to the parent implementation to invoke the
+                 default handler. Since: 1.4</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6503,6 +6635,12 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="src_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the source pad. This function should return
+                 TRUE if the event was handled and should be discarded
+                 (i.e. not unref'ed).
+                 Subclasses should chain up to the parent implementation to
+                 invoke the default handler.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6516,6 +6654,11 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="src_query">
+        <doc xml:space="preserve">Optional.
+                 Query handler on the source pad. This function should
+                 return TRUE if the query could be performed. Subclasses
+                 should chain up to the parent implementation to invoke the
+                 default handler. Since: 1.4</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6529,6 +6672,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="start">
+        <doc xml:space="preserve">Optional.
+                 Called when the element starts processing.
+                 Allows opening external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6539,6 +6685,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="stop">
+        <doc xml:space="preserve">Optional.
+                 Called when the element stops processing.
+                 Allows closing external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6549,6 +6698,11 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="transform_meta">
+        <doc xml:space="preserve">Optional. Transform the metadata on the input buffer to the
+                 output buffer. By default this method is copies all meta without
+                 tags and meta with only the "video" tag. subclasses can
+                 implement this method and return %TRUE if the metadata is to be
+                 copied. Since: 1.6</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -7486,6 +7640,9 @@ and likely as well.  If non-packetized input is supported or expected,
         <type name="Gst.ElementClass" c:type="GstElementClass"/>
       </field>
       <field name="open">
+        <doc xml:space="preserve">Optional.
+                 Called when the element changes to GST_STATE_READY.
+                 Allows opening external resources.</doc>
         <callback name="open">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7498,6 +7655,9 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="close">
+        <doc xml:space="preserve">Optional.
+                 Called when the element changes to GST_STATE_NULL.
+                 Allows closing external resources.</doc>
         <callback name="close">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7510,6 +7670,9 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="start">
+        <doc xml:space="preserve">Optional.
+                 Called when the element starts processing.
+                 Allows opening external resources.</doc>
         <callback name="start">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7522,6 +7685,9 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="stop">
+        <doc xml:space="preserve">Optional.
+                 Called when the element stops processing.
+                 Allows closing external resources.</doc>
         <callback name="stop">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7534,6 +7700,9 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="parse">
+        <doc xml:space="preserve">Required for non-packetized input.
+                 Allows chopping incoming data into manageable units (frames)
+                 for subsequent decoding.</doc>
         <callback name="parse">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -7555,6 +7724,7 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="set_format">
+        <doc xml:space="preserve">Notifies subclass of incoming data format (caps).</doc>
         <callback name="set_format">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7570,6 +7740,9 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="reset">
+        <doc xml:space="preserve">Optional.
+                 Allows subclass (decoder) to perform post-seek semantics reset.
+                 Deprecated.</doc>
         <callback name="reset">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7585,6 +7758,9 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="finish">
+        <doc xml:space="preserve">Optional.
+                 Called to request subclass to dispatch any pending remaining
+                 data at EOS. Sub-classes can refuse to decode new data after.</doc>
         <callback name="finish">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -7597,6 +7773,9 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="handle_frame">
+        <doc xml:space="preserve">Provides input data frame to subclass. In subframe mode, the subclass needs
+                 to take ownership of @GstVideoCodecFrame.input_buffer as it will be modified
+                 by the base class on the next subframe buffer receiving.</doc>
         <callback name="handle_frame">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -7614,6 +7793,12 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="sink_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the sink pad. This function should return
+                 TRUE if the event was handled and should be discarded
+                 (i.e. not unref'ed).
+                 Subclasses should chain up to the parent implementation to
+                 invoke the default handler.</doc>
         <callback name="sink_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7629,6 +7814,12 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="src_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the source pad. This function should return
+                 TRUE if the event was handled and should be discarded
+                 (i.e. not unref'ed).
+                 Subclasses should chain up to the parent implementation to
+                 invoke the default handler.</doc>
         <callback name="src_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7644,6 +7835,10 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="negotiate">
+        <doc xml:space="preserve">Optional.
+                 Negotiate with downstream and configure buffer pools, etc.
+                 Subclasses should chain up to the parent implementation to
+                 invoke the default handler.</doc>
         <callback name="negotiate">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the negotiation succeeded, else %FALSE.</doc>
@@ -7658,6 +7853,12 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="decide_allocation">
+        <doc xml:space="preserve">Optional.
+                    Setup the allocation parameters for allocating output
+                    buffers. The passed in query contains the result of the
+                    downstream allocation query.
+                    Subclasses should chain up to the parent implementation to
+                    invoke the default handler.</doc>
         <callback name="decide_allocation">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7673,6 +7874,10 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="propose_allocation">
+        <doc xml:space="preserve">Optional.
+                     Propose buffer allocation parameters for upstream elements.
+                     Subclasses should chain up to the parent implementation to
+                     invoke the default handler.</doc>
         <callback name="propose_allocation">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7688,6 +7893,9 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="flush">
+        <doc xml:space="preserve">Optional.
+                     Flush all remaining data from the decoder without
+                     pushing it downstream. Since: 1.2</doc>
         <callback name="flush">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7700,6 +7908,11 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="sink_query">
+        <doc xml:space="preserve">Optional.
+                 Query handler on the sink pad. This function should
+                 return TRUE if the query could be performed. Subclasses
+                 should chain up to the parent implementation to invoke the
+                 default handler. Since: 1.4</doc>
         <callback name="sink_query">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7715,6 +7928,11 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="src_query">
+        <doc xml:space="preserve">Optional.
+                 Query handler on the source pad. This function should
+                 return TRUE if the query could be performed. Subclasses
+                 should chain up to the parent implementation to invoke the
+                 default handler. Since: 1.4</doc>
         <callback name="src_query">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7730,6 +7948,11 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="getcaps">
+        <doc xml:space="preserve">Optional.
+                 Allows for a custom sink getcaps implementation.
+                 If not implemented, default returns
+                 gst_video_decoder_proxy_getcaps
+                 applied to sink template caps.</doc>
         <callback name="getcaps">
           <return-value transfer-ownership="full">
             <type name="Gst.Caps" c:type="GstCaps*"/>
@@ -7745,6 +7968,11 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="drain">
+        <doc xml:space="preserve">Optional.
+                 Called to request subclass to decode any data it can at this
+                 point, but that more data may arrive after. (e.g. at segment end).
+                 Sub-classes should be prepared to handle new data afterward,
+                 or seamless segment processing will break. Since: 1.6</doc>
         <callback name="drain">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -7757,6 +7985,11 @@ and likely as well.  If non-packetized input is supported or expected,
         </callback>
       </field>
       <field name="transform_meta">
+        <doc xml:space="preserve">Optional. Transform the metadata on the input buffer to the
+                 output buffer. By default this method is copies all meta without
+                 tags and meta with only the "video" tag. subclasses can
+                 implement this method and return %TRUE if the metadata is to be
+                 copied. Since: 1.6</doc>
         <callback name="transform_meta">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8001,6 +8234,9 @@ are already late and drop them right away to give a chance to the
 pipeline to catch up.</doc>
       <implements name="Gst.Preset"/>
       <virtual-method name="close">
+        <doc xml:space="preserve">Optional.
+                 Called when the element changes to GST_STATE_NULL.
+                 Allows closing external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8011,6 +8247,12 @@ pipeline to catch up.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="decide_allocation">
+        <doc xml:space="preserve">Optional.
+                    Setup the allocation parameters for allocating output
+                    buffers. The passed in query contains the result of the
+                    downstream allocation query.
+                    Subclasses should chain up to the parent implementation to
+                    invoke the default handler.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8024,6 +8266,9 @@ pipeline to catch up.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="finish">
+        <doc xml:space="preserve">Optional.
+                 Called to request subclass to dispatch any pending remaining
+                 data (e.g. at EOS).</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -8034,6 +8279,9 @@ pipeline to catch up.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="flush">
+        <doc xml:space="preserve">Optional.
+                     Flush all remaining data from the encoder without
+                     pushing it downstream. Since: 1.2</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8044,6 +8292,11 @@ pipeline to catch up.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="getcaps">
+        <doc xml:space="preserve">Optional.
+                 Allows for a custom sink getcaps implementation (e.g.
+                 for multichannel input specification).  If not implemented,
+                 default returns gst_video_encoder_proxy_getcaps
+                 applied to sink template caps.</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Caps" c:type="GstCaps*"/>
         </return-value>
@@ -8057,6 +8310,7 @@ pipeline to catch up.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="handle_frame">
+        <doc xml:space="preserve">Provides input frame to subclass.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -8085,6 +8339,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="open">
+        <doc xml:space="preserve">Optional.
+                 Called when the element changes to GST_STATE_READY.
+                 Allows opening external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8095,6 +8352,10 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="pre_push">
+        <doc xml:space="preserve">Optional.
+                 Allows subclass to push frame downstream in whatever
+                 shape or form it deems appropriate.  If not provided,
+                 provided encoded frame data is simply pushed downstream.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -8108,6 +8369,10 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="propose_allocation">
+        <doc xml:space="preserve">Optional.
+                     Propose buffer allocation parameters for upstream elements.
+                     Subclasses should chain up to the parent implementation to
+                     invoke the default handler.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8121,6 +8386,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="reset">
+        <doc xml:space="preserve">Optional.
+                 Allows subclass (encoder) to perform post-seek semantics reset.
+                 Deprecated.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8134,6 +8402,10 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="set_format">
+        <doc xml:space="preserve">Optional.
+                 Notifies subclass of incoming data format.
+                 GstVideoCodecState fields have already been
+                 set according to provided caps.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8147,6 +8419,12 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="sink_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the sink pad. This function should return
+                 TRUE if the event was handled and should be discarded
+                 (i.e. not unref'ed).
+                 Subclasses should chain up to the parent implementation to
+                 invoke the default handler.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8160,6 +8438,11 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="sink_query">
+        <doc xml:space="preserve">Optional.
+                 Query handler on the sink pad. This function should
+                 return TRUE if the query could be performed. Subclasses
+                 should chain up to the parent implementation to invoke the
+                 default handler. Since: 1.4</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8173,6 +8456,12 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="src_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the source pad. This function should return
+                 TRUE if the event was handled and should be discarded
+                 (i.e. not unref'ed).
+                 Subclasses should chain up to the parent implementation to
+                 invoke the default handler.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8186,6 +8475,11 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="src_query">
+        <doc xml:space="preserve">Optional.
+                 Query handler on the source pad. This function should
+                 return TRUE if the query could be performed. Subclasses
+                 should chain up to the parent implementation to invoke the
+                 default handler. Since: 1.4</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8199,6 +8493,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="start">
+        <doc xml:space="preserve">Optional.
+                 Called when the element starts processing.
+                 Allows opening external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8209,6 +8506,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="stop">
+        <doc xml:space="preserve">Optional.
+                 Called when the element stops processing.
+                 Allows closing external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8219,6 +8519,11 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="transform_meta">
+        <doc xml:space="preserve">Optional. Transform the metadata on the input buffer to the
+                 output buffer. By default this method is copies all meta without
+                 tags and meta with only the "video" tag. subclasses can
+                 implement this method and return %TRUE if the metadata is to be
+                 copied. Since: 1.6</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8725,6 +9030,9 @@ and @get_caps are likely needed as well.</doc>
         <type name="Gst.ElementClass" c:type="GstElementClass"/>
       </field>
       <field name="open">
+        <doc xml:space="preserve">Optional.
+                 Called when the element changes to GST_STATE_READY.
+                 Allows opening external resources.</doc>
         <callback name="open">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8737,6 +9045,9 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="close">
+        <doc xml:space="preserve">Optional.
+                 Called when the element changes to GST_STATE_NULL.
+                 Allows closing external resources.</doc>
         <callback name="close">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8749,6 +9060,9 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="start">
+        <doc xml:space="preserve">Optional.
+                 Called when the element starts processing.
+                 Allows opening external resources.</doc>
         <callback name="start">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8761,6 +9075,9 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="stop">
+        <doc xml:space="preserve">Optional.
+                 Called when the element stops processing.
+                 Allows closing external resources.</doc>
         <callback name="stop">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8773,6 +9090,10 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="set_format">
+        <doc xml:space="preserve">Optional.
+                 Notifies subclass of incoming data format.
+                 GstVideoCodecState fields have already been
+                 set according to provided caps.</doc>
         <callback name="set_format">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8788,6 +9109,7 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="handle_frame">
+        <doc xml:space="preserve">Provides input frame to subclass.</doc>
         <callback name="handle_frame">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -8803,6 +9125,9 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="reset">
+        <doc xml:space="preserve">Optional.
+                 Allows subclass (encoder) to perform post-seek semantics reset.
+                 Deprecated.</doc>
         <callback name="reset">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8818,6 +9143,9 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="finish">
+        <doc xml:space="preserve">Optional.
+                 Called to request subclass to dispatch any pending remaining
+                 data (e.g. at EOS).</doc>
         <callback name="finish">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -8830,6 +9158,10 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="pre_push">
+        <doc xml:space="preserve">Optional.
+                 Allows subclass to push frame downstream in whatever
+                 shape or form it deems appropriate.  If not provided,
+                 provided encoded frame data is simply pushed downstream.</doc>
         <callback name="pre_push">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -8845,6 +9177,11 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="getcaps">
+        <doc xml:space="preserve">Optional.
+                 Allows for a custom sink getcaps implementation (e.g.
+                 for multichannel input specification).  If not implemented,
+                 default returns gst_video_encoder_proxy_getcaps
+                 applied to sink template caps.</doc>
         <callback name="getcaps">
           <return-value transfer-ownership="full">
             <type name="Gst.Caps" c:type="GstCaps*"/>
@@ -8860,6 +9197,12 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="sink_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the sink pad. This function should return
+                 TRUE if the event was handled and should be discarded
+                 (i.e. not unref'ed).
+                 Subclasses should chain up to the parent implementation to
+                 invoke the default handler.</doc>
         <callback name="sink_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8875,6 +9218,12 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="src_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the source pad. This function should return
+                 TRUE if the event was handled and should be discarded
+                 (i.e. not unref'ed).
+                 Subclasses should chain up to the parent implementation to
+                 invoke the default handler.</doc>
         <callback name="src_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8890,6 +9239,10 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="negotiate">
+        <doc xml:space="preserve">Optional.
+                 Negotiate with downstream and configure buffer pools, etc.
+                 Subclasses should chain up to the parent implementation to
+                 invoke the default handler.</doc>
         <callback name="negotiate">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the negotiation succeeded, else %FALSE.</doc>
@@ -8904,6 +9257,12 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="decide_allocation">
+        <doc xml:space="preserve">Optional.
+                    Setup the allocation parameters for allocating output
+                    buffers. The passed in query contains the result of the
+                    downstream allocation query.
+                    Subclasses should chain up to the parent implementation to
+                    invoke the default handler.</doc>
         <callback name="decide_allocation">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8919,6 +9278,10 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="propose_allocation">
+        <doc xml:space="preserve">Optional.
+                     Propose buffer allocation parameters for upstream elements.
+                     Subclasses should chain up to the parent implementation to
+                     invoke the default handler.</doc>
         <callback name="propose_allocation">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8934,6 +9297,9 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="flush">
+        <doc xml:space="preserve">Optional.
+                     Flush all remaining data from the encoder without
+                     pushing it downstream. Since: 1.2</doc>
         <callback name="flush">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8946,6 +9312,11 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="sink_query">
+        <doc xml:space="preserve">Optional.
+                 Query handler on the sink pad. This function should
+                 return TRUE if the query could be performed. Subclasses
+                 should chain up to the parent implementation to invoke the
+                 default handler. Since: 1.4</doc>
         <callback name="sink_query">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8961,6 +9332,11 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="src_query">
+        <doc xml:space="preserve">Optional.
+                 Query handler on the source pad. This function should
+                 return TRUE if the query could be performed. Subclasses
+                 should chain up to the parent implementation to invoke the
+                 default handler. Since: 1.4</doc>
         <callback name="src_query">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8976,6 +9352,11 @@ and @get_caps are likely needed as well.</doc>
         </callback>
       </field>
       <field name="transform_meta">
+        <doc xml:space="preserve">Optional. Transform the metadata on the input buffer to the
+                 output buffer. By default this method is copies all meta without
+                 tags and meta with only the "video" tag. subclasses can
+                 implement this method and return %TRUE if the metadata is to be
+                 copied. Since: 1.6</doc>
         <callback name="transform_meta">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -9050,6 +9431,7 @@ buffer flags.</doc>
 The videofilter will by default enable QoS on the parent GstBaseTransform
 to implement frame dropping.</doc>
       <virtual-method name="set_info">
+        <doc xml:space="preserve">function to be called with the negotiated caps and video infos</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -9072,6 +9454,7 @@ to implement frame dropping.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="transform_frame">
+        <doc xml:space="preserve">transform a video frame</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -9088,6 +9471,7 @@ to implement frame dropping.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="transform_frame_ip">
+        <doc xml:space="preserve">transform a video frame in place</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -9125,6 +9509,7 @@ to implement frame dropping.</doc>
         <type name="GstBase.BaseTransformClass" c:type="GstBaseTransformClass"/>
       </field>
       <field name="set_info">
+        <doc xml:space="preserve">function to be called with the negotiated caps and video infos</doc>
         <callback name="set_info">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -9149,6 +9534,7 @@ to implement frame dropping.</doc>
         </callback>
       </field>
       <field name="transform_frame">
+        <doc xml:space="preserve">transform a video frame</doc>
         <callback name="transform_frame">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -9167,6 +9553,7 @@ to implement frame dropping.</doc>
         </callback>
       </field>
       <field name="transform_frame_ip">
+        <doc xml:space="preserve">transform a video frame in place</doc>
         <callback name="transform_frame_ip">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -9742,8 +10129,10 @@ no corresponding FOURCC value, 0 is returned.</doc>
         </parameters>
       </function>
       <function name="to_string" c:identifier="gst_video_format_to_string">
-        <doc xml:space="preserve">Returns a string containing a descriptive name for
-the #GstVideoFormat if there is one, or NULL otherwise.</doc>
+        <doc xml:space="preserve">Returns a string containing a descriptive name for the #GstVideoFormat.
+
+Since 1.26 this can also be used with %GST_VIDEO_FORMAT_UNKNOWN, previous
+versions were printing a critical warning and returned %NULL.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">the name corresponding to @format</doc>
           <type name="utf8" c:type="const gchar*"/>
@@ -11218,6 +11607,7 @@ gst_meta_deserialize().</doc>
         </array>
       </field>
       <field name="map">
+        <doc xml:space="preserve">map the memory of a plane</doc>
         <callback name="map">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -11245,6 +11635,7 @@ gst_meta_deserialize().</doc>
         </callback>
       </field>
       <field name="unmap">
+        <doc xml:space="preserve">unmap the memory of a plane</doc>
         <callback name="unmap">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -11907,6 +12298,7 @@ operation of video-sources or operators.</doc>
         <type name="GObject.TypeInterface" c:type="GTypeInterface"/>
       </field>
       <field name="get_hflip">
+        <doc xml:space="preserve">virtual method to get horizontal flipping state</doc>
         <callback name="get_hflip">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE in case the element supports flipping</doc>
@@ -11925,6 +12317,7 @@ operation of video-sources or operators.</doc>
         </callback>
       </field>
       <field name="get_vflip">
+        <doc xml:space="preserve">virtual method to get vertical flipping state</doc>
         <callback name="get_vflip">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE in case the element supports flipping</doc>
@@ -11943,6 +12336,7 @@ operation of video-sources or operators.</doc>
         </callback>
       </field>
       <field name="get_hcenter">
+        <doc xml:space="preserve">virtual method to get horizontal centering state</doc>
         <callback name="get_hcenter">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE in case the element supports centering</doc>
@@ -11961,6 +12355,7 @@ operation of video-sources or operators.</doc>
         </callback>
       </field>
       <field name="get_vcenter">
+        <doc xml:space="preserve">virtual method to get vertical centering state</doc>
         <callback name="get_vcenter">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE in case the element supports centering</doc>
@@ -11979,6 +12374,7 @@ operation of video-sources or operators.</doc>
         </callback>
       </field>
       <field name="set_hflip">
+        <doc xml:space="preserve">virtual method to set horizontal flipping state</doc>
         <callback name="set_hflip">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE in case the element supports flipping</doc>
@@ -11997,6 +12393,7 @@ operation of video-sources or operators.</doc>
         </callback>
       </field>
       <field name="set_vflip">
+        <doc xml:space="preserve">virtual method to set vertical flipping state</doc>
         <callback name="set_vflip">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE in case the element supports flipping</doc>
@@ -12015,6 +12412,7 @@ operation of video-sources or operators.</doc>
         </callback>
       </field>
       <field name="set_hcenter">
+        <doc xml:space="preserve">virtual method to set horizontal centering state</doc>
         <callback name="set_hcenter">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE in case the element supports centering</doc>
@@ -12033,6 +12431,7 @@ operation of video-sources or operators.</doc>
         </callback>
       </field>
       <field name="set_vcenter">
+        <doc xml:space="preserve">virtual method to set vertical centering state</doc>
         <callback name="set_vcenter">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE in case the element supports centering</doc>
@@ -12424,6 +12823,7 @@ from the #GstVideoOverlay.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="set_render_rectangle">
+        <doc xml:space="preserve">virtual method to set the render rectangle</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -12792,6 +13192,7 @@ contained in the rectangles are not copied.</doc>
         <type name="GObject.TypeInterface" c:type="GTypeInterface"/>
       </field>
       <field name="expose">
+        <doc xml:space="preserve">virtual method to handle expose events</doc>
         <callback name="expose">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -12805,6 +13206,7 @@ contained in the rectangles are not copied.</doc>
         </callback>
       </field>
       <field name="handle_events">
+        <doc xml:space="preserve">virtual method to handle events</doc>
         <callback name="handle_events">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -12822,6 +13224,7 @@ contained in the rectangles are not copied.</doc>
         </callback>
       </field>
       <field name="set_render_rectangle">
+        <doc xml:space="preserve">virtual method to set the render rectangle</doc>
         <callback name="set_render_rectangle">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -12846,6 +13249,7 @@ contained in the rectangles are not copied.</doc>
         </callback>
       </field>
       <field name="set_window_handle">
+        <doc xml:space="preserve">virtual method to configure the window handle</doc>
         <callback name="set_window_handle">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -13816,6 +14220,10 @@ observing out-of-sync frames.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="show_frame">
+        <doc xml:space="preserve">render a video frame. Maps to #GstBaseSinkClass.render() and
+    #GstBaseSinkClass.preroll() vfuncs. Rendering during preroll will be
+    suppressed if the #GstVideoSink:show-preroll-frame property is set to
+    %FALSE.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -13861,6 +14269,10 @@ frames will only be rendered in PLAYING state.</doc>
         <type name="GstBase.BaseSinkClass" c:type="GstBaseSinkClass"/>
       </field>
       <field name="show_frame">
+        <doc xml:space="preserve">render a video frame. Maps to #GstBaseSinkClass.render() and
+    #GstBaseSinkClass.preroll() vfuncs. Rendering during preroll will be
+    suppressed if the #GstVideoSink:show-preroll-frame property is set to
+    %FALSE.</doc>
         <callback name="show_frame">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -15831,6 +16243,32 @@ Shift and Alt).</doc>
         </parameter>
       </parameters>
     </function>
+    <function name="navigation_event_new_mouse_double_click" c:identifier="gst_navigation_event_new_mouse_double_click" moved-to="Navigation.event_new_mouse_double_click" version="1.26">
+      <doc xml:space="preserve">Create a new navigation event for the given key mouse double click.</doc>
+      <return-value transfer-ownership="full">
+        <doc xml:space="preserve">a new #GstEvent</doc>
+        <type name="Gst.Event" c:type="GstEvent*"/>
+      </return-value>
+      <parameters>
+        <parameter name="button" transfer-ownership="none">
+          <doc xml:space="preserve">The number of the pressed mouse button.</doc>
+          <type name="gint" c:type="gint"/>
+        </parameter>
+        <parameter name="x" transfer-ownership="none">
+          <doc xml:space="preserve">The x coordinate of the mouse cursor.</doc>
+          <type name="gdouble" c:type="gdouble"/>
+        </parameter>
+        <parameter name="y" transfer-ownership="none">
+          <doc xml:space="preserve">The y coordinate of the mouse cursor.</doc>
+          <type name="gdouble" c:type="gdouble"/>
+        </parameter>
+        <parameter name="state" transfer-ownership="none">
+          <doc xml:space="preserve">a bit-mask representing the state of the modifier keys (e.g. Control,
+Shift and Alt).</doc>
+          <type name="NavigationModifierType" c:type="GstNavigationModifierType"/>
+        </parameter>
+      </parameters>
+    </function>
     <function name="navigation_event_new_mouse_move" c:identifier="gst_navigation_event_new_mouse_move" moved-to="Navigation.event_new_mouse_move" version="1.22">
       <doc xml:space="preserve">Create a new navigation event for the new mouse location.</doc>
       <return-value transfer-ownership="full">
@@ -17644,8 +18082,10 @@ no corresponding FOURCC value, 0 is returned.</doc>
       </parameters>
     </function>
     <function name="video_format_to_string" c:identifier="gst_video_format_to_string" moved-to="VideoFormat.to_string">
-      <doc xml:space="preserve">Returns a string containing a descriptive name for
-the #GstVideoFormat if there is one, or NULL otherwise.</doc>
+      <doc xml:space="preserve">Returns a string containing a descriptive name for the #GstVideoFormat.
+
+Since 1.26 this can also be used with %GST_VIDEO_FORMAT_UNKNOWN, previous
+versions were printing a critical warning and returned %NULL.</doc>
       <return-value transfer-ownership="none">
         <doc xml:space="preserve">the name corresponding to @format</doc>
         <type name="utf8" c:type="const gchar*"/>

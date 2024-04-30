@@ -1997,7 +1997,7 @@ packets, basically it accepts other types than RR and SR</doc>
       <doc xml:space="preserve">Mask for version, padding bit and packet type pair</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="RTCP_VALID_VALUE" value="200" c:type="GST_RTCP_VALID_VALUE">
+    <constant name="RTCP_VALID_VALUE" value="32968" c:type="GST_RTCP_VALID_VALUE">
       <doc xml:space="preserve">Valid value for the first two bytes of an RTCP packet after applying
 #GST_RTCP_VALID_MASK to them.</doc>
       <type name="gint" c:type="gint"/>
@@ -2256,6 +2256,7 @@ parameter @keep_current.
 Be aware that in case gst_rtp_base_depayload_push_list() is used
 each buffer will see the same list of RTP header extensions.</doc>
       <virtual-method name="handle_event">
+        <doc xml:space="preserve">custom event handling</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -2269,6 +2270,7 @@ each buffer will see the same list of RTP header extensions.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="packet_lost">
+        <doc xml:space="preserve">signal the depayloader about packet loss</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -2282,6 +2284,11 @@ each buffer will see the same list of RTP header extensions.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="process">
+        <doc xml:space="preserve">process incoming rtp packets. Subclass must implement either
+  this method or @process_rtp_packet to process incoming rtp packets.
+  If the child returns a buffer without a valid timestamp, the timestamp
+  of the provided buffer will be applied to the result buffer and the
+  buffer will be pushed. If this function returns %NULL, nothing is pushed.</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Buffer" c:type="GstBuffer*"/>
         </return-value>
@@ -2295,6 +2302,14 @@ each buffer will see the same list of RTP header extensions.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="process_rtp_packet">
+        <doc xml:space="preserve">Same as the process virtual function, but slightly more
+efficient, since it is passed the rtp buffer structure that has already
+been mapped (with GST_MAP_READ) by the base class and thus does not have
+to be mapped again by the subclass. Can be used by the subclass to process
+incoming rtp packets. If the subclass returns a buffer without a valid
+timestamp, the timestamp of the input buffer will be applied to the result
+buffer and the output buffer will be pushed out. If this function returns
+%NULL, nothing is pushed out. Since: 1.6.</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Buffer" c:type="GstBuffer*"/>
         </return-value>
@@ -2308,6 +2323,7 @@ each buffer will see the same list of RTP header extensions.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="set_caps">
+        <doc xml:space="preserve">configure the depayloader</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -2615,6 +2631,7 @@ necessary attributes as required by the extension implementation.</doc>
         <type name="Gst.ElementClass" c:type="GstElementClass"/>
       </field>
       <field name="set_caps">
+        <doc xml:space="preserve">configure the depayloader</doc>
         <callback name="set_caps">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -2630,6 +2647,11 @@ necessary attributes as required by the extension implementation.</doc>
         </callback>
       </field>
       <field name="process">
+        <doc xml:space="preserve">process incoming rtp packets. Subclass must implement either
+  this method or @process_rtp_packet to process incoming rtp packets.
+  If the child returns a buffer without a valid timestamp, the timestamp
+  of the provided buffer will be applied to the result buffer and the
+  buffer will be pushed. If this function returns %NULL, nothing is pushed.</doc>
         <callback name="process">
           <return-value transfer-ownership="full">
             <type name="Gst.Buffer" c:type="GstBuffer*"/>
@@ -2645,6 +2667,7 @@ necessary attributes as required by the extension implementation.</doc>
         </callback>
       </field>
       <field name="packet_lost">
+        <doc xml:space="preserve">signal the depayloader about packet loss</doc>
         <callback name="packet_lost">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -2660,6 +2683,7 @@ necessary attributes as required by the extension implementation.</doc>
         </callback>
       </field>
       <field name="handle_event">
+        <doc xml:space="preserve">custom event handling</doc>
         <callback name="handle_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -2675,6 +2699,14 @@ necessary attributes as required by the extension implementation.</doc>
         </callback>
       </field>
       <field name="process_rtp_packet">
+        <doc xml:space="preserve">Same as the process virtual function, but slightly more
+efficient, since it is passed the rtp buffer structure that has already
+been mapped (with GST_MAP_READ) by the base class and thus does not have
+to be mapped again by the subclass. Can be used by the subclass to process
+incoming rtp packets. If the subclass returns a buffer without a valid
+timestamp, the timestamp of the input buffer will be applied to the result
+buffer and the output buffer will be pushed out. If this function returns
+%NULL, nothing is pushed out. Since: 1.6.</doc>
         <callback name="process_rtp_packet">
           <return-value transfer-ownership="full">
             <type name="Gst.Buffer" c:type="GstBuffer*"/>
@@ -2699,6 +2731,7 @@ necessary attributes as required by the extension implementation.</doc>
     <class name="RTPBasePayload" c:symbol-prefix="rtp_base_payload" c:type="GstRTPBasePayload" parent="Gst.Element" abstract="1" glib:type-name="GstRTPBasePayload" glib:get-type="gst_rtp_base_payload_get_type" glib:type-struct="RTPBasePayloadClass">
       <doc xml:space="preserve">Provides a base class for RTP payloaders</doc>
       <virtual-method name="get_caps">
+        <doc xml:space="preserve">get desired caps</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Caps" c:type="GstCaps*"/>
         </return-value>
@@ -2715,6 +2748,7 @@ necessary attributes as required by the extension implementation.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="handle_buffer">
+        <doc xml:space="preserve">process data</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -2728,6 +2762,7 @@ necessary attributes as required by the extension implementation.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="query">
+        <doc xml:space="preserve">custom query handling</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -2744,6 +2779,7 @@ necessary attributes as required by the extension implementation.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="set_caps">
+        <doc xml:space="preserve">configure the payloader</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -2757,6 +2793,7 @@ necessary attributes as required by the extension implementation.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="sink_event">
+        <doc xml:space="preserve">custom event handling on the sinkpad</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -2770,6 +2807,7 @@ necessary attributes as required by the extension implementation.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="src_event">
+        <doc xml:space="preserve">custom event handling on the srcpad</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3222,6 +3260,7 @@ necessary attributes as required by the extension implementation.</doc>
         <type name="Gst.ElementClass" c:type="GstElementClass"/>
       </field>
       <field name="get_caps">
+        <doc xml:space="preserve">get desired caps</doc>
         <callback name="get_caps">
           <return-value transfer-ownership="full">
             <type name="Gst.Caps" c:type="GstCaps*"/>
@@ -3240,6 +3279,7 @@ necessary attributes as required by the extension implementation.</doc>
         </callback>
       </field>
       <field name="set_caps">
+        <doc xml:space="preserve">configure the payloader</doc>
         <callback name="set_caps">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -3255,6 +3295,7 @@ necessary attributes as required by the extension implementation.</doc>
         </callback>
       </field>
       <field name="handle_buffer">
+        <doc xml:space="preserve">process data</doc>
         <callback name="handle_buffer">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -3270,6 +3311,7 @@ necessary attributes as required by the extension implementation.</doc>
         </callback>
       </field>
       <field name="sink_event">
+        <doc xml:space="preserve">custom event handling on the sinkpad</doc>
         <callback name="sink_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -3285,6 +3327,7 @@ necessary attributes as required by the extension implementation.</doc>
         </callback>
       </field>
       <field name="src_event">
+        <doc xml:space="preserve">custom event handling on the srcpad</doc>
         <callback name="src_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -3300,6 +3343,7 @@ necessary attributes as required by the extension implementation.</doc>
         </callback>
       </field>
       <field name="query">
+        <doc xml:space="preserve">custom query handling</doc>
         <callback name="query">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4398,6 +4442,7 @@ information given in the input @buffer.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="get_supported_flags" invoker="get_supported_flags" version="1.20">
+        <doc xml:space="preserve">retrieve the supported flags</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">the flags supported by this instance of @ext</doc>
           <type name="RTPHeaderExtensionFlags" c:type="GstRTPHeaderExtensionFlags"/>
@@ -4442,6 +4487,8 @@ information given in the input @buffer.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="set_attributes">
+        <doc xml:space="preserve">set the necessary attributes that may be signaled e.g. with
+    an SDP.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4898,6 +4945,7 @@ from gst_rtp_header_extension_get_max_size().</doc>
         <type name="Gst.ElementClass" c:type="GstElementClass"/>
       </field>
       <field name="get_supported_flags">
+        <doc xml:space="preserve">retrieve the supported flags</doc>
         <callback name="get_supported_flags">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">the flags supported by this instance of @ext</doc>
@@ -4912,6 +4960,13 @@ from gst_rtp_header_extension_get_max_size().</doc>
         </callback>
       </field>
       <field name="get_max_size">
+        <doc xml:space="preserve">retrieve the maximum size for this extension based on the
+    information available from input_meta.  Implementations should attempt
+    to provide as accurate information as possible as the returned value
+    will be used to control the amount of possible data in the payload.
+    Implementations must return the maximum as the allocated size for
+    writing the extension will be at least the size of the returned value.
+    Return the amount of data read or &lt;0 on failure.</doc>
         <callback name="get_max_size">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">the maximum size of the data written by this extension</doc>
@@ -4930,6 +4985,8 @@ from gst_rtp_header_extension_get_max_size().</doc>
         </callback>
       </field>
       <field name="write">
+        <doc xml:space="preserve">write into @data the information for this extension.  Various
+    information is provided to help writing extensions in particular cases.</doc>
         <callback name="write">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">the size of the data written, &lt; 0 on failure</doc>
@@ -4967,6 +5024,8 @@ from gst_rtp_header_extension_get_max_size().</doc>
         </callback>
       </field>
       <field name="read">
+        <doc xml:space="preserve">read from a rtp payloaded buffer and extract the extension
+    information, optionally adding some meta onto the output buffer.</doc>
         <callback name="read">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">whether the extension could be read from @data</doc>
@@ -5000,6 +5059,8 @@ from gst_rtp_header_extension_get_max_size().</doc>
         </callback>
       </field>
       <field name="set_non_rtp_sink_caps">
+        <doc xml:space="preserve">read any information from sink caps that the header
+    extension needs for its function.</doc>
         <callback name="set_non_rtp_sink_caps">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">Whether @caps could be read successfully</doc>
@@ -5018,6 +5079,8 @@ from gst_rtp_header_extension_get_max_size().</doc>
         </callback>
       </field>
       <field name="update_non_rtp_src_caps">
+        <doc xml:space="preserve">update depayloader non-RTP (depayloaded) caps with
+    the information parsed from RTP header.</doc>
         <callback name="update_non_rtp_src_caps">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">whether @caps were modified successfully</doc>
@@ -5036,6 +5099,8 @@ from gst_rtp_header_extension_get_max_size().</doc>
         </callback>
       </field>
       <field name="set_attributes">
+        <doc xml:space="preserve">set the necessary attributes that may be signaled e.g. with
+    an SDP.</doc>
         <callback name="set_attributes">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -5054,6 +5119,8 @@ from gst_rtp_header_extension_get_max_size().</doc>
         </callback>
       </field>
       <field name="set_caps_from_attributes">
+        <doc xml:space="preserve">write the necessary caps field/s for the configured
+    attributes e.g. as signalled with SDP.</doc>
         <callback name="set_caps_from_attributes">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">whether the configured attributes on @ext can successfully be set on

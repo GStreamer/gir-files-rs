@@ -184,6 +184,9 @@ have a static lifetime (never be freed).</doc>
         <type name="utf8" c:type="const char*"/>
       </field>
       <field name="mtd_meta_transform">
+        <doc xml:space="preserve">A pointer to a function that will be called
+when the containing meta is transform to potentially copy the data
+into a new Mtd into the new meta.</doc>
         <callback name="mtd_meta_transform">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>

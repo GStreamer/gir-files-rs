@@ -693,6 +693,10 @@ format.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <constant name="AUDIO_FORMAT_LAST" value="32" c:type="GST_AUDIO_FORMAT_LAST" version="1.26">
+      <doc xml:space="preserve">Number of audio formats in #GstAudioFormat.</doc>
+      <type name="gint" c:type="gint"/>
+    </constant>
     <function-macro name="AUDIO_INFO_BPF" c:identifier="GST_AUDIO_INFO_BPF" introspectable="0">
       <parameters>
         <parameter name="info">
@@ -1082,6 +1086,10 @@ additional information in the info #GstStructure of the returned sample:
 - "position"  G_TYPE_UINT   current position in the input buffer in samples
 - "size"  G_TYPE_UINT   size of the input buffer in samples</doc>
       <virtual-method name="aggregate_one_buffer">
+        <doc xml:space="preserve">Aggregates one input buffer to the output
+ buffer.  The in_offset and out_offset are in "frames", which is
+ the size of a sample times the number of channels. Returns TRUE if
+ any non-silence was added to the buffer</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1110,6 +1118,7 @@ additional information in the info #GstStructure of the returned sample:
         </parameters>
       </virtual-method>
       <virtual-method name="create_output_buffer">
+        <doc xml:space="preserve">Create a new output buffer contains num_frames frames.</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Buffer" c:type="GstBuffer*"/>
         </return-value>
@@ -1190,6 +1199,7 @@ but wants to configure it already.</doc>
         <type name="GstBase.AggregatorClass" c:type="GstAggregatorClass"/>
       </field>
       <field name="create_output_buffer">
+        <doc xml:space="preserve">Create a new output buffer contains num_frames frames.</doc>
         <callback name="create_output_buffer">
           <return-value transfer-ownership="full">
             <type name="Gst.Buffer" c:type="GstBuffer*"/>
@@ -1205,6 +1215,10 @@ but wants to configure it already.</doc>
         </callback>
       </field>
       <field name="aggregate_one_buffer">
+        <doc xml:space="preserve">Aggregates one input buffer to the output
+ buffer.  The in_offset and out_offset are in "frames", which is
+ the size of a sample times the number of channels. Returns TRUE if
+ any non-silence was added to the buffer</doc>
         <callback name="aggregate_one_buffer">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -1273,6 +1287,7 @@ See #GstAudioAggregator for more details.</doc>
     <class name="AudioAggregatorPad" c:symbol-prefix="audio_aggregator_pad" c:type="GstAudioAggregatorPad" version="1.14" parent="GstBase.AggregatorPad" glib:type-name="GstAudioAggregatorPad" glib:get-type="gst_audio_aggregator_pad_get_type" glib:type-struct="AudioAggregatorPadClass">
       <doc xml:space="preserve">The default implementation of GstPad used with #GstAudioAggregator</doc>
       <virtual-method name="convert_buffer">
+        <doc xml:space="preserve">Convert a buffer from one format to another.</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Buffer" c:type="GstBuffer*"/>
         </return-value>
@@ -1292,6 +1307,8 @@ See #GstAudioAggregator for more details.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="update_conversion_info">
+        <doc xml:space="preserve">Called when either the input or output
+ formats have changed.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -1326,6 +1343,7 @@ See #GstAudioAggregator for more details.</doc>
         <type name="GstBase.AggregatorPadClass" c:type="GstAggregatorPadClass"/>
       </field>
       <field name="convert_buffer">
+        <doc xml:space="preserve">Convert a buffer from one format to another.</doc>
         <callback name="convert_buffer">
           <return-value transfer-ownership="full">
             <type name="Gst.Buffer" c:type="GstBuffer*"/>
@@ -1347,6 +1365,8 @@ See #GstAudioAggregator for more details.</doc>
         </callback>
       </field>
       <field name="update_conversion_info">
+        <doc xml:space="preserve">Called when either the input or output
+ formats have changed.</doc>
         <callback name="update_conversion_info">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -1386,6 +1406,10 @@ the returned buffer (see gst_object_set_parent()).</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="payload">
+        <doc xml:space="preserve">payload data in a format suitable to write to the sink. If no
+          payloading is required, returns a reffed copy of the original
+          buffer, else returns the payloaded buffer with all other metadata
+          copied.</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Buffer" c:type="GstBuffer*"/>
         </return-value>
@@ -1675,6 +1699,7 @@ functionality.</doc>
         <type name="GstBase.BaseSinkClass" c:type="GstBaseSinkClass"/>
       </field>
       <field name="create_ringbuffer">
+        <doc xml:space="preserve">create and return a #GstAudioRingBuffer to write to.</doc>
         <callback name="create_ringbuffer">
           <return-value transfer-ownership="none" nullable="1">
             <doc xml:space="preserve">The new ringbuffer of @sink.</doc>
@@ -1689,6 +1714,10 @@ functionality.</doc>
         </callback>
       </field>
       <field name="payload">
+        <doc xml:space="preserve">payload data in a format suitable to write to the sink. If no
+          payloading is required, returns a reffed copy of the original
+          buffer, else returns the payloaded buffer with all other metadata
+          copied.</doc>
         <callback name="payload">
           <return-value transfer-ownership="full">
             <type name="Gst.Buffer" c:type="GstBuffer*"/>
@@ -1953,6 +1982,7 @@ functionality.</doc>
         <type name="GstBase.PushSrcClass" c:type="GstPushSrcClass"/>
       </field>
       <field name="create_ringbuffer">
+        <doc xml:space="preserve">create and return a #GstAudioRingBuffer to read from.</doc>
         <callback name="create_ringbuffer">
           <return-value transfer-ownership="none" nullable="1">
             <doc xml:space="preserve">The new ringbuffer of @src.</doc>
@@ -2256,6 +2286,7 @@ tag list, or calculated via gst_toc_entry_get_start_stop_times().
 The track entries in the TOC will be sorted by track number.</doc>
       <implements name="Gst.URIHandler"/>
       <virtual-method name="close">
+        <doc xml:space="preserve">closing the device</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -2266,6 +2297,7 @@ The track entries in the TOC will be sorted by track number.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="open">
+        <doc xml:space="preserve">opening the device</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -2279,6 +2311,7 @@ The track entries in the TOC will be sorted by track number.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="read_sector">
+        <doc xml:space="preserve">reading a sector</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Buffer" c:type="GstBuffer*"/>
         </return-value>
@@ -2347,6 +2380,7 @@ copy of the structure (and take ownership of the taglist if there is one).</doc>
         <type name="GstBase.PushSrcClass" c:type="GstPushSrcClass"/>
       </field>
       <field name="open">
+        <doc xml:space="preserve">opening the device</doc>
         <callback name="open">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -2362,6 +2396,7 @@ copy of the structure (and take ownership of the taglist if there is one).</doc>
         </callback>
       </field>
       <field name="close">
+        <doc xml:space="preserve">closing the device</doc>
         <callback name="close">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -2374,6 +2409,7 @@ copy of the structure (and take ownership of the taglist if there is one).</doc>
         </callback>
       </field>
       <field name="read_sector">
+        <doc xml:space="preserve">reading a sector</doc>
         <callback name="read_sector">
           <return-value transfer-ownership="full">
             <type name="Gst.Buffer" c:type="GstBuffer*"/>
@@ -3299,6 +3335,9 @@ Things that subclass need to take care of:
      PLC, it should also accept NULL data in @handle_frame and provide for
      data for indicated duration.</doc>
       <virtual-method name="close">
+        <doc xml:space="preserve">Optional.
+                 Called when the element changes to GST_STATE_NULL.
+                 Allows closing external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3309,6 +3348,12 @@ Things that subclass need to take care of:
         </parameters>
       </virtual-method>
       <virtual-method name="decide_allocation">
+        <doc xml:space="preserve">Optional.
+                    Setup the allocation parameters for allocating output
+                    buffers. The passed in query contains the result of the
+                    downstream allocation query.
+                    Subclasses should chain up to the parent implementation to
+                    invoke the default handler.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3322,6 +3367,11 @@ Things that subclass need to take care of:
         </parameters>
       </virtual-method>
       <virtual-method name="flush">
+        <doc xml:space="preserve">Optional.
+                 Instructs subclass to clear any codec caches and discard
+                 any pending samples and not yet returned decoded data.
+                 @hard indicates whether a FLUSH is being processed,
+                 or otherwise a DISCONT (or conceptually similar).</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -3335,6 +3385,11 @@ Things that subclass need to take care of:
         </parameters>
       </virtual-method>
       <virtual-method name="getcaps">
+        <doc xml:space="preserve">Optional.
+                 Allows for a custom sink getcaps implementation.
+                 If not implemented,
+                 default returns gst_audio_decoder_proxy_getcaps
+                 applied to sink template caps.</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Caps" c:type="GstCaps*"/>
         </return-value>
@@ -3348,6 +3403,11 @@ Things that subclass need to take care of:
         </parameters>
       </virtual-method>
       <virtual-method name="handle_frame">
+        <doc xml:space="preserve">Provides input data (or NULL to clear any remaining data)
+                 to subclass.  Input data ref management is performed by
+                 base class, subclass should not care or intervene,
+                 and input data is only valid until next call to base class,
+                 most notably a call to gst_audio_decoder_finish_frame().</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -3376,6 +3436,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="open">
+        <doc xml:space="preserve">Optional.
+                 Called when the element changes to GST_STATE_READY.
+                 Allows opening external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3405,6 +3468,10 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="pre_push">
+        <doc xml:space="preserve">Optional.
+                 Called just prior to pushing (encoded data) buffer downstream.
+                 Subclass has full discretionary access to buffer,
+                 and a not OK flow return will abort downstream pushing.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -3418,6 +3485,10 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="propose_allocation">
+        <doc xml:space="preserve">Optional.
+                     Propose buffer allocation parameters for upstream elements.
+                     Subclasses should chain up to the parent implementation to
+                     invoke the default handler.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3431,6 +3502,7 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="set_format">
+        <doc xml:space="preserve">Notifies subclass of incoming data format (caps).</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3444,6 +3516,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="sink_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the sink pad. Subclasses should chain up to
+                 the parent implementation to invoke the default handler.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3457,6 +3532,11 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="sink_query">
+        <doc xml:space="preserve">Optional.
+                 Query handler on the sink pad. This function should
+                 return TRUE if the query could be performed. Subclasses
+                 should chain up to the parent implementation to invoke the
+                 default handler. Since: 1.6</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3470,6 +3550,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="src_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the src pad. Subclasses should chain up to
+                 the parent implementation to invoke the default handler.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3483,6 +3566,11 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="src_query">
+        <doc xml:space="preserve">Optional.
+                 Query handler on the source pad. This function should
+                 return TRUE if the query could be performed. Subclasses
+                 should chain up to the parent implementation to invoke the
+                 default handler. Since: 1.6</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3496,6 +3584,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="start">
+        <doc xml:space="preserve">Optional.
+                 Called when the element starts processing.
+                 Allows opening external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3506,6 +3597,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="stop">
+        <doc xml:space="preserve">Optional.
+                 Called when the element stops processing.
+                 Allows closing external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3516,6 +3610,11 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="transform_meta">
+        <doc xml:space="preserve">Optional. Transform the metadata on the input buffer to the
+                 output buffer. By default this method copies all meta without
+                 tags and meta with only the "audio" tag. subclasses can
+                 implement this method and return %TRUE if the metadata is to be
+                 copied. Since: 1.6</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4174,6 +4273,9 @@ overridden.</doc>
         <type name="Gst.ElementClass" c:type="GstElementClass"/>
       </field>
       <field name="start">
+        <doc xml:space="preserve">Optional.
+                 Called when the element starts processing.
+                 Allows opening external resources.</doc>
         <callback name="start">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4186,6 +4288,9 @@ overridden.</doc>
         </callback>
       </field>
       <field name="stop">
+        <doc xml:space="preserve">Optional.
+                 Called when the element stops processing.
+                 Allows closing external resources.</doc>
         <callback name="stop">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4198,6 +4303,7 @@ overridden.</doc>
         </callback>
       </field>
       <field name="set_format">
+        <doc xml:space="preserve">Notifies subclass of incoming data format (caps).</doc>
         <callback name="set_format">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4213,6 +4319,11 @@ overridden.</doc>
         </callback>
       </field>
       <field name="parse">
+        <doc xml:space="preserve">Optional.
+                 Allows chopping incoming data into manageable units (frames)
+                 for subsequent decoding.  This division is at subclass
+                 discretion and may or may not correspond to 1 (or more)
+                 frames as defined by audio format.</doc>
         <callback name="parse">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -4234,6 +4345,11 @@ overridden.</doc>
         </callback>
       </field>
       <field name="handle_frame">
+        <doc xml:space="preserve">Provides input data (or NULL to clear any remaining data)
+                 to subclass.  Input data ref management is performed by
+                 base class, subclass should not care or intervene,
+                 and input data is only valid until next call to base class,
+                 most notably a call to gst_audio_decoder_finish_frame().</doc>
         <callback name="handle_frame">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -4249,6 +4365,11 @@ overridden.</doc>
         </callback>
       </field>
       <field name="flush">
+        <doc xml:space="preserve">Optional.
+                 Instructs subclass to clear any codec caches and discard
+                 any pending samples and not yet returned decoded data.
+                 @hard indicates whether a FLUSH is being processed,
+                 or otherwise a DISCONT (or conceptually similar).</doc>
         <callback name="flush">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -4264,6 +4385,10 @@ overridden.</doc>
         </callback>
       </field>
       <field name="pre_push">
+        <doc xml:space="preserve">Optional.
+                 Called just prior to pushing (encoded data) buffer downstream.
+                 Subclass has full discretionary access to buffer,
+                 and a not OK flow return will abort downstream pushing.</doc>
         <callback name="pre_push">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -4279,6 +4404,9 @@ overridden.</doc>
         </callback>
       </field>
       <field name="sink_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the sink pad. Subclasses should chain up to
+                 the parent implementation to invoke the default handler.</doc>
         <callback name="sink_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4294,6 +4422,9 @@ overridden.</doc>
         </callback>
       </field>
       <field name="src_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the src pad. Subclasses should chain up to
+                 the parent implementation to invoke the default handler.</doc>
         <callback name="src_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4309,6 +4440,9 @@ overridden.</doc>
         </callback>
       </field>
       <field name="open">
+        <doc xml:space="preserve">Optional.
+                 Called when the element changes to GST_STATE_READY.
+                 Allows opening external resources.</doc>
         <callback name="open">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4321,6 +4455,9 @@ overridden.</doc>
         </callback>
       </field>
       <field name="close">
+        <doc xml:space="preserve">Optional.
+                 Called when the element changes to GST_STATE_NULL.
+                 Allows closing external resources.</doc>
         <callback name="close">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4333,6 +4470,10 @@ overridden.</doc>
         </callback>
       </field>
       <field name="negotiate">
+        <doc xml:space="preserve">Optional.
+                 Negotiate with downstream and configure buffer pools, etc.
+                 Subclasses should chain up to the parent implementation to
+                 invoke the default handler.</doc>
         <callback name="negotiate">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the negotiation succeeded, else %FALSE.</doc>
@@ -4347,6 +4488,12 @@ overridden.</doc>
         </callback>
       </field>
       <field name="decide_allocation">
+        <doc xml:space="preserve">Optional.
+                    Setup the allocation parameters for allocating output
+                    buffers. The passed in query contains the result of the
+                    downstream allocation query.
+                    Subclasses should chain up to the parent implementation to
+                    invoke the default handler.</doc>
         <callback name="decide_allocation">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4362,6 +4509,10 @@ overridden.</doc>
         </callback>
       </field>
       <field name="propose_allocation">
+        <doc xml:space="preserve">Optional.
+                     Propose buffer allocation parameters for upstream elements.
+                     Subclasses should chain up to the parent implementation to
+                     invoke the default handler.</doc>
         <callback name="propose_allocation">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4377,6 +4528,11 @@ overridden.</doc>
         </callback>
       </field>
       <field name="sink_query">
+        <doc xml:space="preserve">Optional.
+                 Query handler on the sink pad. This function should
+                 return TRUE if the query could be performed. Subclasses
+                 should chain up to the parent implementation to invoke the
+                 default handler. Since: 1.6</doc>
         <callback name="sink_query">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4392,6 +4548,11 @@ overridden.</doc>
         </callback>
       </field>
       <field name="src_query">
+        <doc xml:space="preserve">Optional.
+                 Query handler on the source pad. This function should
+                 return TRUE if the query could be performed. Subclasses
+                 should chain up to the parent implementation to invoke the
+                 default handler. Since: 1.6</doc>
         <callback name="src_query">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4407,6 +4568,11 @@ overridden.</doc>
         </callback>
       </field>
       <field name="getcaps">
+        <doc xml:space="preserve">Optional.
+                 Allows for a custom sink getcaps implementation.
+                 If not implemented,
+                 default returns gst_audio_decoder_proxy_getcaps
+                 applied to sink template caps.</doc>
         <callback name="getcaps">
           <return-value transfer-ownership="full">
             <type name="Gst.Caps" c:type="GstCaps*"/>
@@ -4422,6 +4588,11 @@ overridden.</doc>
         </callback>
       </field>
       <field name="transform_meta">
+        <doc xml:space="preserve">Optional. Transform the metadata on the input buffer to the
+                 output buffer. By default this method copies all meta without
+                 tags and meta with only the "audio" tag. subclasses can
+                 implement this method and return %TRUE if the metadata is to be
+                 copied. Since: 1.6</doc>
         <callback name="transform_meta">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4598,6 +4769,9 @@ Things that subclass need to take care of:
      gst_audio_encoder_finish_frame().</doc>
       <implements name="Gst.Preset"/>
       <virtual-method name="close">
+        <doc xml:space="preserve">Optional.
+                 Called when the element changes to GST_STATE_NULL.
+                 Allows closing external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4608,6 +4782,12 @@ Things that subclass need to take care of:
         </parameters>
       </virtual-method>
       <virtual-method name="decide_allocation">
+        <doc xml:space="preserve">Optional.
+                    Setup the allocation parameters for allocating output
+                    buffers. The passed in query contains the result of the
+                    downstream allocation query.
+                    Subclasses should chain up to the parent implementation to
+                    invoke the default handler.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4621,6 +4801,9 @@ Things that subclass need to take care of:
         </parameters>
       </virtual-method>
       <virtual-method name="flush">
+        <doc xml:space="preserve">Optional.
+                 Instructs subclass to clear any codec caches and discard
+                 any pending samples and not yet returned encoded data.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -4631,6 +4814,11 @@ Things that subclass need to take care of:
         </parameters>
       </virtual-method>
       <virtual-method name="getcaps">
+        <doc xml:space="preserve">Optional.
+                 Allows for a custom sink getcaps implementation (e.g.
+                 for multichannel input specification).  If not implemented,
+                 default returns gst_audio_encoder_proxy_getcaps
+                 applied to sink template caps.</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Caps" c:type="GstCaps*"/>
         </return-value>
@@ -4644,6 +4832,12 @@ Things that subclass need to take care of:
         </parameters>
       </virtual-method>
       <virtual-method name="handle_frame">
+        <doc xml:space="preserve">Provides input samples (or NULL to clear any remaining data)
+                 according to directions as configured by the subclass
+                 using the API.  Input data ref management is performed
+                 by base class, subclass should not care or intervene,
+                 and input data is only valid until next call to base class,
+                 most notably a call to gst_audio_encoder_finish_frame().</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -4672,6 +4866,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="open">
+        <doc xml:space="preserve">Optional.
+                 Called when the element changes to GST_STATE_READY.
+                 Allows opening external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4682,6 +4879,10 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="pre_push">
+        <doc xml:space="preserve">Optional.
+                 Called just prior to pushing (encoded data) buffer downstream.
+                 Subclass has full discretionary access to buffer,
+                 and a not OK flow return will abort downstream pushing.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -4695,6 +4896,10 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="propose_allocation">
+        <doc xml:space="preserve">Optional.
+                     Propose buffer allocation parameters for upstream elements.
+                     Subclasses should chain up to the parent implementation to
+                     invoke the default handler.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4708,6 +4913,8 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="set_format">
+        <doc xml:space="preserve">Notifies subclass of incoming data format.
+                 GstAudioInfo contains the format according to provided caps.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4721,6 +4928,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="sink_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the sink pad. Subclasses should chain up to
+                 the parent implementation to invoke the default handler.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4734,6 +4944,11 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="sink_query">
+        <doc xml:space="preserve">Optional.
+                 Query handler on the sink pad. This function should
+                 return TRUE if the query could be performed. Subclasses
+                 should chain up to the parent implementation to invoke the
+                 default handler. Since: 1.6</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4747,6 +4962,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="src_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the src pad. Subclasses should chain up to
+                 the parent implementation to invoke the default handler.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4760,6 +4978,11 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="src_query">
+        <doc xml:space="preserve">Optional.
+                 Query handler on the source pad. This function should
+                 return TRUE if the query could be performed. Subclasses
+                 should chain up to the parent implementation to invoke the
+                 default handler. Since: 1.6</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4773,6 +4996,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="start">
+        <doc xml:space="preserve">Optional.
+                 Called when the element starts processing.
+                 Allows opening external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4783,6 +5009,9 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="stop">
+        <doc xml:space="preserve">Optional.
+                 Called when the element stops processing.
+                 Allows closing external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4793,6 +5022,11 @@ negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="transform_meta">
+        <doc xml:space="preserve">Optional. Transform the metadata on the input buffer to the
+                 output buffer. By default this method copies all meta without
+                 tags and meta with only the "audio" tag. subclasses can
+                 implement this method and return %TRUE if the metadata is to be
+                 copied. Since: 1.6</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -5434,6 +5668,9 @@ needed. At minimum @set_format and @handle_frame needs to be overridden.</doc>
         <type name="Gst.ElementClass" c:type="GstElementClass"/>
       </field>
       <field name="start">
+        <doc xml:space="preserve">Optional.
+                 Called when the element starts processing.
+                 Allows opening external resources.</doc>
         <callback name="start">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -5446,6 +5683,9 @@ needed. At minimum @set_format and @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="stop">
+        <doc xml:space="preserve">Optional.
+                 Called when the element stops processing.
+                 Allows closing external resources.</doc>
         <callback name="stop">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -5458,6 +5698,8 @@ needed. At minimum @set_format and @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="set_format">
+        <doc xml:space="preserve">Notifies subclass of incoming data format.
+                 GstAudioInfo contains the format according to provided caps.</doc>
         <callback name="set_format">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -5473,6 +5715,12 @@ needed. At minimum @set_format and @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="handle_frame">
+        <doc xml:space="preserve">Provides input samples (or NULL to clear any remaining data)
+                 according to directions as configured by the subclass
+                 using the API.  Input data ref management is performed
+                 by base class, subclass should not care or intervene,
+                 and input data is only valid until next call to base class,
+                 most notably a call to gst_audio_encoder_finish_frame().</doc>
         <callback name="handle_frame">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -5488,6 +5736,9 @@ needed. At minimum @set_format and @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="flush">
+        <doc xml:space="preserve">Optional.
+                 Instructs subclass to clear any codec caches and discard
+                 any pending samples and not yet returned encoded data.</doc>
         <callback name="flush">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -5500,6 +5751,10 @@ needed. At minimum @set_format and @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="pre_push">
+        <doc xml:space="preserve">Optional.
+                 Called just prior to pushing (encoded data) buffer downstream.
+                 Subclass has full discretionary access to buffer,
+                 and a not OK flow return will abort downstream pushing.</doc>
         <callback name="pre_push">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -5515,6 +5770,9 @@ needed. At minimum @set_format and @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="sink_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the sink pad. Subclasses should chain up to
+                 the parent implementation to invoke the default handler.</doc>
         <callback name="sink_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -5530,6 +5788,9 @@ needed. At minimum @set_format and @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="src_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the src pad. Subclasses should chain up to
+                 the parent implementation to invoke the default handler.</doc>
         <callback name="src_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -5545,6 +5806,11 @@ needed. At minimum @set_format and @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="getcaps">
+        <doc xml:space="preserve">Optional.
+                 Allows for a custom sink getcaps implementation (e.g.
+                 for multichannel input specification).  If not implemented,
+                 default returns gst_audio_encoder_proxy_getcaps
+                 applied to sink template caps.</doc>
         <callback name="getcaps">
           <return-value transfer-ownership="full">
             <type name="Gst.Caps" c:type="GstCaps*"/>
@@ -5560,6 +5826,9 @@ needed. At minimum @set_format and @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="open">
+        <doc xml:space="preserve">Optional.
+                 Called when the element changes to GST_STATE_READY.
+                 Allows opening external resources.</doc>
         <callback name="open">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -5572,6 +5841,9 @@ needed. At minimum @set_format and @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="close">
+        <doc xml:space="preserve">Optional.
+                 Called when the element changes to GST_STATE_NULL.
+                 Allows closing external resources.</doc>
         <callback name="close">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -5584,6 +5856,10 @@ needed. At minimum @set_format and @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="negotiate">
+        <doc xml:space="preserve">Optional.
+                 Negotiate with downstream and configure buffer pools, etc.
+                 Subclasses should chain up to the parent implementation to
+                 invoke the default handler.</doc>
         <callback name="negotiate">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the negotiation succeeded, else %FALSE.</doc>
@@ -5598,6 +5874,12 @@ needed. At minimum @set_format and @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="decide_allocation">
+        <doc xml:space="preserve">Optional.
+                    Setup the allocation parameters for allocating output
+                    buffers. The passed in query contains the result of the
+                    downstream allocation query.
+                    Subclasses should chain up to the parent implementation to
+                    invoke the default handler.</doc>
         <callback name="decide_allocation">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -5613,6 +5895,10 @@ needed. At minimum @set_format and @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="propose_allocation">
+        <doc xml:space="preserve">Optional.
+                     Propose buffer allocation parameters for upstream elements.
+                     Subclasses should chain up to the parent implementation to
+                     invoke the default handler.</doc>
         <callback name="propose_allocation">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -5628,6 +5914,11 @@ needed. At minimum @set_format and @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="transform_meta">
+        <doc xml:space="preserve">Optional. Transform the metadata on the input buffer to the
+                 output buffer. By default this method copies all meta without
+                 tags and meta with only the "audio" tag. subclasses can
+                 implement this method and return %TRUE if the metadata is to be
+                 copied. Since: 1.6</doc>
         <callback name="transform_meta">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -5649,6 +5940,11 @@ needed. At minimum @set_format and @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="sink_query">
+        <doc xml:space="preserve">Optional.
+                 Query handler on the sink pad. This function should
+                 return TRUE if the query could be performed. Subclasses
+                 should chain up to the parent implementation to invoke the
+                 default handler. Since: 1.6</doc>
         <callback name="sink_query">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -5664,6 +5960,11 @@ needed. At minimum @set_format and @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="src_query">
+        <doc xml:space="preserve">Optional.
+                 Query handler on the source pad. This function should
+                 return TRUE if the query could be performed. Subclasses
+                 should chain up to the parent implementation to invoke the
+                 default handler. Since: 1.6</doc>
         <callback name="src_query">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -5700,6 +6001,7 @@ Derived classes should override the #GstAudioFilterClass.setup() and
 #GstBaseTransformClass.transform()
 virtual functions in their class_init function.</doc>
       <virtual-method name="setup">
+        <doc xml:space="preserve">virtual function called whenever the format changes</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -5733,6 +6035,7 @@ function.</doc>
         <type name="GstBase.BaseTransformClass" c:type="GstBaseTransformClass"/>
       </field>
       <field name="setup">
+        <doc xml:space="preserve">virtual function called whenever the format changes</doc>
         <callback name="setup">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -6000,11 +6303,17 @@ string is not a known format.</doc>
         </parameters>
       </function>
       <function name="to_string" c:identifier="gst_audio_format_to_string">
+        <doc xml:space="preserve">Returns a string containing a descriptive name for the #GstAudioFormat.
+
+Since 1.26 this can also be used with %GST_AUDIO_FORMAT_UNKNOWN, previous
+versions were printing a critical warning and returned %NULL.</doc>
         <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the name corresponding to @format</doc>
           <type name="utf8" c:type="const gchar*"/>
         </return-value>
         <parameters>
           <parameter name="format" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstAudioFormat audio format</doc>
             <type name="AudioFormat" c:type="GstAudioFormat"/>
           </parameter>
         </parameters>
@@ -7136,6 +7445,7 @@ MT safe.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="resume">
+        <doc xml:space="preserve">resume processing of samples after pause</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -7899,6 +8209,7 @@ called to fill the memory at @data with @len bytes of samples.</doc>
         <type name="Gst.ObjectClass" c:type="GstObjectClass"/>
       </field>
       <field name="open_device">
+        <doc xml:space="preserve">open the device, don't set any params or allocate anything</doc>
         <callback name="open_device">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">TRUE if the device could be opened, FALSE on error.
@@ -7915,6 +8226,7 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="acquire">
+        <doc xml:space="preserve">allocate the resources for the ringbuffer using the given spec</doc>
         <callback name="acquire">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">TRUE if the device could be acquired, FALSE on error.
@@ -7935,6 +8247,7 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="release">
+        <doc xml:space="preserve">free resources of the ringbuffer</doc>
         <callback name="release">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">TRUE if the device could be released, FALSE on error.
@@ -7951,6 +8264,7 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="close_device">
+        <doc xml:space="preserve">close the device</doc>
         <callback name="close_device">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">TRUE if the device could be closed, FALSE on error.
@@ -7967,6 +8281,7 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="start">
+        <doc xml:space="preserve">start processing of samples</doc>
         <callback name="start">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">TRUE if the device could be started, FALSE on error.
@@ -7983,6 +8298,7 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="pause">
+        <doc xml:space="preserve">pause processing of samples</doc>
         <callback name="pause">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">TRUE if the device could be paused, FALSE on error.
@@ -7999,6 +8315,7 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="resume">
+        <doc xml:space="preserve">resume processing of samples after pause</doc>
         <callback name="resume">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8011,6 +8328,7 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="stop">
+        <doc xml:space="preserve">stop processing of samples</doc>
         <callback name="stop">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">TRUE if the device could be stopped, FALSE on error.
@@ -8027,6 +8345,7 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="delay">
+        <doc xml:space="preserve">get number of frames queued in device</doc>
         <callback name="delay">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">The number of samples queued in the audio device.
@@ -8043,6 +8362,8 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="activate">
+        <doc xml:space="preserve">activate the thread that starts pulling and monitoring the
+consumed segments in the device.</doc>
         <callback name="activate">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">TRUE if the device could be activated in the requested mode,
@@ -8062,6 +8383,7 @@ FALSE on error.</doc>
         </callback>
       </field>
       <field name="commit">
+        <doc xml:space="preserve">write samples into the ringbuffer</doc>
         <callback name="commit">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">The number of samples written to the ringbuffer or -1 on error. The
@@ -8100,6 +8422,10 @@ with a flush or stop.</doc>
         </callback>
       </field>
       <field name="clear_all">
+        <doc xml:space="preserve">Optional.
+            Clear the entire ringbuffer.
+            Subclasses should chain up to the parent implementation to
+            invoke the default handler.</doc>
         <callback name="clear_all">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8261,6 +8587,7 @@ All scheduling of samples and timestamps is done in this base class
 together with #GstAudioBaseSink using a default implementation of a
 #GstAudioRingBuffer that uses threads.</doc>
       <virtual-method name="close">
+        <doc xml:space="preserve">Close the device.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8271,6 +8598,8 @@ together with #GstAudioBaseSink using a default implementation of a
         </parameters>
       </virtual-method>
       <virtual-method name="delay">
+        <doc xml:space="preserve">Return how many frames are still in the device. Participates in
+        computing the time for audio clocks and drives the synchronisation.</doc>
         <return-value transfer-ownership="none">
           <type name="guint" c:type="guint"/>
         </return-value>
@@ -8281,6 +8610,8 @@ together with #GstAudioBaseSink using a default implementation of a
         </parameters>
       </virtual-method>
       <virtual-method name="open">
+        <doc xml:space="preserve">Open the device. No configuration needs to be done at this point.
+       This function is also used to check if the device is available.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8291,6 +8622,9 @@ together with #GstAudioBaseSink using a default implementation of a
         </parameters>
       </virtual-method>
       <virtual-method name="pause">
+        <doc xml:space="preserve">Pause the device and unblock write as fast as possible.
+        For retro compatibility, the audio sink will fallback
+        to calling reset if this vmethod is not provided. Since: 1.18</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -8301,6 +8635,7 @@ together with #GstAudioBaseSink using a default implementation of a
         </parameters>
       </virtual-method>
       <virtual-method name="prepare">
+        <doc xml:space="preserve">Prepare the device to operate with the specified parameters.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8314,6 +8649,9 @@ together with #GstAudioBaseSink using a default implementation of a
         </parameters>
       </virtual-method>
       <virtual-method name="reset">
+        <doc xml:space="preserve">Returns as quickly as possible from a write and flush any pending
+        samples from the device.
+        This vmethod is deprecated. Please provide pause and stop instead.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -8324,6 +8662,7 @@ together with #GstAudioBaseSink using a default implementation of a
         </parameters>
       </virtual-method>
       <virtual-method name="resume">
+        <doc xml:space="preserve">Resume the device. Since: 1.18</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -8334,6 +8673,10 @@ together with #GstAudioBaseSink using a default implementation of a
         </parameters>
       </virtual-method>
       <virtual-method name="stop">
+        <doc xml:space="preserve">Stop the device and unblock write as fast as possible.
+       Pending samples are flushed from the device.
+       For retro compatibility, the audio sink will fallback
+       to calling reset if this vmethod is not provided. Since: 1.18</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -8344,6 +8687,7 @@ together with #GstAudioBaseSink using a default implementation of a
         </parameters>
       </virtual-method>
       <virtual-method name="unprepare">
+        <doc xml:space="preserve">Undo operations done in prepare.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8391,6 +8735,8 @@ together with #GstAudioBaseSink using a default implementation of a
         <type name="AudioBaseSinkClass" c:type="GstAudioBaseSinkClass"/>
       </field>
       <field name="open">
+        <doc xml:space="preserve">Open the device. No configuration needs to be done at this point.
+       This function is also used to check if the device is available.</doc>
         <callback name="open">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8403,6 +8749,7 @@ together with #GstAudioBaseSink using a default implementation of a
         </callback>
       </field>
       <field name="prepare">
+        <doc xml:space="preserve">Prepare the device to operate with the specified parameters.</doc>
         <callback name="prepare">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8418,6 +8765,7 @@ together with #GstAudioBaseSink using a default implementation of a
         </callback>
       </field>
       <field name="unprepare">
+        <doc xml:space="preserve">Undo operations done in prepare.</doc>
         <callback name="unprepare">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8430,6 +8778,7 @@ together with #GstAudioBaseSink using a default implementation of a
         </callback>
       </field>
       <field name="close">
+        <doc xml:space="preserve">Close the device.</doc>
         <callback name="close">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8442,6 +8791,10 @@ together with #GstAudioBaseSink using a default implementation of a
         </callback>
       </field>
       <field name="write">
+        <doc xml:space="preserve">Write data to the device.
+        This vmethod is allowed to block until all the data is written.
+        If such is the case then it is expected that pause, stop and
+        reset will unblock the write when called.</doc>
         <callback name="write">
           <return-value transfer-ownership="none">
             <type name="gint" c:type="gint"/>
@@ -8463,6 +8816,8 @@ together with #GstAudioBaseSink using a default implementation of a
         </callback>
       </field>
       <field name="delay">
+        <doc xml:space="preserve">Return how many frames are still in the device. Participates in
+        computing the time for audio clocks and drives the synchronisation.</doc>
         <callback name="delay">
           <return-value transfer-ownership="none">
             <type name="guint" c:type="guint"/>
@@ -8475,6 +8830,9 @@ together with #GstAudioBaseSink using a default implementation of a
         </callback>
       </field>
       <field name="reset">
+        <doc xml:space="preserve">Returns as quickly as possible from a write and flush any pending
+        samples from the device.
+        This vmethod is deprecated. Please provide pause and stop instead.</doc>
         <callback name="reset">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8487,6 +8845,9 @@ together with #GstAudioBaseSink using a default implementation of a
         </callback>
       </field>
       <field name="pause">
+        <doc xml:space="preserve">Pause the device and unblock write as fast as possible.
+        For retro compatibility, the audio sink will fallback
+        to calling reset if this vmethod is not provided. Since: 1.18</doc>
         <callback name="pause">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8499,6 +8860,7 @@ together with #GstAudioBaseSink using a default implementation of a
         </callback>
       </field>
       <field name="resume">
+        <doc xml:space="preserve">Resume the device. Since: 1.18</doc>
         <callback name="resume">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8511,6 +8873,10 @@ together with #GstAudioBaseSink using a default implementation of a
         </callback>
       </field>
       <field name="stop">
+        <doc xml:space="preserve">Stop the device and unblock write as fast as possible.
+       Pending samples are flushed from the device.
+       For retro compatibility, the audio sink will fallback
+       to calling reset if this vmethod is not provided. Since: 1.18</doc>
         <callback name="stop">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8557,6 +8923,7 @@ All scheduling of samples and timestamps is done in this base class
 together with #GstAudioBaseSrc using a default implementation of a
 #GstAudioRingBuffer that uses threads.</doc>
       <virtual-method name="close">
+        <doc xml:space="preserve">close the device</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8567,6 +8934,7 @@ together with #GstAudioBaseSrc using a default implementation of a
         </parameters>
       </virtual-method>
       <virtual-method name="delay">
+        <doc xml:space="preserve">the number of frames queued in the device</doc>
         <return-value transfer-ownership="none">
           <type name="guint" c:type="guint"/>
         </return-value>
@@ -8577,6 +8945,7 @@ together with #GstAudioBaseSrc using a default implementation of a
         </parameters>
       </virtual-method>
       <virtual-method name="open">
+        <doc xml:space="preserve">open the device with the specified caps</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8587,6 +8956,7 @@ together with #GstAudioBaseSrc using a default implementation of a
         </parameters>
       </virtual-method>
       <virtual-method name="prepare">
+        <doc xml:space="preserve">configure device with format</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8624,6 +8994,7 @@ together with #GstAudioBaseSrc using a default implementation of a
         </parameters>
       </virtual-method>
       <virtual-method name="reset">
+        <doc xml:space="preserve">unblock a read to the device and reset.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -8634,6 +9005,7 @@ together with #GstAudioBaseSrc using a default implementation of a
         </parameters>
       </virtual-method>
       <virtual-method name="unprepare">
+        <doc xml:space="preserve">undo the configuration</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8663,6 +9035,7 @@ functionality.</doc>
         <type name="AudioBaseSrcClass" c:type="GstAudioBaseSrcClass"/>
       </field>
       <field name="open">
+        <doc xml:space="preserve">open the device with the specified caps</doc>
         <callback name="open">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8675,6 +9048,7 @@ functionality.</doc>
         </callback>
       </field>
       <field name="prepare">
+        <doc xml:space="preserve">configure device with format</doc>
         <callback name="prepare">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8690,6 +9064,7 @@ functionality.</doc>
         </callback>
       </field>
       <field name="unprepare">
+        <doc xml:space="preserve">undo the configuration</doc>
         <callback name="unprepare">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8702,6 +9077,7 @@ functionality.</doc>
         </callback>
       </field>
       <field name="close">
+        <doc xml:space="preserve">close the device</doc>
         <callback name="close">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8714,6 +9090,7 @@ functionality.</doc>
         </callback>
       </field>
       <field name="read">
+        <doc xml:space="preserve">read samples from the audio device</doc>
         <callback name="read">
           <return-value transfer-ownership="none">
             <type name="guint" c:type="guint"/>
@@ -8739,6 +9116,7 @@ functionality.</doc>
         </callback>
       </field>
       <field name="delay">
+        <doc xml:space="preserve">the number of frames queued in the device</doc>
         <callback name="delay">
           <return-value transfer-ownership="none">
             <type name="guint" c:type="guint"/>
@@ -8751,6 +9129,7 @@ functionality.</doc>
         </callback>
       </field>
       <field name="reset">
+        <doc xml:space="preserve">unblock a read to the device and reset.</doc>
         <callback name="reset">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -10264,11 +10643,17 @@ string is not a known format.</doc>
       </return-value>
     </function>
     <function name="audio_format_to_string" c:identifier="gst_audio_format_to_string" moved-to="AudioFormat.to_string">
+      <doc xml:space="preserve">Returns a string containing a descriptive name for the #GstAudioFormat.
+
+Since 1.26 this can also be used with %GST_AUDIO_FORMAT_UNKNOWN, previous
+versions were printing a critical warning and returned %NULL.</doc>
       <return-value transfer-ownership="none">
+        <doc xml:space="preserve">the name corresponding to @format</doc>
         <type name="utf8" c:type="const gchar*"/>
       </return-value>
       <parameters>
         <parameter name="format" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstAudioFormat audio format</doc>
           <type name="AudioFormat" c:type="GstAudioFormat"/>
         </parameter>
       </parameters>

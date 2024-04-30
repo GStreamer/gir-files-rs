@@ -1036,6 +1036,8 @@ for the EOS condition.</doc>
       <doc xml:space="preserve">A set of callbacks that can be installed on the appsink with
 gst_app_sink_set_callbacks().</doc>
       <field name="eos">
+        <doc xml:space="preserve">Called when the end-of-stream has been reached. This callback
+      is called from the streaming thread.</doc>
         <callback name="eos">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -1051,6 +1053,11 @@ gst_app_sink_set_callbacks().</doc>
         </callback>
       </field>
       <field name="new_preroll">
+        <doc xml:space="preserve">Called when a new preroll sample is available.
+      This callback is called from the streaming thread.
+      The new preroll sample can be retrieved with
+      gst_app_sink_pull_preroll() either from this callback
+      or from any other thread.</doc>
         <callback name="new_preroll">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -1066,6 +1073,11 @@ gst_app_sink_set_callbacks().</doc>
         </callback>
       </field>
       <field name="new_sample">
+        <doc xml:space="preserve">Called when a new sample is available.
+      This callback is called from the streaming thread.
+      The new sample can be retrieved with
+      gst_app_sink_pull_sample() either from this callback
+      or from any other thread.</doc>
         <callback name="new_sample">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -1081,6 +1093,14 @@ gst_app_sink_set_callbacks().</doc>
         </callback>
       </field>
       <field name="new_event">
+        <doc xml:space="preserve">Called when a new event is available.
+      This callback is called from the streaming thread.
+      The new event can be retrieved with
+      gst_app_sink_pull_event() either from this callback
+      or from any other thread.
+      The callback should return %TRUE if the event has been handled,
+      %FALSE otherwise.
+      Since: 1.20</doc>
         <callback name="new_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -1096,6 +1116,12 @@ gst_app_sink_set_callbacks().</doc>
         </callback>
       </field>
       <field name="propose_allocation">
+        <doc xml:space="preserve">Called when the propose_allocation query is available.
+      This callback is called from the streaming thread.
+      The allocation query can be retrieved with
+      gst_app_sink_propose_allocation() either from this callback
+      or from any other thread.
+      Since: 1.24</doc>
         <callback name="propose_allocation">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -2167,6 +2193,9 @@ This callback is only called for seekable stream types.</doc>
       <doc xml:space="preserve">A set of callbacks that can be installed on the appsrc with
 gst_app_src_set_callbacks().</doc>
       <field name="need_data">
+        <doc xml:space="preserve">Called when the appsrc needs more data. A buffer or EOS should be
+   pushed to appsrc from this thread or another thread. @length is just a hint
+   and when it is set to -1, any number of bytes can be pushed into @appsrc.</doc>
         <callback name="need_data">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -2185,6 +2214,9 @@ gst_app_src_set_callbacks().</doc>
         </callback>
       </field>
       <field name="enough_data">
+        <doc xml:space="preserve">Called when appsrc has enough data. It is recommended that the
+   application stops calling push-buffer until the need_data callback is
+   emitted again to avoid excessive buffer queueing.</doc>
         <callback name="enough_data">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -2200,6 +2232,9 @@ gst_app_src_set_callbacks().</doc>
         </callback>
       </field>
       <field name="seek_data">
+        <doc xml:space="preserve">Called when a seek should be performed to the offset.
+   The next push-buffer should produce buffers from the new @offset.
+   This callback is only called for seekable stream types.</doc>
         <callback name="seek_data">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>

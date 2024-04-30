@@ -371,6 +371,8 @@ The memory is only mmapped on gst_buffer_map() request.</doc>
     <interface name="PhysMemoryAllocator" c:symbol-prefix="phys_memory_allocator" c:type="GstPhysMemoryAllocator" version="1.14" glib:type-name="GstPhysMemoryAllocator" glib:get-type="gst_phys_memory_allocator_get_type" glib:type-struct="PhysMemoryAllocatorInterface">
       <prerequisite name="Gst.Allocator"/>
       <virtual-method name="get_phys_addr">
+        <doc xml:space="preserve">Implementations shall return the physicall memory address
+   that is backing the provided memory, or 0 if none.</doc>
         <return-value transfer-ownership="none">
           <type name="guintptr" c:type="guintptr"/>
         </return-value>
@@ -390,6 +392,8 @@ The memory is only mmapped on gst_buffer_map() request.</doc>
         <type name="GObject.TypeInterface" c:type="GTypeInterface"/>
       </field>
       <field name="get_phys_addr">
+        <doc xml:space="preserve">Implementations shall return the physicall memory address
+   that is backing the provided memory, or 0 if none.</doc>
         <callback name="get_phys_addr">
           <return-value transfer-ownership="none">
             <type name="guintptr" c:type="guintptr"/>

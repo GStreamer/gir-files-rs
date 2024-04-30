@@ -503,6 +503,9 @@ context.  It also provided some wrappers around #GstBaseTransform's
 `start()`, `stop()` and `set_caps()` virtual methods that ensure an OpenGL
 context is available and current in the calling thread.</doc>
       <virtual-method name="gl_set_caps">
+        <doc xml:space="preserve">called in the GL thread when caps are set on @filter.
+              Note: this will also be called when changing OpenGL contexts
+              where #GstBaseTransform::set_caps may not.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -519,6 +522,7 @@ context is available and current in the calling thread.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="gl_start">
+        <doc xml:space="preserve">called in the GL thread to setup the element GL state.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -529,6 +533,7 @@ context is available and current in the calling thread.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="gl_stop">
+        <doc xml:space="preserve">called in the GL thread to setup the element GL state.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -603,6 +608,7 @@ context is available and current in the calling thread.</doc>
         <type name="GLAPI" c:type="GstGLAPI"/>
       </field>
       <field name="gl_start">
+        <doc xml:space="preserve">called in the GL thread to setup the element GL state.</doc>
         <callback name="gl_start">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -615,6 +621,7 @@ context is available and current in the calling thread.</doc>
         </callback>
       </field>
       <field name="gl_stop">
+        <doc xml:space="preserve">called in the GL thread to setup the element GL state.</doc>
         <callback name="gl_stop">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -627,6 +634,9 @@ context is available and current in the calling thread.</doc>
         </callback>
       </field>
       <field name="gl_set_caps">
+        <doc xml:space="preserve">called in the GL thread when caps are set on @filter.
+              Note: this will also be called when changing OpenGL contexts
+              where #GstBaseTransform::set_caps may not.</doc>
         <callback name="gl_set_caps">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -805,6 +815,7 @@ multiple times.  This must be called before any other GstGLBaseMemory operation.
     <class name="GLBaseMemoryAllocator" c:symbol-prefix="gl_base_memory_allocator" c:type="GstGLBaseMemoryAllocator" version="1.8" parent="Gst.Allocator" abstract="1" glib:type-name="GstGLBaseMemoryAllocator" glib:get-type="gst_gl_base_memory_allocator_get_type" glib:type-struct="GLBaseMemoryAllocatorClass">
       <doc xml:space="preserve">Opaque #GstGLBaseMemoryAllocator struct</doc>
       <virtual-method name="alloc">
+        <doc xml:space="preserve">a #GstGLBaseMemoryAllocatorAllocFunction</doc>
         <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a newly allocated #GstGLBaseMemory from @allocator and @params</doc>
           <type name="GLBaseMemory" c:type="GstGLBaseMemory*"/>
@@ -1129,6 +1140,7 @@ context. It also provided some wrappers around #GstBaseSrc's `start()` and
 `stop()` virtual methods that ensure an OpenGL context is available and
 current in the calling thread.</doc>
       <virtual-method name="fill_gl_memory">
+        <doc xml:space="preserve">called in the GL thread to fill the current video texture.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1142,6 +1154,7 @@ current in the calling thread.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="gl_start">
+        <doc xml:space="preserve">called in the GL thread to setup the element GL state.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1152,6 +1165,7 @@ current in the calling thread.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="gl_stop">
+        <doc xml:space="preserve">called in the GL thread to setup the element GL state.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -1206,6 +1220,7 @@ current in the calling thread.</doc>
         <type name="GLAPI" c:type="GstGLAPI"/>
       </field>
       <field name="gl_start">
+        <doc xml:space="preserve">called in the GL thread to setup the element GL state.</doc>
         <callback name="gl_start">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -1218,6 +1233,7 @@ current in the calling thread.</doc>
         </callback>
       </field>
       <field name="gl_stop">
+        <doc xml:space="preserve">called in the GL thread to setup the element GL state.</doc>
         <callback name="gl_stop">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -1230,6 +1246,7 @@ current in the calling thread.</doc>
         </callback>
       </field>
       <field name="fill_gl_memory">
+        <doc xml:space="preserve">called in the GL thread to fill the current video texture.</doc>
         <callback name="fill_gl_memory">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -1870,6 +1887,7 @@ case.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="choose_format" throws="1">
+        <doc xml:space="preserve">choose a format for the framebuffer</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1880,6 +1898,7 @@ case.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="create_context" throws="1">
+        <doc xml:space="preserve">create the OpenGL context</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1896,6 +1915,7 @@ case.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="destroy_context">
+        <doc xml:space="preserve">destroy the OpenGL context</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -2597,6 +2617,7 @@ MT-safe</doc>
         </callback>
       </field>
       <field name="get_gl_context">
+        <doc xml:space="preserve">get the backing platform specific OpenGL context</doc>
         <callback name="get_gl_context">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">The platform specific backing OpenGL context</doc>
@@ -2611,6 +2632,7 @@ MT-safe</doc>
         </callback>
       </field>
       <field name="get_gl_api">
+        <doc xml:space="preserve">get the available OpenGL api's that this context can work with</doc>
         <callback name="get_gl_api">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">the available OpenGL api</doc>
@@ -2639,6 +2661,7 @@ MT-safe</doc>
         </callback>
       </field>
       <field name="get_proc_address">
+        <doc xml:space="preserve">get an function pointer to an OpenGL function</doc>
         <callback name="get_proc_address">
           <return-value transfer-ownership="none">
             <type name="gpointer" c:type="gpointer"/>
@@ -2654,6 +2677,7 @@ MT-safe</doc>
         </callback>
       </field>
       <field name="activate">
+        <doc xml:space="preserve">call eglMakeCurrent or similar</doc>
         <callback name="activate">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">Whether the activation succeeded</doc>
@@ -2672,6 +2696,7 @@ MT-safe</doc>
         </callback>
       </field>
       <field name="choose_format">
+        <doc xml:space="preserve">choose a format for the framebuffer</doc>
         <callback name="choose_format" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -2684,6 +2709,7 @@ MT-safe</doc>
         </callback>
       </field>
       <field name="create_context">
+        <doc xml:space="preserve">create the OpenGL context</doc>
         <callback name="create_context" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -2702,6 +2728,7 @@ MT-safe</doc>
         </callback>
       </field>
       <field name="destroy_context">
+        <doc xml:space="preserve">destroy the OpenGL context</doc>
         <callback name="destroy_context">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -2714,6 +2741,7 @@ MT-safe</doc>
         </callback>
       </field>
       <field name="swap_buffers">
+        <doc xml:space="preserve">swap the default framebuffer's front/back buffers</doc>
         <callback name="swap_buffers">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -3295,6 +3323,10 @@ single input and producing a single output with a #GstGLFramebuffer</doc>
         </parameters>
       </function>
       <virtual-method name="filter">
+        <doc xml:space="preserve">perform operations on the input and output buffers.  In general,
+         you should avoid using this method if at all possible. One valid
+         use-case for using this is keeping previous buffers for future calculations.
+         Note: If @filter exists, then @filter_texture is not run</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3332,6 +3364,7 @@ single input and producing a single output with a #GstGLFramebuffer</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="init_fbo">
+        <doc xml:space="preserve">perform initialization when the Framebuffer object is created</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3342,6 +3375,7 @@ single input and producing a single output with a #GstGLFramebuffer</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="set_caps">
+        <doc xml:space="preserve">mirror from #GstBaseTransform</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3358,6 +3392,8 @@ single input and producing a single output with a #GstGLFramebuffer</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="transform_internal_caps">
+        <doc xml:space="preserve">Perform sub-class specific modifications of the
+  caps to be processed between upload on input and before download for output.</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Caps" c:type="GstCaps*"/>
         </return-value>
@@ -3535,6 +3571,7 @@ See also: gst_gl_filter_render_to_target()</doc>
         <type name="GLBaseFilterClass" c:type="GstGLBaseFilterClass"/>
       </field>
       <field name="set_caps">
+        <doc xml:space="preserve">mirror from #GstBaseTransform</doc>
         <callback name="set_caps">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -3553,6 +3590,10 @@ See also: gst_gl_filter_render_to_target()</doc>
         </callback>
       </field>
       <field name="filter">
+        <doc xml:space="preserve">perform operations on the input and output buffers.  In general,
+         you should avoid using this method if at all possible. One valid
+         use-case for using this is keeping previous buffers for future calculations.
+         Note: If @filter exists, then @filter_texture is not run</doc>
         <callback name="filter">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -3571,6 +3612,8 @@ See also: gst_gl_filter_render_to_target()</doc>
         </callback>
       </field>
       <field name="filter_texture">
+        <doc xml:space="preserve">given @in_tex, transform it into @out_tex.  Not used
+                 if @filter exists</doc>
         <callback name="filter_texture">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">whether the transformation succeeded</doc>
@@ -3593,6 +3636,7 @@ See also: gst_gl_filter_render_to_target()</doc>
         </callback>
       </field>
       <field name="init_fbo">
+        <doc xml:space="preserve">perform initialization when the Framebuffer object is created</doc>
         <callback name="init_fbo">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -3605,6 +3649,8 @@ See also: gst_gl_filter_render_to_target()</doc>
         </callback>
       </field>
       <field name="transform_internal_caps">
+        <doc xml:space="preserve">Perform sub-class specific modifications of the
+  caps to be processed between upload on input and before download for output.</doc>
         <callback name="transform_internal_caps">
           <return-value transfer-ownership="full">
             <type name="Gst.Caps" c:type="GstCaps*"/>
@@ -6713,6 +6759,7 @@ with the CPU or with other OpenGL contexts.</doc>
         <type name="gpointer" c:type="gpointer"/>
       </field>
       <field name="set_sync">
+        <doc xml:space="preserve">set a sync point in the OpenGL command stream</doc>
         <callback name="set_sync">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -6728,6 +6775,7 @@ with the CPU or with other OpenGL contexts.</doc>
         </callback>
       </field>
       <field name="set_sync_gl">
+        <doc xml:space="preserve">the same as @set_sync but called from @context's thread</doc>
         <callback name="set_sync_gl">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -6743,6 +6791,7 @@ with the CPU or with other OpenGL contexts.</doc>
         </callback>
       </field>
       <field name="wait">
+        <doc xml:space="preserve">execute a wait on the previously set sync point into the OpenGL command stream</doc>
         <callback name="wait">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -6758,6 +6807,7 @@ with the CPU or with other OpenGL contexts.</doc>
         </callback>
       </field>
       <field name="wait_gl">
+        <doc xml:space="preserve">the same as @wait but called from @context's thread</doc>
         <callback name="wait_gl">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -6773,6 +6823,7 @@ with the CPU or with other OpenGL contexts.</doc>
         </callback>
       </field>
       <field name="wait_cpu">
+        <doc xml:space="preserve">wait for the previously set sync point to pass from the CPU</doc>
         <callback name="wait_cpu">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -6788,6 +6839,7 @@ with the CPU or with other OpenGL contexts.</doc>
         </callback>
       </field>
       <field name="wait_cpu_gl">
+        <doc xml:space="preserve">the same as @wait_cpu but called from @context's thread</doc>
         <callback name="wait_cpu_gl">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -6803,6 +6855,7 @@ with the CPU or with other OpenGL contexts.</doc>
         </callback>
       </field>
       <field name="copy">
+        <doc xml:space="preserve">copy @data into a new #GstGLSyncMeta</doc>
         <callback name="copy">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -6824,6 +6877,7 @@ with the CPU or with other OpenGL contexts.</doc>
         </callback>
       </field>
       <field name="free">
+        <doc xml:space="preserve">free @data</doc>
         <callback name="free">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -6839,6 +6893,7 @@ with the CPU or with other OpenGL contexts.</doc>
         </callback>
       </field>
       <field name="free_gl">
+        <doc xml:space="preserve">free @data in @context's thread</doc>
         <callback name="free_gl">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -7781,6 +7836,7 @@ either be a user visible window (onscreen) or hidden (offscreen).</doc>
         </parameters>
       </constructor>
       <virtual-method name="close">
+        <doc xml:space="preserve">close the connection to the display</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -7816,6 +7872,7 @@ either be a user visible window (onscreen) or hidden (offscreen).</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="get_display" invoker="get_display" version="1.4">
+        <doc xml:space="preserve">Gets the current windowing system display connection</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">the windowing system display handle for this @window</doc>
           <type name="guintptr" c:type="guintptr"/>
@@ -7828,6 +7885,9 @@ either be a user visible window (onscreen) or hidden (offscreen).</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="get_window_handle" invoker="get_window_handle" version="1.4">
+        <doc xml:space="preserve">Gets the current window handle that this #GstGLWindow is
+                    rendering into.  This may return a different value to
+                    what is passed into @set_window_handle</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">the window handle we are currently rendering into</doc>
           <type name="guintptr" c:type="guintptr"/>
@@ -7873,6 +7933,7 @@ from the @window.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="open" throws="1">
+        <doc xml:space="preserve">open the connection to the display</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -8624,6 +8685,7 @@ direct handle comparision.</doc>
         <type name="Gst.ObjectClass" c:type="GstObjectClass"/>
       </field>
       <field name="get_display">
+        <doc xml:space="preserve">Gets the current windowing system display connection</doc>
         <callback name="get_display">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">the windowing system display handle for this @window</doc>
@@ -8638,6 +8700,7 @@ direct handle comparision.</doc>
         </callback>
       </field>
       <field name="set_window_handle">
+        <doc xml:space="preserve">Set a window handle to render into</doc>
         <callback name="set_window_handle">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8655,6 +8718,9 @@ direct handle comparision.</doc>
         </callback>
       </field>
       <field name="get_window_handle">
+        <doc xml:space="preserve">Gets the current window handle that this #GstGLWindow is
+                    rendering into.  This may return a different value to
+                    what is passed into @set_window_handle</doc>
         <callback name="get_window_handle">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">the window handle we are currently rendering into</doc>
@@ -8669,6 +8735,7 @@ direct handle comparision.</doc>
         </callback>
       </field>
       <field name="draw">
+        <doc xml:space="preserve">redraw the window with the specified dimensions</doc>
         <callback name="draw">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8682,6 +8749,7 @@ direct handle comparision.</doc>
         </callback>
       </field>
       <field name="run">
+        <doc xml:space="preserve">run the mainloop</doc>
         <callback name="run">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8695,6 +8763,7 @@ direct handle comparision.</doc>
         </callback>
       </field>
       <field name="quit">
+        <doc xml:space="preserve">send a quit to the mainloop</doc>
         <callback name="quit">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8708,6 +8777,7 @@ direct handle comparision.</doc>
         </callback>
       </field>
       <field name="send_message">
+        <doc xml:space="preserve">invoke a function on the window thread.  Required to be reentrant.</doc>
         <callback name="send_message">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8729,6 +8799,8 @@ direct handle comparision.</doc>
         </callback>
       </field>
       <field name="send_message_async">
+        <doc xml:space="preserve">invoke a function on the window thread. @run may or may
+                     not have been called.  Required to be reentrant.</doc>
         <callback name="send_message_async">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8754,6 +8826,7 @@ direct handle comparision.</doc>
         </callback>
       </field>
       <field name="open">
+        <doc xml:space="preserve">open the connection to the display</doc>
         <callback name="open" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8766,6 +8839,7 @@ direct handle comparision.</doc>
         </callback>
       </field>
       <field name="close">
+        <doc xml:space="preserve">close the connection to the display</doc>
         <callback name="close">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8778,6 +8852,9 @@ direct handle comparision.</doc>
         </callback>
       </field>
       <field name="handle_events">
+        <doc xml:space="preserve">whether to handle 'extra' events from the windowing system.
+                Basic events like surface moves and resizes are still valid
+                things to listen for.</doc>
         <callback name="handle_events">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8795,6 +8872,8 @@ direct handle comparision.</doc>
         </callback>
       </field>
       <field name="set_preferred_size">
+        <doc xml:space="preserve">request that the window change surface size.  The
+                     implementation is free to ignore this information.</doc>
         <callback name="set_preferred_size">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8816,6 +8895,7 @@ direct handle comparision.</doc>
         </callback>
       </field>
       <field name="show">
+        <doc xml:space="preserve">request that the window be shown to the user</doc>
         <callback name="show">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8829,6 +8909,7 @@ direct handle comparision.</doc>
         </callback>
       </field>
       <field name="set_render_rectangle">
+        <doc xml:space="preserve">request a rectangle to render into.  See #GstVideoOverlay</doc>
         <callback name="set_render_rectangle">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">whether the specified region could be set</doc>
@@ -8859,6 +8940,7 @@ direct handle comparision.</doc>
         </callback>
       </field>
       <field name="queue_resize">
+        <doc xml:space="preserve">request a resize to occur when possible</doc>
         <callback name="queue_resize">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8872,6 +8954,8 @@ direct handle comparision.</doc>
         </callback>
       </field>
       <field name="controls_viewport">
+        <doc xml:space="preserve">Whether the window takes care of glViewport setup.
+                    and the user does not need to deal with viewports</doc>
         <callback name="controls_viewport">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if @window controls the GL viewport, otherwise %FALSE</doc>
@@ -8886,6 +8970,7 @@ direct handle comparision.</doc>
         </callback>
       </field>
       <field name="has_output_surface">
+        <doc xml:space="preserve">Whether the window has output surface or not. (Since: 1.18)</doc>
         <callback name="has_output_surface">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if @window has useable output surface</doc>

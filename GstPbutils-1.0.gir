@@ -1611,6 +1611,22 @@ subtitles), are currently ignored.</doc>
           </parameter>
         </parameters>
       </function>
+      <function name="from_string" c:identifier="gst_encoding_profile_from_string" version="1.26">
+        <doc xml:space="preserve">Converts a string in the "encoding profile serialization format" into a
+GstEncodingProfile. Refer to the encoding-profile documentation for details
+on the format.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">A newly created GstEncodingProfile or NULL if the
+input string is not a valid encoding profile serialization format.</doc>
+          <type name="EncodingProfile" c:type="GstEncodingProfile*"/>
+        </return-value>
+        <parameters>
+          <parameter name="string" transfer-ownership="none">
+            <doc xml:space="preserve">The string to convert into a GstEncodingProfile.</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </function>
       <method name="copy" c:identifier="gst_encoding_profile_copy" version="1.12">
         <doc xml:space="preserve">Makes a deep copy of @self</doc>
         <return-value transfer-ownership="full">
@@ -2024,6 +2040,21 @@ eat so as to appear as one segment.
 single segment before the encoder, #FALSE otherwise.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </parameter>
+        </parameters>
+      </method>
+      <method name="to_string" c:identifier="gst_encoding_profile_to_string" version="1.26">
+        <doc xml:space="preserve">Converts a GstEncodingProfile to a string in the "Encoding Profile
+serialization format".</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">A string representation of the GstEncodingProfile,
+  or NULL if the input is invalid.</doc>
+          <type name="utf8" c:type="gchar*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="profile" transfer-ownership="none">
+            <doc xml:space="preserve">The GstEncodingProfile to convert.</doc>
+            <type name="EncodingProfile" c:type="GstEncodingProfile*"/>
+          </instance-parameter>
         </parameters>
       </method>
       <property name="element-properties" version="1.20" writable="1" transfer-ownership="none" setter="set_element_properties" getter="get_element_properties">
@@ -2705,7 +2736,7 @@ in debugging.</doc>
       <doc xml:space="preserve">The micro version of GStreamer's gst-plugins-base libraries at compile time.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="PLUGINS_BASE_VERSION_MINOR" value="24" c:type="GST_PLUGINS_BASE_VERSION_MINOR">
+    <constant name="PLUGINS_BASE_VERSION_MINOR" value="25" c:type="GST_PLUGINS_BASE_VERSION_MINOR">
       <doc xml:space="preserve">The minor version of GStreamer's gst-plugins-base libraries at compile time.</doc>
       <type name="gint" c:type="gint"/>
     </constant>

@@ -573,6 +573,10 @@ g_free() after usage.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="authenticate">
+        <doc xml:space="preserve">check the authentication of a client. The default implementation
+        checks if the authentication in the header matches one of the basic
+        authentication tokens. This function should set the authgroup field
+        in the context.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -586,6 +590,10 @@ g_free() after usage.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="check">
+        <doc xml:space="preserve">check if a resource can be accessed. this function should
+        call authenticate to authenticate the client when needed. The method
+        should also construct and send an appropriate response message on
+        error.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -941,6 +949,10 @@ no one else overrides it.</doc>
         <type name="GObject.ObjectClass" c:type="GObjectClass"/>
       </field>
       <field name="authenticate">
+        <doc xml:space="preserve">check the authentication of a client. The default implementation
+        checks if the authentication in the header matches one of the basic
+        authentication tokens. This function should set the authgroup field
+        in the context.</doc>
         <callback name="authenticate">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -956,6 +968,10 @@ no one else overrides it.</doc>
         </callback>
       </field>
       <field name="check">
+        <doc xml:space="preserve">check if a resource can be accessed. this function should
+        call authenticate to authenticate the client when needed. The method
+        should also construct and send an appropriate response message on
+        error.</doc>
         <callback name="check">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -1048,6 +1064,8 @@ possibility to adjust the error code.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="adjust_play_mode">
+        <doc xml:space="preserve">called to give the application the possibility to adjust
+   the range, seek flags, rate and rate-control. Since 1.18</doc>
         <return-value transfer-ownership="none">
           <type name="GstRtsp.RTSPStatusCode" c:type="GstRTSPStatusCode"/>
         </return-value>
@@ -1076,6 +1094,9 @@ possibility to adjust the error code.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="adjust_play_response">
+        <doc xml:space="preserve">called to give the implementation the possibility to
+   adjust the response to a play request, for example if extra headers were
+   parsed when #GstRTSPClientClass.adjust_play_mode was called. Since 1.18</doc>
         <return-value transfer-ownership="none">
           <type name="GstRtsp.RTSPStatusCode" c:type="GstRTSPStatusCode"/>
         </return-value>
@@ -1128,6 +1149,9 @@ possibility to adjust the error code.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="configure_client_media">
+        <doc xml:space="preserve">called when the stream in media needs to be configured.
+   The default implementation will configure the blocksize on the payloader when
+   spcified in the request headers.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1147,6 +1171,8 @@ possibility to adjust the error code.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="configure_client_transport">
+        <doc xml:space="preserve">called when the client transport needs to be
+   configured.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1163,6 +1189,7 @@ possibility to adjust the error code.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="create_sdp">
+        <doc xml:space="preserve">called when the SDP needs to be created for media.</doc>
         <return-value transfer-ownership="full">
           <type name="GstSdp.SDPMessage" c:type="GstSDPMessage*"/>
         </return-value>
@@ -1234,6 +1261,7 @@ possibility to adjust the error code.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="make_path_from_uri">
+        <doc xml:space="preserve">called to create path from uri.</doc>
         <return-value transfer-ownership="full">
           <type name="utf8" c:type="gchar*"/>
         </return-value>
@@ -1273,6 +1301,8 @@ possibility to adjust the error code.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="params_get">
+        <doc xml:space="preserve">get parameters. This function should also initialize the
+   RTSP response(ctx-&gt;response) via a call to gst_rtsp_message_init_response()</doc>
         <return-value transfer-ownership="none">
           <type name="GstRtsp.RTSPResult" c:type="GstRTSPResult"/>
         </return-value>
@@ -1286,6 +1316,8 @@ possibility to adjust the error code.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="params_set">
+        <doc xml:space="preserve">set parameters. This function should also initialize the
+   RTSP response(ctx-&gt;response) via a call to gst_rtsp_message_init_response()</doc>
         <return-value transfer-ownership="none">
           <type name="GstRtsp.RTSPResult" c:type="GstRTSPResult"/>
         </return-value>
@@ -1523,6 +1555,8 @@ possibility to adjust the error code.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="tunnel_http_response">
+        <doc xml:space="preserve">called when a response to the GET request is about to
+  be sent for a tunneled connection. The response can be modified. Since: 1.4</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -2249,6 +2283,7 @@ that created the client but can be overridden later.</doc>
         <type name="GObject.ObjectClass" c:type="GObjectClass"/>
       </field>
       <field name="create_sdp">
+        <doc xml:space="preserve">called when the SDP needs to be created for media.</doc>
         <callback name="create_sdp">
           <return-value transfer-ownership="full">
             <type name="GstSdp.SDPMessage" c:type="GstSDPMessage*"/>
@@ -2264,6 +2299,9 @@ that created the client but can be overridden later.</doc>
         </callback>
       </field>
       <field name="configure_client_media">
+        <doc xml:space="preserve">called when the stream in media needs to be configured.
+   The default implementation will configure the blocksize on the payloader when
+   spcified in the request headers.</doc>
         <callback name="configure_client_media">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -2285,6 +2323,8 @@ that created the client but can be overridden later.</doc>
         </callback>
       </field>
       <field name="configure_client_transport">
+        <doc xml:space="preserve">called when the client transport needs to be
+   configured.</doc>
         <callback name="configure_client_transport">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -2303,6 +2343,8 @@ that created the client but can be overridden later.</doc>
         </callback>
       </field>
       <field name="params_set">
+        <doc xml:space="preserve">set parameters. This function should also initialize the
+   RTSP response(ctx-&gt;response) via a call to gst_rtsp_message_init_response()</doc>
         <callback name="params_set">
           <return-value transfer-ownership="none">
             <type name="GstRtsp.RTSPResult" c:type="GstRTSPResult"/>
@@ -2318,6 +2360,8 @@ that created the client but can be overridden later.</doc>
         </callback>
       </field>
       <field name="params_get">
+        <doc xml:space="preserve">get parameters. This function should also initialize the
+   RTSP response(ctx-&gt;response) via a call to gst_rtsp_message_init_response()</doc>
         <callback name="params_get">
           <return-value transfer-ownership="none">
             <type name="GstRtsp.RTSPResult" c:type="GstRTSPResult"/>
@@ -2333,6 +2377,7 @@ that created the client but can be overridden later.</doc>
         </callback>
       </field>
       <field name="make_path_from_uri">
+        <doc xml:space="preserve">called to create path from uri.</doc>
         <callback name="make_path_from_uri">
           <return-value transfer-ownership="full">
             <type name="utf8" c:type="gchar*"/>
@@ -2348,6 +2393,8 @@ that created the client but can be overridden later.</doc>
         </callback>
       </field>
       <field name="adjust_play_mode">
+        <doc xml:space="preserve">called to give the application the possibility to adjust
+   the range, seek flags, rate and rate-control. Since 1.18</doc>
         <callback name="adjust_play_mode">
           <return-value transfer-ownership="none">
             <type name="GstRtsp.RTSPStatusCode" c:type="GstRTSPStatusCode"/>
@@ -2378,6 +2425,9 @@ that created the client but can be overridden later.</doc>
         </callback>
       </field>
       <field name="adjust_play_response">
+        <doc xml:space="preserve">called to give the implementation the possibility to
+   adjust the response to a play request, for example if extra headers were
+   parsed when #GstRTSPClientClass.adjust_play_mode was called. Since 1.18</doc>
         <callback name="adjust_play_response">
           <return-value transfer-ownership="none">
             <type name="GstRtsp.RTSPStatusCode" c:type="GstRTSPStatusCode"/>
@@ -2555,6 +2605,8 @@ that created the client but can be overridden later.</doc>
         </callback>
       </field>
       <field name="tunnel_http_response">
+        <doc xml:space="preserve">called when a response to the GET request is about to
+  be sent for a tunneled connection. The response can be modified. Since: 1.4</doc>
         <callback name="tunnel_http_response">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -3092,6 +3144,7 @@ Ownership is taken of @element.</doc>
         </parameters>
       </constructor>
       <virtual-method name="convert_range">
+        <doc xml:space="preserve">convert a range to the given unit</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3118,6 +3171,7 @@ Ownership is taken of @element.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="handle_message">
+        <doc xml:space="preserve">handle a message</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3207,6 +3261,7 @@ such as the duration.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="query_position">
+        <doc xml:space="preserve">query the current position in the pipeline</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3220,6 +3275,7 @@ such as the duration.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="query_stop">
+        <doc xml:space="preserve">query when playback will stop</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4766,6 +4822,7 @@ enabled.</doc>
         <type name="GObject.ObjectClass" c:type="GObjectClass"/>
       </field>
       <field name="handle_message">
+        <doc xml:space="preserve">handle a message</doc>
         <callback name="handle_message">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4781,6 +4838,9 @@ enabled.</doc>
         </callback>
       </field>
       <field name="prepare">
+        <doc xml:space="preserve">the default implementation adds all elements and sets the
+          pipeline's state to GST_STATE_PAUSED (or GST_STATE_PLAYING
+          in case of NO_PREROLL elements).</doc>
         <callback name="prepare">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE on success.</doc>
@@ -4800,6 +4860,8 @@ enabled.</doc>
         </callback>
       </field>
       <field name="unprepare">
+        <doc xml:space="preserve">the default implementation sets the pipeline's state
+            to GST_STATE_NULL and removes all elements.</doc>
         <callback name="unprepare">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE on success.</doc>
@@ -4814,6 +4876,9 @@ enabled.</doc>
         </callback>
       </field>
       <field name="suspend">
+        <doc xml:space="preserve">the default implementation sets the pipeline's state to
+          GST_STATE_NULL GST_STATE_PAUSED depending on the selected
+          suspend mode.</doc>
         <callback name="suspend">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE on success.</doc>
@@ -4828,6 +4893,9 @@ enabled.</doc>
         </callback>
       </field>
       <field name="unsuspend">
+        <doc xml:space="preserve">the default implementation reverts the suspend operation.
+            The pipeline will be prerolled again if it's state was
+            set to GST_STATE_NULL in suspend.</doc>
         <callback name="unsuspend">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE on success.</doc>
@@ -4842,6 +4910,7 @@ enabled.</doc>
         </callback>
       </field>
       <field name="convert_range">
+        <doc xml:space="preserve">convert a range to the given unit</doc>
         <callback name="convert_range">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4860,6 +4929,7 @@ enabled.</doc>
         </callback>
       </field>
       <field name="query_position">
+        <doc xml:space="preserve">query the current position in the pipeline</doc>
         <callback name="query_position">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4875,6 +4945,7 @@ enabled.</doc>
         </callback>
       </field>
       <field name="query_stop">
+        <doc xml:space="preserve">query when playback will stop</doc>
         <callback name="query_stop">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -5057,6 +5128,8 @@ can contain multiple streams like audio and video.</doc>
         </return-value>
       </constructor>
       <virtual-method name="configure">
+        <doc xml:space="preserve">configure the media created with @construct. The default
+      implementation will configure the 'shared' property of the media.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -5119,6 +5192,8 @@ launch parameter.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="create_pipeline" introspectable="0">
+        <doc xml:space="preserve">create a new pipeline or re-use an existing one and
+      add the #GstRTSPMedia's element created by @construct to the pipeline.</doc>
         <return-value>
           <type name="Gst.Element" c:type="GstElement*"/>
         </return-value>
@@ -5132,6 +5207,9 @@ launch parameter.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="gen_key">
+        <doc xml:space="preserve">convert @url to a key for caching shared #GstRTSPMedia objects.
+      The default implementation of this function will use the complete URL
+      including the query parameters to return a key.</doc>
         <return-value transfer-ownership="full">
           <type name="utf8" c:type="gchar*"/>
         </return-value>
@@ -5145,6 +5223,7 @@ launch parameter.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="media_configure">
+        <doc xml:space="preserve">signal emitted when a media should be configured</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -5158,6 +5237,7 @@ launch parameter.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="media_constructed">
+        <doc xml:space="preserve">signal emitted when a media was constructed</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -6077,6 +6157,9 @@ This options is only relevant when ensure-keyunit-on-start is enabled.</doc>
         <type name="GObject.ObjectClass" c:type="GObjectClass"/>
       </field>
       <field name="gen_key">
+        <doc xml:space="preserve">convert @url to a key for caching shared #GstRTSPMedia objects.
+      The default implementation of this function will use the complete URL
+      including the query parameters to return a key.</doc>
         <callback name="gen_key">
           <return-value transfer-ownership="full">
             <type name="utf8" c:type="gchar*"/>
@@ -6092,6 +6175,10 @@ This options is only relevant when ensure-keyunit-on-start is enabled.</doc>
         </callback>
       </field>
       <field name="create_element">
+        <doc xml:space="preserve">Construct and return a #GstElement that is a #GstBin containing
+      the elements to use for streaming the media. The bin should contain
+      payloaders pay\%d for each stream. The default implementation of this
+      function returns the bin created from the launch parameter.</doc>
         <callback name="create_element">
           <return-value transfer-ownership="none" nullable="1">
             <doc xml:space="preserve">a new #GstElement.</doc>
@@ -6110,6 +6197,10 @@ This options is only relevant when ensure-keyunit-on-start is enabled.</doc>
         </callback>
       </field>
       <field name="construct">
+        <doc xml:space="preserve">the vmethod that will be called when the factory has to create the
+      #GstRTSPMedia for @url. The default implementation of this
+      function calls create_element to retrieve an element and then looks for
+      pay\%d to create the streams.</doc>
         <callback name="construct">
           <return-value transfer-ownership="full" nullable="1">
             <doc xml:space="preserve">a new #GstRTSPMedia if the media could be prepared.</doc>
@@ -6128,6 +6219,8 @@ This options is only relevant when ensure-keyunit-on-start is enabled.</doc>
         </callback>
       </field>
       <field name="create_pipeline" introspectable="0">
+        <doc xml:space="preserve">create a new pipeline or re-use an existing one and
+      add the #GstRTSPMedia's element created by @construct to the pipeline.</doc>
         <callback name="create_pipeline" introspectable="0">
           <return-value>
             <type name="Gst.Element" c:type="GstElement*"/>
@@ -6143,6 +6236,8 @@ This options is only relevant when ensure-keyunit-on-start is enabled.</doc>
         </callback>
       </field>
       <field name="configure">
+        <doc xml:space="preserve">configure the media created with @construct. The default
+      implementation will configure the 'shared' property of the media.</doc>
         <callback name="configure">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -6158,6 +6253,7 @@ This options is only relevant when ensure-keyunit-on-start is enabled.</doc>
         </callback>
       </field>
       <field name="media_constructed">
+        <doc xml:space="preserve">signal emitted when a media was constructed</doc>
         <callback name="media_constructed">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -6173,6 +6269,7 @@ This options is only relevant when ensure-keyunit-on-start is enabled.</doc>
         </callback>
       </field>
       <field name="media_configure">
+        <doc xml:space="preserve">signal emitted when a media should be configured</doc>
         <callback name="media_configure">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -6442,6 +6539,7 @@ g_object_unref() after usage.</doc>
         <type name="GObject.ObjectClass" c:type="GObjectClass"/>
       </field>
       <field name="make_path">
+        <doc xml:space="preserve">make a path from the given url.</doc>
         <callback name="make_path">
           <return-value transfer-ownership="full" nullable="1">
             <doc xml:space="preserve">a path string for @url, g_free() after usage.</doc>
@@ -7051,6 +7149,7 @@ new connection on @socket or @server.</doc>
         </parameters>
       </function>
       <virtual-method name="client_connected">
+        <doc xml:space="preserve">emitted when a new client connected.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -7064,6 +7163,10 @@ new connection on @socket or @server.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="create_client" introspectable="0">
+        <doc xml:space="preserve">Create, configure a new GstRTSPClient
+         object that handles the new connection on @socket. The default
+         implementation will create a GstRTSPClient and will configure the
+         mount-points, auth, session-pool and thread-pool on the client.</doc>
         <return-value>
           <type name="RTSPClient" c:type="GstRTSPClient*"/>
         </return-value>
@@ -7528,6 +7631,10 @@ that the HTTP server read from the socket while parsing the HTTP header.</doc>
         <type name="GObject.ObjectClass" c:type="GObjectClass"/>
       </field>
       <field name="create_client" introspectable="0">
+        <doc xml:space="preserve">Create, configure a new GstRTSPClient
+         object that handles the new connection on @socket. The default
+         implementation will create a GstRTSPClient and will configure the
+         mount-points, auth, session-pool and thread-pool on the client.</doc>
         <callback name="create_client" introspectable="0">
           <return-value>
             <type name="RTSPClient" c:type="GstRTSPClient*"/>
@@ -7540,6 +7647,7 @@ that the HTTP server read from the socket while parsing the HTTP header.</doc>
         </callback>
       </field>
       <field name="client_connected">
+        <doc xml:space="preserve">emitted when a new client connected.</doc>
         <callback name="client_connected">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8203,6 +8311,7 @@ usage.</doc>
         </return-value>
       </constructor>
       <virtual-method name="create_session" introspectable="0">
+        <doc xml:space="preserve">make a new session object.</doc>
         <return-value>
           <type name="RTSPSession" c:type="GstRTSPSession*"/>
         </return-value>
@@ -8216,6 +8325,8 @@ usage.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="create_session_id">
+        <doc xml:space="preserve">create a new random session id. Subclasses can create
+   custom session ids and should not check if the session exists.</doc>
         <return-value transfer-ownership="full">
           <type name="utf8" c:type="gchar*"/>
         </return-value>
@@ -8226,6 +8337,7 @@ usage.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="session_removed">
+        <doc xml:space="preserve">a session was removed from the pool</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -8427,6 +8539,8 @@ A value of 0 means an unlimited amount of sessions.</doc>
         <type name="GObject.ObjectClass" c:type="GObjectClass"/>
       </field>
       <field name="create_session_id">
+        <doc xml:space="preserve">create a new random session id. Subclasses can create
+   custom session ids and should not check if the session exists.</doc>
         <callback name="create_session_id">
           <return-value transfer-ownership="full">
             <type name="utf8" c:type="gchar*"/>
@@ -8439,6 +8553,7 @@ A value of 0 means an unlimited amount of sessions.</doc>
         </callback>
       </field>
       <field name="create_session" introspectable="0">
+        <doc xml:space="preserve">make a new session object.</doc>
         <callback name="create_session" introspectable="0">
           <return-value>
             <type name="RTSPSession" c:type="GstRTSPSession*"/>
@@ -8454,6 +8569,7 @@ A value of 0 means an unlimited amount of sessions.</doc>
         </callback>
       </field>
       <field name="session_removed">
+        <doc xml:space="preserve">a session was removed from the pool</doc>
         <callback name="session_removed">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -10596,6 +10712,8 @@ structures.</doc>
         </return-value>
       </function>
       <virtual-method name="configure_thread">
+        <doc xml:space="preserve">configure a thread object. this vmethod is called when
+      a new thread has been created and should be configured.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -10634,6 +10752,7 @@ gst_rtsp_thread_stop() after usage</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="thread_enter">
+        <doc xml:space="preserve">called from the thread when it is entered</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -10647,6 +10766,7 @@ gst_rtsp_thread_stop() after usage</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="thread_leave">
+        <doc xml:space="preserve">called from the thread when it is left</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -10738,6 +10858,8 @@ unlimited number of threads.</doc>
         <type name="GLib.ThreadPool" c:type="GThreadPool*"/>
       </field>
       <field name="get_thread">
+        <doc xml:space="preserve">this function should make or reuse an existing thread that runs
+       a mainloop.</doc>
         <callback name="get_thread">
           <return-value transfer-ownership="full" nullable="1">
             <doc xml:space="preserve">a new #GstRTSPThread,
@@ -10761,6 +10883,8 @@ gst_rtsp_thread_stop() after usage</doc>
         </callback>
       </field>
       <field name="configure_thread">
+        <doc xml:space="preserve">configure a thread object. this vmethod is called when
+      a new thread has been created and should be configured.</doc>
         <callback name="configure_thread">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -10779,6 +10903,7 @@ gst_rtsp_thread_stop() after usage</doc>
         </callback>
       </field>
       <field name="thread_enter">
+        <doc xml:space="preserve">called from the thread when it is entered</doc>
         <callback name="thread_enter">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -10794,6 +10919,7 @@ gst_rtsp_thread_stop() after usage</doc>
         </callback>
       </field>
       <field name="thread_leave">
+        <doc xml:space="preserve">called from the thread when it is left</doc>
         <callback name="thread_leave">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>

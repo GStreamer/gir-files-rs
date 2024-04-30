@@ -600,7 +600,7 @@ position is returned.
 
 The dts is reset to GST_CLOCK_TIME_NONE and the distance is set to 0 when
 the adapter is first created or when it is cleared. This also means that before
-the first byte with a dts is removed from the adapter, the dts
+the first byte with a dts is added to the adapter, the dts
 and distance returned are GST_CLOCK_TIME_NONE and 0 respectively.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">The previously seen dts.</doc>
@@ -624,7 +624,7 @@ position is returned.
 
 The dts is reset to GST_CLOCK_TIME_NONE and the distance is set to 0 when
 the adapter is first created or when it is cleared. This also means that before
-the first byte with a dts is removed from the adapter, the dts
+the first byte with a dts is added to the adapter, the dts
 and distance returned are GST_CLOCK_TIME_NONE and 0 respectively.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">The previously seen dts at given offset.</doc>
@@ -652,7 +652,7 @@ position is returned.
 
 The offset is reset to GST_BUFFER_OFFSET_NONE and the distance is set to 0
 when the adapter is first created or when it is cleared. This also means that
-before the first byte with an offset is removed from the adapter, the offset
+before the first byte with an offset is added to the adapter, the offset
 and distance returned are GST_BUFFER_OFFSET_NONE and 0 respectively.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">The previous seen offset.</doc>
@@ -676,7 +676,7 @@ position is returned.
 
 The pts is reset to GST_CLOCK_TIME_NONE and the distance is set to 0 when
 the adapter is first created or when it is cleared. This also means that before
-the first byte with a pts is removed from the adapter, the pts
+the first byte with a pts is added to the adapter, the pts
 and distance returned are GST_CLOCK_TIME_NONE and 0 respectively.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">The previously seen pts.</doc>
@@ -700,7 +700,7 @@ position is returned.
 
 The pts is reset to GST_CLOCK_TIME_NONE and the distance is set to 0 when
 the adapter is first created or when it is cleared. This also means that before
-the first byte with a pts is removed from the adapter, the pts
+the first byte with a pts is added to the adapter, the pts
 and distance returned are GST_CLOCK_TIME_NONE and 0 respectively.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">The previously seen pts at given offset.</doc>
@@ -984,6 +984,13 @@ Control is given to the subclass when all pads have data.
 
 This class used to live in gst-plugins-bad and was moved to core.</doc>
       <virtual-method name="aggregate">
+        <doc xml:space="preserve">Mandatory.
+                 Called when buffers are queued on all sinkpads. Classes
+                 should iterate the GstElement-&gt;sinkpads and peek or steal
+                 buffers from the #GstAggregatorPads. If the subclass returns
+                 GST_FLOW_EOS, sending of the eos event will be taken care
+                 of. Once / if a buffer has been constructed from the
+                 aggregated buffers, the subclass should call _finish_buffer.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -997,6 +1004,14 @@ This class used to live in gst-plugins-bad and was moved to core.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="clip">
+        <doc xml:space="preserve">Optional.
+                 Called when a buffer is received on a sink pad, the task of
+                 clipping it and translating it to the current segment falls
+                 on the subclass. The function should use the segment of data
+                 and the negotiated media type on the pad to perform
+                 clipping of input buffer. This function takes ownership of
+                 buf and should output a buffer or return NULL in
+                 if the buffer should be dropped.</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Buffer" c:type="GstBuffer*"/>
         </return-value>
@@ -1013,6 +1028,10 @@ This class used to live in gst-plugins-bad and was moved to core.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="create_new_pad" introspectable="0">
+        <doc xml:space="preserve">Optional.
+                 Called when a new pad needs to be created. Allows subclass that
+                 don't have a single sink pad template to provide a pad based
+                 on the provided information.</doc>
         <return-value>
           <type name="AggregatorPad" c:type="GstAggregatorPad*"/>
         </return-value>
@@ -1032,6 +1051,11 @@ This class used to live in gst-plugins-bad and was moved to core.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="decide_allocation">
+        <doc xml:space="preserve">Optional.
+                    Allows the subclass to influence the allocation choices.
+                    Setup the allocation parameters for allocating output
+                    buffers. The passed in query contains the result of the
+                    downstream allocation query.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1081,6 +1105,10 @@ sent before pushing the buffer.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="fixate_src_caps">
+        <doc xml:space="preserve">Optional.
+                  Fixate and return the src pad caps provided.  The function takes
+                  ownership of @caps and returns a fixated version of
+                  @caps. @caps is not guaranteed to be writable.</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Caps" c:type="GstCaps*"/>
         </return-value>
@@ -1094,6 +1122,10 @@ sent before pushing the buffer.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="flush">
+        <doc xml:space="preserve">Optional.
+                 Called after a successful flushing seek, once all the flush
+                 stops have been received. Flush pad-specific data in
+                 #GstAggregatorPad-&gt;flush.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -1104,6 +1136,12 @@ sent before pushing the buffer.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="get_next_time">
+        <doc xml:space="preserve">Optional.
+                 Called when the element needs to know the running time of the next
+                 rendered buffer for live pipelines. This causes deadline
+                 based aggregation to occur. Defaults to returning
+                 GST_CLOCK_TIME_NONE causing the element to wait for buffers
+                 on all sink pads before aggregating.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.ClockTime" c:type="GstClockTime"/>
         </return-value>
@@ -1129,6 +1167,8 @@ if #GstAggregatorClass::negotiate fails.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="negotiated_src_caps">
+        <doc xml:space="preserve">Optional.
+                      Notifies subclasses what caps format has been negotiated</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1163,6 +1203,8 @@ control aggregating parameters for a given set of input samples.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="propose_allocation">
+        <doc xml:space="preserve">Optional.
+                    Allows the subclass to handle the allocation query from upstream.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1182,6 +1224,9 @@ control aggregating parameters for a given set of input samples.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="sink_event">
+        <doc xml:space="preserve">Optional.
+                 Called when an event is received on a sink pad, the subclass
+                 should always chain up.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1198,6 +1243,9 @@ control aggregating parameters for a given set of input samples.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="sink_event_pre_queue">
+        <doc xml:space="preserve">Optional.
+                       Called when an event is received on a sink pad before queueing up
+                       serialized events. The subclass should always chain up (Since: 1.18).</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -1214,6 +1262,9 @@ control aggregating parameters for a given set of input samples.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="sink_query">
+        <doc xml:space="preserve">Optional.
+                 Called when a query is received on a sink pad, the subclass
+                 should always chain up.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1230,6 +1281,9 @@ control aggregating parameters for a given set of input samples.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="sink_query_pre_queue">
+        <doc xml:space="preserve">Optional.
+                       Called when a query is received on a sink pad before queueing up
+                       serialized queries. The subclass should always chain up (Since: 1.18).</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1246,6 +1300,9 @@ control aggregating parameters for a given set of input samples.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="src_activate">
+        <doc xml:space="preserve">Optional.
+                 Called when the src pad is activated, it will start/stop its
+                 pad task right after that call.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1262,6 +1319,9 @@ control aggregating parameters for a given set of input samples.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="src_event">
+        <doc xml:space="preserve">Optional.
+                 Called when an event is received on the src pad, the subclass
+                 should always chain up.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1275,6 +1335,9 @@ control aggregating parameters for a given set of input samples.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="src_query">
+        <doc xml:space="preserve">Optional.
+                 Called when a query is received on the src pad, the subclass
+                 should always chain up.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1288,6 +1351,10 @@ control aggregating parameters for a given set of input samples.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="start">
+        <doc xml:space="preserve">Optional.
+                 Called when the element goes from READY to PAUSED.
+                 The subclass should get ready to process
+                 aggregated buffers.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1298,6 +1365,9 @@ control aggregating parameters for a given set of input samples.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="stop">
+        <doc xml:space="preserve">Optional.
+                 Called when the element goes from PAUSED to READY.
+                 The subclass should free all resources and reset its state.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -1702,6 +1772,10 @@ _finish_buffer from inside that function.</doc>
         <type name="Gst.ElementClass" c:type="GstElementClass"/>
       </field>
       <field name="flush">
+        <doc xml:space="preserve">Optional.
+                 Called after a successful flushing seek, once all the flush
+                 stops have been received. Flush pad-specific data in
+                 #GstAggregatorPad-&gt;flush.</doc>
         <callback name="flush">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -1714,6 +1788,14 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="clip">
+        <doc xml:space="preserve">Optional.
+                 Called when a buffer is received on a sink pad, the task of
+                 clipping it and translating it to the current segment falls
+                 on the subclass. The function should use the segment of data
+                 and the negotiated media type on the pad to perform
+                 clipping of input buffer. This function takes ownership of
+                 buf and should output a buffer or return NULL in
+                 if the buffer should be dropped.</doc>
         <callback name="clip">
           <return-value transfer-ownership="full">
             <type name="Gst.Buffer" c:type="GstBuffer*"/>
@@ -1732,6 +1814,13 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="finish_buffer">
+        <doc xml:space="preserve">Optional.
+                 Called when a subclass calls gst_aggregator_finish_buffer()
+                 from their aggregate function to push out a buffer.
+                 Subclasses can override this to modify or decorate buffers
+                 before they get pushed out. This function takes ownership
+                 of the buffer passed. Subclasses that override this method
+                 should always chain up to the parent class virtual method.</doc>
         <callback name="finish_buffer">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -1749,6 +1838,9 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="sink_event">
+        <doc xml:space="preserve">Optional.
+                 Called when an event is received on a sink pad, the subclass
+                 should always chain up.</doc>
         <callback name="sink_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -1767,6 +1859,9 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="sink_query">
+        <doc xml:space="preserve">Optional.
+                 Called when a query is received on a sink pad, the subclass
+                 should always chain up.</doc>
         <callback name="sink_query">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -1785,6 +1880,9 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="src_event">
+        <doc xml:space="preserve">Optional.
+                 Called when an event is received on the src pad, the subclass
+                 should always chain up.</doc>
         <callback name="src_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -1800,6 +1898,9 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="src_query">
+        <doc xml:space="preserve">Optional.
+                 Called when a query is received on the src pad, the subclass
+                 should always chain up.</doc>
         <callback name="src_query">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -1815,6 +1916,9 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="src_activate">
+        <doc xml:space="preserve">Optional.
+                 Called when the src pad is activated, it will start/stop its
+                 pad task right after that call.</doc>
         <callback name="src_activate">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -1833,6 +1937,13 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="aggregate">
+        <doc xml:space="preserve">Mandatory.
+                 Called when buffers are queued on all sinkpads. Classes
+                 should iterate the GstElement-&gt;sinkpads and peek or steal
+                 buffers from the #GstAggregatorPads. If the subclass returns
+                 GST_FLOW_EOS, sending of the eos event will be taken care
+                 of. Once / if a buffer has been constructed from the
+                 aggregated buffers, the subclass should call _finish_buffer.</doc>
         <callback name="aggregate">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -1848,6 +1959,9 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="stop">
+        <doc xml:space="preserve">Optional.
+                 Called when the element goes from PAUSED to READY.
+                 The subclass should free all resources and reset its state.</doc>
         <callback name="stop">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -1860,6 +1974,10 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="start">
+        <doc xml:space="preserve">Optional.
+                 Called when the element goes from READY to PAUSED.
+                 The subclass should get ready to process
+                 aggregated buffers.</doc>
         <callback name="start">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -1872,6 +1990,12 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="get_next_time">
+        <doc xml:space="preserve">Optional.
+                 Called when the element needs to know the running time of the next
+                 rendered buffer for live pipelines. This causes deadline
+                 based aggregation to occur. Defaults to returning
+                 GST_CLOCK_TIME_NONE causing the element to wait for buffers
+                 on all sink pads before aggregating.</doc>
         <callback name="get_next_time">
           <return-value transfer-ownership="none">
             <type name="Gst.ClockTime" c:type="GstClockTime"/>
@@ -1884,6 +2008,10 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="create_new_pad" introspectable="0">
+        <doc xml:space="preserve">Optional.
+                 Called when a new pad needs to be created. Allows subclass that
+                 don't have a single sink pad template to provide a pad based
+                 on the provided information.</doc>
         <callback name="create_new_pad" introspectable="0">
           <return-value>
             <type name="AggregatorPad" c:type="GstAggregatorPad*"/>
@@ -1905,6 +2033,12 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="update_src_caps">
+        <doc xml:space="preserve">Lets subclasses update the #GstCaps representing
+                  the src pad caps before usage.  The result should end up
+                  in @ret. Return %GST_AGGREGATOR_FLOW_NEED_DATA to indicate that the
+                  element needs more information (caps, a buffer, etc) to
+                  choose the correct caps. Should return ANY caps if the
+                  stream has not caps at all.</doc>
         <callback name="update_src_caps">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -1923,6 +2057,10 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="fixate_src_caps">
+        <doc xml:space="preserve">Optional.
+                  Fixate and return the src pad caps provided.  The function takes
+                  ownership of @caps and returns a fixated version of
+                  @caps. @caps is not guaranteed to be writable.</doc>
         <callback name="fixate_src_caps">
           <return-value transfer-ownership="full">
             <type name="Gst.Caps" c:type="GstCaps*"/>
@@ -1938,6 +2076,8 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="negotiated_src_caps">
+        <doc xml:space="preserve">Optional.
+                      Notifies subclasses what caps format has been negotiated</doc>
         <callback name="negotiated_src_caps">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -1953,6 +2093,11 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="decide_allocation">
+        <doc xml:space="preserve">Optional.
+                    Allows the subclass to influence the allocation choices.
+                    Setup the allocation parameters for allocating output
+                    buffers. The passed in query contains the result of the
+                    downstream allocation query.</doc>
         <callback name="decide_allocation">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -1968,6 +2113,8 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="propose_allocation">
+        <doc xml:space="preserve">Optional.
+                    Allows the subclass to handle the allocation query from upstream.</doc>
         <callback name="propose_allocation">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -1989,6 +2136,8 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="negotiate">
+        <doc xml:space="preserve">Optional.
+            Negotiate the caps with the peer (Since: 1.18).</doc>
         <callback name="negotiate">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the negotiation succeeded, else %FALSE.</doc>
@@ -2003,6 +2152,9 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="sink_event_pre_queue">
+        <doc xml:space="preserve">Optional.
+                       Called when an event is received on a sink pad before queueing up
+                       serialized events. The subclass should always chain up (Since: 1.18).</doc>
         <callback name="sink_event_pre_queue">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -2021,6 +2173,9 @@ _finish_buffer from inside that function.</doc>
         </callback>
       </field>
       <field name="sink_query_pre_queue">
+        <doc xml:space="preserve">Optional.
+                       Called when a query is received on a sink pad before queueing up
+                       serialized queries. The subclass should always chain up (Since: 1.18).</doc>
         <callback name="sink_query_pre_queue">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -2085,6 +2240,10 @@ _finish_buffer from inside that function.</doc>
 
 This class used to live in gst-plugins-bad and was moved to core.</doc>
       <virtual-method name="flush">
+        <doc xml:space="preserve">Optional
+              Called when the pad has received a flush stop, this is the place
+              to flush any information specific to the pad, it allows for individual
+              pads to be flushed while others might not be.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -2098,6 +2257,9 @@ This class used to live in gst-plugins-bad and was moved to core.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="skip_buffer">
+        <doc xml:space="preserve">Optional
+              Called before input buffers are queued in the pad, return %TRUE
+              if the buffer should be skipped.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -2230,6 +2392,10 @@ usage.</doc>
         <type name="Gst.PadClass" c:type="GstPadClass"/>
       </field>
       <field name="flush">
+        <doc xml:space="preserve">Optional
+              Called when the pad has received a flush stop, this is the place
+              to flush any information specific to the pad, it allows for individual
+              pads to be flushed while others might not be.</doc>
         <callback name="flush">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -2245,6 +2411,9 @@ usage.</doc>
         </callback>
       </field>
       <field name="skip_buffer">
+        <doc xml:space="preserve">Optional
+              Called before input buffers are queued in the pad, return %TRUE
+              if the buffer should be skipped.</doc>
         <callback name="skip_buffer">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -2727,6 +2896,8 @@ Things that subclass need to take care of:
   These rates are also used to update (estimated) duration at regular
   frame intervals.</doc>
       <virtual-method name="convert">
+        <doc xml:space="preserve">Optional.
+                 Convert between formats.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -2749,6 +2920,10 @@ Things that subclass need to take care of:
         </parameters>
       </virtual-method>
       <virtual-method name="detect">
+        <doc xml:space="preserve">Optional.
+                  Called until it doesn't return GST_FLOW_OK anymore for
+                  the first buffers. Can be used by the subclass to detect
+                  the stream format.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -2762,6 +2937,8 @@ Things that subclass need to take care of:
         </parameters>
       </virtual-method>
       <virtual-method name="get_sink_caps">
+        <doc xml:space="preserve">Optional.
+                 Allows the subclass to do its own sink get caps if needed.</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Caps" c:type="GstCaps*"/>
         </return-value>
@@ -2801,6 +2978,12 @@ if desired.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="pre_push_frame">
+        <doc xml:space="preserve">Optional.
+                  Called just prior to pushing a frame (after any pending
+                  events have been sent) to give subclass a chance to perform
+                  additional actions at this time (e.g. tag sending) or to
+                  decide whether this buffer should be dropped or not
+                  (e.g. custom segment clipping).</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -2814,6 +2997,8 @@ if desired.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="set_sink_caps">
+        <doc xml:space="preserve">Optional.
+                 Allows the subclass to be notified of the actual caps set.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -2827,6 +3012,10 @@ if desired.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="sink_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the sink pad. This function should chain
+                 up to the parent implementation to let the default handler
+                 run.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -2840,6 +3029,10 @@ if desired.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="sink_query">
+        <doc xml:space="preserve">Optional.
+                  Query handler on the sink pad. This function should chain
+                  up to the parent implementation to let the default handler
+                  run (Since: 1.2)</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -2853,6 +3046,9 @@ if desired.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="src_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the source pad. Should chain up to the
+                 parent to let the default handler run.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -2866,6 +3062,9 @@ if desired.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="src_query">
+        <doc xml:space="preserve">Optional.
+                  Query handler on the source pad. Should chain up to the
+                  parent to let the default handler run (Since: 1.2)</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -2879,6 +3078,9 @@ if desired.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="start">
+        <doc xml:space="preserve">Optional.
+                 Called when the element starts processing.
+                 Allows opening external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -2889,6 +3091,9 @@ if desired.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="stop">
+        <doc xml:space="preserve">Optional.
+                 Called when the element stops processing.
+                 Allows closing external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3341,6 +3546,9 @@ needed. At minimum @handle_frame needs to be overridden.</doc>
         <type name="Gst.ElementClass" c:type="GstElementClass"/>
       </field>
       <field name="start">
+        <doc xml:space="preserve">Optional.
+                 Called when the element starts processing.
+                 Allows opening external resources.</doc>
         <callback name="start">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -3353,6 +3561,9 @@ needed. At minimum @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="stop">
+        <doc xml:space="preserve">Optional.
+                 Called when the element stops processing.
+                 Allows closing external resources.</doc>
         <callback name="stop">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -3365,6 +3576,8 @@ needed. At minimum @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="set_sink_caps">
+        <doc xml:space="preserve">Optional.
+                 Allows the subclass to be notified of the actual caps set.</doc>
         <callback name="set_sink_caps">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -3380,6 +3593,16 @@ needed. At minimum @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="handle_frame">
+        <doc xml:space="preserve">Parses the input data into valid frames as defined by subclass
+                 which should be passed to gst_base_parse_finish_frame().
+                 The frame's input buffer is guaranteed writable,
+                 whereas the input frame ownership is held by caller
+                 (so subclass should make a copy if it needs to hang on).
+                 Input buffer (data) is provided by baseclass with as much
+                 metadata set as possible by baseclass according to upstream
+                 information and/or subclass settings,
+                 though subclass may still set buffer timestamp and duration
+                 if desired.</doc>
         <callback name="handle_frame">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -3398,6 +3621,12 @@ needed. At minimum @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="pre_push_frame">
+        <doc xml:space="preserve">Optional.
+                  Called just prior to pushing a frame (after any pending
+                  events have been sent) to give subclass a chance to perform
+                  additional actions at this time (e.g. tag sending) or to
+                  decide whether this buffer should be dropped or not
+                  (e.g. custom segment clipping).</doc>
         <callback name="pre_push_frame">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -3413,6 +3642,8 @@ needed. At minimum @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="convert">
+        <doc xml:space="preserve">Optional.
+                 Convert between formats.</doc>
         <callback name="convert">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -3437,6 +3668,10 @@ needed. At minimum @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="sink_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the sink pad. This function should chain
+                 up to the parent implementation to let the default handler
+                 run.</doc>
         <callback name="sink_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -3452,6 +3687,9 @@ needed. At minimum @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="src_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the source pad. Should chain up to the
+                 parent to let the default handler run.</doc>
         <callback name="src_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -3467,6 +3705,8 @@ needed. At minimum @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="get_sink_caps">
+        <doc xml:space="preserve">Optional.
+                 Allows the subclass to do its own sink get caps if needed.</doc>
         <callback name="get_sink_caps">
           <return-value transfer-ownership="full">
             <type name="Gst.Caps" c:type="GstCaps*"/>
@@ -3482,6 +3722,10 @@ needed. At minimum @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="detect">
+        <doc xml:space="preserve">Optional.
+                  Called until it doesn't return GST_FLOW_OK anymore for
+                  the first buffers. Can be used by the subclass to detect
+                  the stream format.</doc>
         <callback name="detect">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -3497,6 +3741,10 @@ needed. At minimum @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="sink_query">
+        <doc xml:space="preserve">Optional.
+                  Query handler on the sink pad. This function should chain
+                  up to the parent implementation to let the default handler
+                  run (Since: 1.2)</doc>
         <callback name="sink_query">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -3512,6 +3760,9 @@ needed. At minimum @handle_frame needs to be overridden.</doc>
         </callback>
       </field>
       <field name="src_query">
+        <doc xml:space="preserve">Optional.
+                  Query handler on the source pad. Should chain up to the
+                  parent to let the default handler run (Since: 1.2)</doc>
         <callback name="src_query">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -3797,6 +4048,11 @@ The #GstBaseSink:async property can be used to instruct the sink to never
 perform an ASYNC state change. This feature is mostly usable when dealing
 with non-synchronized streams or sparse streams.</doc>
       <virtual-method name="activate_pull">
+        <doc xml:space="preserve">Subclasses should override this when they can provide an
+    alternate method of spawning a thread to drive the pipeline in pull mode.
+    Should start or stop the pulling thread, depending on the value of the
+    "active" argument. Called after actually activating the sink pad in pull
+    mode. The default implementation starts a task on the sink pad.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3810,6 +4066,7 @@ with non-synchronized streams or sparse streams.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="event">
+        <doc xml:space="preserve">Override this to handle events arriving on the sink pad</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3823,6 +4080,8 @@ with non-synchronized streams or sparse streams.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="fixate">
+        <doc xml:space="preserve">Only useful in pull mode. Implement if you have
+    ideas about what should be the default values for the caps you support.</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Caps" c:type="GstCaps*"/>
         </return-value>
@@ -3872,6 +4131,8 @@ with non-synchronized streams or sparse streams.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="prepare">
+        <doc xml:space="preserve">Called to prepare the buffer for @render and @preroll. This
+    function is called before synchronisation is performed.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -3885,6 +4146,8 @@ with non-synchronized streams or sparse streams.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="prepare_list">
+        <doc xml:space="preserve">Called to prepare the buffer list for @render_list. This
+    function is called before synchronisation is performed.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -3898,6 +4161,7 @@ with non-synchronized streams or sparse streams.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="preroll">
+        <doc xml:space="preserve">Called to present the preroll buffer if desired.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -3911,6 +4175,7 @@ with non-synchronized streams or sparse streams.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="propose_allocation">
+        <doc xml:space="preserve">configure the allocation query</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3924,6 +4189,7 @@ with non-synchronized streams or sparse streams.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="query">
+        <doc xml:space="preserve">perform a #GstQuery on the element.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3937,6 +4203,8 @@ with non-synchronized streams or sparse streams.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="render">
+        <doc xml:space="preserve">Called when a buffer should be presented or output, at the
+    correct moment if the #GstBaseSink has been set to sync to the clock.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -3950,6 +4218,8 @@ with non-synchronized streams or sparse streams.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="render_list">
+        <doc xml:space="preserve">Same as @render but used with buffer lists instead of
+    buffers.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -3963,6 +4233,7 @@ with non-synchronized streams or sparse streams.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="set_caps">
+        <doc xml:space="preserve">Notify subclass of changed caps</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3976,6 +4247,7 @@ with non-synchronized streams or sparse streams.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="start">
+        <doc xml:space="preserve">Start processing. Ideal for opening resources in the subclass</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3986,6 +4258,7 @@ with non-synchronized streams or sparse streams.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="stop">
+        <doc xml:space="preserve">Stop processing. Subclasses should use this to close resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3996,6 +4269,8 @@ with non-synchronized streams or sparse streams.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="unlock">
+        <doc xml:space="preserve">Unlock any pending access to the resource. Subclasses should
+    unblock any blocked function ASAP and call gst_base_sink_wait_preroll()</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4006,6 +4281,11 @@ with non-synchronized streams or sparse streams.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="unlock_stop">
+        <doc xml:space="preserve">Clear the previous unlock request. Subclasses should clear
+    any state they set during #GstBaseSinkClass::unlock, and be ready to
+    continue where they left off after gst_base_sink_wait_preroll(),
+    gst_base_sink_wait() or gst_wait_sink_wait_clock() return or
+    #GstBaseSinkClass::render is called again.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4016,6 +4296,9 @@ with non-synchronized streams or sparse streams.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="wait_event">
+        <doc xml:space="preserve">Override this to implement custom logic to wait for the event
+    time (for events like EOS and GAP). Subclasses should always first
+    chain up to the default implementation.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -4776,6 +5059,7 @@ output/present buffers.</doc>
         <type name="Gst.ElementClass" c:type="GstElementClass"/>
       </field>
       <field name="get_caps">
+        <doc xml:space="preserve">Called to get sink pad caps from the subclass</doc>
         <callback name="get_caps">
           <return-value transfer-ownership="full">
             <type name="Gst.Caps" c:type="GstCaps*"/>
@@ -4791,6 +5075,7 @@ output/present buffers.</doc>
         </callback>
       </field>
       <field name="set_caps">
+        <doc xml:space="preserve">Notify subclass of changed caps</doc>
         <callback name="set_caps">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4806,6 +5091,8 @@ output/present buffers.</doc>
         </callback>
       </field>
       <field name="fixate">
+        <doc xml:space="preserve">Only useful in pull mode. Implement if you have
+    ideas about what should be the default values for the caps you support.</doc>
         <callback name="fixate">
           <return-value transfer-ownership="full">
             <type name="Gst.Caps" c:type="GstCaps*"/>
@@ -4821,6 +5108,11 @@ output/present buffers.</doc>
         </callback>
       </field>
       <field name="activate_pull">
+        <doc xml:space="preserve">Subclasses should override this when they can provide an
+    alternate method of spawning a thread to drive the pipeline in pull mode.
+    Should start or stop the pulling thread, depending on the value of the
+    "active" argument. Called after actually activating the sink pad in pull
+    mode. The default implementation starts a task on the sink pad.</doc>
         <callback name="activate_pull">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4836,6 +5128,8 @@ output/present buffers.</doc>
         </callback>
       </field>
       <field name="get_times">
+        <doc xml:space="preserve">Called to get the start and end times for synchronising
+    the passed buffer to the clock</doc>
         <callback name="get_times">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -4859,6 +5153,7 @@ output/present buffers.</doc>
         </callback>
       </field>
       <field name="propose_allocation">
+        <doc xml:space="preserve">configure the allocation query</doc>
         <callback name="propose_allocation">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4874,6 +5169,7 @@ output/present buffers.</doc>
         </callback>
       </field>
       <field name="start">
+        <doc xml:space="preserve">Start processing. Ideal for opening resources in the subclass</doc>
         <callback name="start">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4886,6 +5182,7 @@ output/present buffers.</doc>
         </callback>
       </field>
       <field name="stop">
+        <doc xml:space="preserve">Stop processing. Subclasses should use this to close resources.</doc>
         <callback name="stop">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4898,6 +5195,8 @@ output/present buffers.</doc>
         </callback>
       </field>
       <field name="unlock">
+        <doc xml:space="preserve">Unlock any pending access to the resource. Subclasses should
+    unblock any blocked function ASAP and call gst_base_sink_wait_preroll()</doc>
         <callback name="unlock">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4910,6 +5209,11 @@ output/present buffers.</doc>
         </callback>
       </field>
       <field name="unlock_stop">
+        <doc xml:space="preserve">Clear the previous unlock request. Subclasses should clear
+    any state they set during #GstBaseSinkClass::unlock, and be ready to
+    continue where they left off after gst_base_sink_wait_preroll(),
+    gst_base_sink_wait() or gst_wait_sink_wait_clock() return or
+    #GstBaseSinkClass::render is called again.</doc>
         <callback name="unlock_stop">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4922,6 +5226,7 @@ output/present buffers.</doc>
         </callback>
       </field>
       <field name="query">
+        <doc xml:space="preserve">perform a #GstQuery on the element.</doc>
         <callback name="query">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4937,6 +5242,7 @@ output/present buffers.</doc>
         </callback>
       </field>
       <field name="event">
+        <doc xml:space="preserve">Override this to handle events arriving on the sink pad</doc>
         <callback name="event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -4952,6 +5258,9 @@ output/present buffers.</doc>
         </callback>
       </field>
       <field name="wait_event">
+        <doc xml:space="preserve">Override this to implement custom logic to wait for the event
+    time (for events like EOS and GAP). Subclasses should always first
+    chain up to the default implementation.</doc>
         <callback name="wait_event">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -4967,6 +5276,8 @@ output/present buffers.</doc>
         </callback>
       </field>
       <field name="prepare">
+        <doc xml:space="preserve">Called to prepare the buffer for @render and @preroll. This
+    function is called before synchronisation is performed.</doc>
         <callback name="prepare">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -4982,6 +5293,8 @@ output/present buffers.</doc>
         </callback>
       </field>
       <field name="prepare_list">
+        <doc xml:space="preserve">Called to prepare the buffer list for @render_list. This
+    function is called before synchronisation is performed.</doc>
         <callback name="prepare_list">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -4997,6 +5310,7 @@ output/present buffers.</doc>
         </callback>
       </field>
       <field name="preroll">
+        <doc xml:space="preserve">Called to present the preroll buffer if desired.</doc>
         <callback name="preroll">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -5012,6 +5326,8 @@ output/present buffers.</doc>
         </callback>
       </field>
       <field name="render">
+        <doc xml:space="preserve">Called when a buffer should be presented or output, at the
+    correct moment if the #GstBaseSink has been set to sync to the clock.</doc>
         <callback name="render">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -5027,6 +5343,8 @@ output/present buffers.</doc>
         </callback>
       </field>
       <field name="render_list">
+        <doc xml:space="preserve">Same as @render but used with buffer lists instead of
+    buffers.</doc>
         <callback name="render_list">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -5204,6 +5522,7 @@ implementation will call alloc if no allocated @buf is provided and then call fi
         </parameters>
       </virtual-method>
       <virtual-method name="decide_allocation">
+        <doc xml:space="preserve">configure the allocation query</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -5217,6 +5536,7 @@ implementation will call alloc if no allocated @buf is provided and then call fi
         </parameters>
       </virtual-method>
       <virtual-method name="do_seek">
+        <doc xml:space="preserve">Perform seeking on the resource to the indicated segment.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -5230,6 +5550,7 @@ implementation will call alloc if no allocated @buf is provided and then call fi
         </parameters>
       </virtual-method>
       <virtual-method name="event">
+        <doc xml:space="preserve">Override this to implement custom event handling.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -5243,6 +5564,8 @@ implementation will call alloc if no allocated @buf is provided and then call fi
         </parameters>
       </virtual-method>
       <virtual-method name="fill">
+        <doc xml:space="preserve">Ask the subclass to fill the buffer with data for offset and size. The
+  passed buffer is guaranteed to hold the requested amount of bytes.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -5328,6 +5651,7 @@ out. The base class will sync on the clock using these times.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="is_seekable">
+        <doc xml:space="preserve">Check if the source can seek</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -5357,6 +5681,12 @@ buffer is allocated.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="prepare_seek_segment">
+        <doc xml:space="preserve">Prepare the #GstSegment that will be passed to the
+  #GstBaseSrcClass::do_seek vmethod for executing a seek
+  request. Sub-classes should override this if they support seeking in
+  formats other than the configured native format. By default, it tries to
+  convert the seek arguments to the configured native format and prepare a
+  segment in that format.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -5373,6 +5703,7 @@ buffer is allocated.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="query">
+        <doc xml:space="preserve">Handle a requested query.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -5403,6 +5734,10 @@ buffer is allocated.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="start">
+        <doc xml:space="preserve">Start processing. Subclasses should open resources and prepare
+   to produce data. Implementation should call gst_base_src_start_complete()
+   when the operation completes, either from the current thread or any other
+   thread that finishes the start operation asynchronously.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -5413,6 +5748,7 @@ buffer is allocated.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="stop">
+        <doc xml:space="preserve">Stop processing. Subclasses should use this to close resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -5423,6 +5759,12 @@ buffer is allocated.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="unlock">
+        <doc xml:space="preserve">Unlock any pending access to the resource. Subclasses should unblock
+   any blocked function ASAP. In particular, any `create()` function in
+   progress should be unblocked and should return GST_FLOW_FLUSHING. Any
+   future #GstBaseSrcClass::create function call should also return
+   GST_FLOW_FLUSHING until the #GstBaseSrcClass::unlock_stop function has
+   been called.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -5433,6 +5775,9 @@ buffer is allocated.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="unlock_stop">
+        <doc xml:space="preserve">Clear the previous unlock request. Subclasses should clear any
+   state they set during #GstBaseSrcClass::unlock, such as clearing command
+   queues.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -5994,6 +6339,7 @@ buffers.</doc>
         <type name="Gst.ElementClass" c:type="GstElementClass"/>
       </field>
       <field name="get_caps">
+        <doc xml:space="preserve">Called to get the caps to report</doc>
         <callback name="get_caps">
           <return-value transfer-ownership="full">
             <type name="Gst.Caps" c:type="GstCaps*"/>
@@ -6009,6 +6355,7 @@ buffers.</doc>
         </callback>
       </field>
       <field name="negotiate">
+        <doc xml:space="preserve">Negotiated the caps with the peer.</doc>
         <callback name="negotiate">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the negotiation succeeded, else %FALSE.</doc>
@@ -6023,6 +6370,8 @@ buffers.</doc>
         </callback>
       </field>
       <field name="fixate">
+        <doc xml:space="preserve">Called during negotiation if caps need fixating. Implement instead of
+  setting a fixate function on the source pad.</doc>
         <callback name="fixate">
           <return-value transfer-ownership="full">
             <doc xml:space="preserve">the fixated caps</doc>
@@ -6039,6 +6388,7 @@ buffers.</doc>
         </callback>
       </field>
       <field name="set_caps">
+        <doc xml:space="preserve">Notify subclass of changed output caps</doc>
         <callback name="set_caps">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the caps could be set</doc>
@@ -6057,6 +6407,7 @@ buffers.</doc>
         </callback>
       </field>
       <field name="decide_allocation">
+        <doc xml:space="preserve">configure the allocation query</doc>
         <callback name="decide_allocation">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -6072,6 +6423,10 @@ buffers.</doc>
         </callback>
       </field>
       <field name="start">
+        <doc xml:space="preserve">Start processing. Subclasses should open resources and prepare
+   to produce data. Implementation should call gst_base_src_start_complete()
+   when the operation completes, either from the current thread or any other
+   thread that finishes the start operation asynchronously.</doc>
         <callback name="start">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -6084,6 +6439,7 @@ buffers.</doc>
         </callback>
       </field>
       <field name="stop">
+        <doc xml:space="preserve">Stop processing. Subclasses should use this to close resources.</doc>
         <callback name="stop">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -6096,6 +6452,9 @@ buffers.</doc>
         </callback>
       </field>
       <field name="get_times">
+        <doc xml:space="preserve">Given a buffer, return the start and stop time when it
+   should be pushed out. The base class will sync on the clock using
+   these times.</doc>
         <callback name="get_times">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -6117,6 +6476,8 @@ buffers.</doc>
         </callback>
       </field>
       <field name="get_size">
+        <doc xml:space="preserve">Return the total size of the resource, in the format set by
+    gst_base_src_set_format().</doc>
         <callback name="get_size">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the size is available and has been set.</doc>
@@ -6133,6 +6494,7 @@ buffers.</doc>
         </callback>
       </field>
       <field name="is_seekable">
+        <doc xml:space="preserve">Check if the source can seek</doc>
         <callback name="is_seekable">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -6145,6 +6507,12 @@ buffers.</doc>
         </callback>
       </field>
       <field name="prepare_seek_segment">
+        <doc xml:space="preserve">Prepare the #GstSegment that will be passed to the
+  #GstBaseSrcClass::do_seek vmethod for executing a seek
+  request. Sub-classes should override this if they support seeking in
+  formats other than the configured native format. By default, it tries to
+  convert the seek arguments to the configured native format and prepare a
+  segment in that format.</doc>
         <callback name="prepare_seek_segment">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -6163,6 +6531,7 @@ buffers.</doc>
         </callback>
       </field>
       <field name="do_seek">
+        <doc xml:space="preserve">Perform seeking on the resource to the indicated segment.</doc>
         <callback name="do_seek">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -6178,6 +6547,12 @@ buffers.</doc>
         </callback>
       </field>
       <field name="unlock">
+        <doc xml:space="preserve">Unlock any pending access to the resource. Subclasses should unblock
+   any blocked function ASAP. In particular, any `create()` function in
+   progress should be unblocked and should return GST_FLOW_FLUSHING. Any
+   future #GstBaseSrcClass::create function call should also return
+   GST_FLOW_FLUSHING until the #GstBaseSrcClass::unlock_stop function has
+   been called.</doc>
         <callback name="unlock">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -6190,6 +6565,9 @@ buffers.</doc>
         </callback>
       </field>
       <field name="unlock_stop">
+        <doc xml:space="preserve">Clear the previous unlock request. Subclasses should clear any
+   state they set during #GstBaseSrcClass::unlock, such as clearing command
+   queues.</doc>
         <callback name="unlock_stop">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -6202,6 +6580,7 @@ buffers.</doc>
         </callback>
       </field>
       <field name="query">
+        <doc xml:space="preserve">Handle a requested query.</doc>
         <callback name="query">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -6217,6 +6596,7 @@ buffers.</doc>
         </callback>
       </field>
       <field name="event">
+        <doc xml:space="preserve">Override this to implement custom event handling.</doc>
         <callback name="event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -6232,6 +6612,13 @@ buffers.</doc>
         </callback>
       </field>
       <field name="create">
+        <doc xml:space="preserve">Ask the subclass to create a buffer with offset and size.  When the
+  subclass returns GST_FLOW_OK, it MUST return a buffer of the requested size
+  unless fewer bytes are available because an EOS condition is near. No
+  buffer should be returned when the return value is different from
+  GST_FLOW_OK. A return value of GST_FLOW_EOS signifies that the end of
+  stream is reached. The default implementation will call
+  #GstBaseSrcClass::alloc and then call #GstBaseSrcClass::fill.</doc>
         <callback name="create">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -6253,6 +6640,8 @@ buffers.</doc>
         </callback>
       </field>
       <field name="alloc">
+        <doc xml:space="preserve">Ask the subclass to allocate a buffer with for offset and size. The
+  default implementation will create a new buffer from the negotiated allocator.</doc>
         <callback name="alloc">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -6274,6 +6663,8 @@ buffers.</doc>
         </callback>
       </field>
       <field name="fill">
+        <doc xml:space="preserve">Ask the subclass to fill the buffer with data for offset and size. The
+  passed buffer is guaranteed to hold the requested amount of bytes.</doc>
         <callback name="fill">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -6419,6 +6810,10 @@ It provides for:
   * Implied %TRUE if no transform function is implemented.
   * Implied %FALSE if ONLY transform function is implemented.</doc>
       <virtual-method name="accept_caps">
+        <doc xml:space="preserve">Optional.
+                 Subclasses can override this method to check if @caps can be
+                 handled by the element. The default implementation might not be
+                 the most optimal way to check this in all cases.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6435,6 +6830,10 @@ It provides for:
         </parameters>
       </virtual-method>
       <virtual-method name="before_transform">
+        <doc xml:space="preserve">Optional.
+                   This method is called right before the base class will
+                   start processing. Dynamic properties or other delayed
+                   configuration could be performed in this method.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -6448,6 +6847,10 @@ It provides for:
         </parameters>
       </virtual-method>
       <virtual-method name="copy_metadata">
+        <doc xml:space="preserve">Optional.
+                Copy the metadata from the input buffer to the output buffer.
+                The default implementation will copy the flags, timestamps and
+                offsets of the buffer.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6464,6 +6867,14 @@ It provides for:
         </parameters>
       </virtual-method>
       <virtual-method name="decide_allocation">
+        <doc xml:space="preserve">Setup the allocation parameters for allocating output
+                   buffers. The passed in query contains the result of the
+                   downstream allocation query. This function is only called
+                   when not operating in passthrough mode. The default
+                   implementation will remove all memory dependent metadata.
+                   If there is a @filter_meta method implementation, it will
+                   be called for all metadata API in the downstream query,
+                   otherwise the metadata API is removed.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6477,6 +6888,9 @@ It provides for:
         </parameters>
       </virtual-method>
       <virtual-method name="filter_meta">
+        <doc xml:space="preserve">Return %TRUE if the metadata API should be proposed in the
+              upstream allocation query. The default implementation is %NULL
+              and will cause all metadata to be removed.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6560,6 +6974,14 @@ It provides for:
         </parameters>
       </virtual-method>
       <virtual-method name="propose_allocation">
+        <doc xml:space="preserve">Propose buffer allocation parameters for upstream elements.
+                     This function must be implemented if the element reads or
+                     writes the buffer content. The query that was passed to
+                     the decide_allocation is passed in this method (or %NULL
+                     when the element is in passthrough mode). The default
+                     implementation will pass the query downstream when in
+                     passthrough mode and will copy all the filtered metadata
+                     API in non-passthrough mode.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6576,6 +6998,10 @@ It provides for:
         </parameters>
       </virtual-method>
       <virtual-method name="query">
+        <doc xml:space="preserve">Optional.
+                 Handle a requested query. Subclasses that implement this
+                 must chain up to the parent if they didn't handle the
+                 query</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6592,6 +7018,7 @@ It provides for:
         </parameters>
       </virtual-method>
       <virtual-method name="set_caps">
+        <doc xml:space="preserve">Allows the subclass to be notified of the actual caps set.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6634,6 +7061,9 @@ It provides for:
         </parameters>
       </virtual-method>
       <virtual-method name="start">
+        <doc xml:space="preserve">Optional.
+                 Called when the element starts processing.
+                 Allows opening external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6644,6 +7074,9 @@ It provides for:
         </parameters>
       </virtual-method>
       <virtual-method name="stop">
+        <doc xml:space="preserve">Optional.
+                 Called when the element stops processing.
+                 Allows closing external resources.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6654,6 +7087,13 @@ It provides for:
         </parameters>
       </virtual-method>
       <virtual-method name="submit_input_buffer">
+        <doc xml:space="preserve">Function which accepts a new input buffer and pre-processes it.
+                 The default implementation performs caps (re)negotiation, then
+                 QoS if needed, and places the input buffer into the @queued_buf
+                 member variable. If the buffer is dropped due to QoS, it returns
+                 GST_BASE_TRANSFORM_FLOW_DROPPED. If this input buffer is not
+                 contiguous with any previous input buffer, then @is_discont
+                 is set to %TRUE. (Since: 1.6)</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -6670,6 +7110,10 @@ It provides for:
         </parameters>
       </virtual-method>
       <virtual-method name="transform">
+        <doc xml:space="preserve">Required if the element does not operate in-place.
+                 Transforms one incoming buffer to one outgoing buffer.
+                 The function is allowed to change size/timestamp/duration
+                 of the outgoing buffer.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -6686,6 +7130,9 @@ It provides for:
         </parameters>
       </virtual-method>
       <virtual-method name="transform_caps">
+        <doc xml:space="preserve">Optional.  Given the pad in this direction and the given
+                 caps, what caps are allowed on the other pad in this
+                 element ?</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Caps" c:type="GstCaps*"/>
         </return-value>
@@ -6705,6 +7152,8 @@ It provides for:
         </parameters>
       </virtual-method>
       <virtual-method name="transform_ip">
+        <doc xml:space="preserve">Required if the element operates in-place.
+                 Transform the incoming buffer in-place.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -6718,6 +7167,10 @@ It provides for:
         </parameters>
       </virtual-method>
       <virtual-method name="transform_meta">
+        <doc xml:space="preserve">Optional. Transform the metadata on the input buffer to the
+                 output buffer. By default this method copies all meta without
+                 tags. Subclasses can implement this method and return %TRUE if
+                 the metadata is to be copied.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -7114,6 +7567,9 @@ same type and quantity) it should provide @transform_ip.</doc>
         <type name="gboolean" c:type="gboolean"/>
       </field>
       <field name="transform_caps">
+        <doc xml:space="preserve">Optional.  Given the pad in this direction and the given
+                 caps, what caps are allowed on the other pad in this
+                 element ?</doc>
         <callback name="transform_caps">
           <return-value transfer-ownership="full">
             <type name="Gst.Caps" c:type="GstCaps*"/>
@@ -7135,6 +7591,10 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="fixate_caps">
+        <doc xml:space="preserve">Optional. Given the pad in this direction and the given
+                 caps, fixate the caps on the other pad. The function takes
+                 ownership of @othercaps and returns a fixated version of
+                 @othercaps. @othercaps is not guaranteed to be writable.</doc>
         <callback name="fixate_caps">
           <return-value transfer-ownership="full">
             <type name="Gst.Caps" c:type="GstCaps*"/>
@@ -7156,6 +7616,10 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="accept_caps">
+        <doc xml:space="preserve">Optional.
+                 Subclasses can override this method to check if @caps can be
+                 handled by the element. The default implementation might not be
+                 the most optimal way to check this in all cases.</doc>
         <callback name="accept_caps">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7174,6 +7638,7 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="set_caps">
+        <doc xml:space="preserve">Allows the subclass to be notified of the actual caps set.</doc>
         <callback name="set_caps">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7192,6 +7657,10 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="query">
+        <doc xml:space="preserve">Optional.
+                 Handle a requested query. Subclasses that implement this
+                 must chain up to the parent if they didn't handle the
+                 query</doc>
         <callback name="query">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7210,6 +7679,14 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="decide_allocation">
+        <doc xml:space="preserve">Setup the allocation parameters for allocating output
+                   buffers. The passed in query contains the result of the
+                   downstream allocation query. This function is only called
+                   when not operating in passthrough mode. The default
+                   implementation will remove all memory dependent metadata.
+                   If there is a @filter_meta method implementation, it will
+                   be called for all metadata API in the downstream query,
+                   otherwise the metadata API is removed.</doc>
         <callback name="decide_allocation">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7225,6 +7702,9 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="filter_meta">
+        <doc xml:space="preserve">Return %TRUE if the metadata API should be proposed in the
+              upstream allocation query. The default implementation is %NULL
+              and will cause all metadata to be removed.</doc>
         <callback name="filter_meta">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7246,6 +7726,14 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="propose_allocation">
+        <doc xml:space="preserve">Propose buffer allocation parameters for upstream elements.
+                     This function must be implemented if the element reads or
+                     writes the buffer content. The query that was passed to
+                     the decide_allocation is passed in this method (or %NULL
+                     when the element is in passthrough mode). The default
+                     implementation will pass the query downstream when in
+                     passthrough mode and will copy all the filtered metadata
+                     API in non-passthrough mode.</doc>
         <callback name="propose_allocation">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7264,6 +7752,11 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="transform_size">
+        <doc xml:space="preserve">Optional. Given the size of a buffer in the given direction
+                 with the given caps, calculate the size in bytes of a buffer
+                 on the other pad with the given other caps.
+                 The default implementation uses get_unit_size and keeps
+                 the number of units the same.</doc>
         <callback name="transform_size">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7291,6 +7784,8 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="get_unit_size">
+        <doc xml:space="preserve">Required if the transform is not in-place.
+                 Get the size in bytes of one unit for the given caps.</doc>
         <callback name="get_unit_size">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7309,6 +7804,9 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="start">
+        <doc xml:space="preserve">Optional.
+                 Called when the element starts processing.
+                 Allows opening external resources.</doc>
         <callback name="start">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7321,6 +7819,9 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="stop">
+        <doc xml:space="preserve">Optional.
+                 Called when the element stops processing.
+                 Allows closing external resources.</doc>
         <callback name="stop">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7333,6 +7834,9 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="sink_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the sink pad. The default implementation
+                 handles the event and forwards it downstream.</doc>
         <callback name="sink_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7348,6 +7852,9 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="src_event">
+        <doc xml:space="preserve">Optional.
+                 Event handler on the source pad. The default implementation
+                 handles the event and forwards it upstream.</doc>
         <callback name="src_event">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7363,6 +7870,15 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="prepare_output_buffer">
+        <doc xml:space="preserve">Optional.
+                        Subclasses can override this to do their own
+                        allocation of output buffers.  Elements that only do
+                        analysis can return a subbuffer or even just
+                        return a reference to the input buffer (if in
+                        passthrough mode). The default implementation will
+                        use the negotiated allocator or bufferpool and
+                        transform_size to allocate an output buffer or it
+                        will return the input buffer in passthrough mode.</doc>
         <callback name="prepare_output_buffer">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -7381,6 +7897,10 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="copy_metadata">
+        <doc xml:space="preserve">Optional.
+                Copy the metadata from the input buffer to the output buffer.
+                The default implementation will copy the flags, timestamps and
+                offsets of the buffer.</doc>
         <callback name="copy_metadata">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7399,6 +7919,10 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="transform_meta">
+        <doc xml:space="preserve">Optional. Transform the metadata on the input buffer to the
+                 output buffer. By default this method copies all meta without
+                 tags. Subclasses can implement this method and return %TRUE if
+                 the metadata is to be copied.</doc>
         <callback name="transform_meta">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -7420,6 +7944,10 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="before_transform">
+        <doc xml:space="preserve">Optional.
+                   This method is called right before the base class will
+                   start processing. Dynamic properties or other delayed
+                   configuration could be performed in this method.</doc>
         <callback name="before_transform">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -7435,6 +7963,10 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="transform">
+        <doc xml:space="preserve">Required if the element does not operate in-place.
+                 Transforms one incoming buffer to one outgoing buffer.
+                 The function is allowed to change size/timestamp/duration
+                 of the outgoing buffer.</doc>
         <callback name="transform">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -7453,6 +7985,8 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="transform_ip">
+        <doc xml:space="preserve">Required if the element operates in-place.
+                 Transform the incoming buffer in-place.</doc>
         <callback name="transform_ip">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -7468,6 +8002,13 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="submit_input_buffer">
+        <doc xml:space="preserve">Function which accepts a new input buffer and pre-processes it.
+                 The default implementation performs caps (re)negotiation, then
+                 QoS if needed, and places the input buffer into the @queued_buf
+                 member variable. If the buffer is dropped due to QoS, it returns
+                 GST_BASE_TRANSFORM_FLOW_DROPPED. If this input buffer is not
+                 contiguous with any previous input buffer, then @is_discont
+                 is set to %TRUE. (Since: 1.6)</doc>
         <callback name="submit_input_buffer">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -7486,6 +8027,15 @@ same type and quantity) it should provide @transform_ip.</doc>
         </callback>
       </field>
       <field name="generate_output">
+        <doc xml:space="preserve">Called after each new input buffer is submitted repeatedly
+                  until it either generates an error or fails to generate an output
+                  buffer. The default implementation takes the contents of the
+                  @queued_buf variable, generates an output buffer if needed
+                  by calling the class @prepare_output_buffer, and then
+                  calls either @transform or @transform_ip. Elements that don't
+                  do 1-to-1 transformations of input to output buffers can either
+                  return GST_BASE_TRANSFORM_FLOW_DROPPED or simply not generate
+                  an output buffer until they are ready to do so. (Since: 1.6)</doc>
         <callback name="generate_output">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -12274,6 +12824,7 @@ no allocated @buf is provided and then call fill.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="fill">
+        <doc xml:space="preserve">Ask the subclass to fill the buffer with data.</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
@@ -12304,6 +12855,10 @@ buffers.</doc>
         <type name="BaseSrcClass" c:type="GstBaseSrcClass"/>
       </field>
       <field name="create">
+        <doc xml:space="preserve">Ask the subclass to create a buffer. The subclass decides which
+         size this buffer should be. Other then that, refer to
+         #GstBaseSrc&lt;!-- --&gt;.create() for more details. If this method is
+         not implemented, @alloc followed by @fill will be called.</doc>
         <callback name="create">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -12319,6 +12874,9 @@ buffers.</doc>
         </callback>
       </field>
       <field name="alloc">
+        <doc xml:space="preserve">Ask the subclass to allocate a buffer. The subclass decides which
+        size this buffer should be. The default implementation will create
+        a new buffer from the negotiated allocator.</doc>
         <callback name="alloc">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
@@ -12334,6 +12892,7 @@ buffers.</doc>
         </callback>
       </field>
       <field name="fill">
+        <doc xml:space="preserve">Ask the subclass to fill the buffer with data.</doc>
         <callback name="fill">
           <return-value transfer-ownership="none">
             <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>

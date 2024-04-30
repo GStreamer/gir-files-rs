@@ -350,6 +350,9 @@ Subclasses have to do four things:
  or not. A class parsing ID3v1 tags, for example, would set min_end_size to
  128 bytes.</doc>
       <virtual-method name="identify_tag">
+        <doc xml:space="preserve">identify tag and determine the size required to parse the
+tag. Buffer may be larger than the specified minimum size.
+Subclassed MUST override this vfunc in their class_init function.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -369,6 +372,10 @@ Subclasses have to do four things:
         </parameters>
       </virtual-method>
       <virtual-method name="merge_tags">
+        <doc xml:space="preserve">merge start and end tags. Subclasses may want to override this
+vfunc to allow prioritising of start or end tag according to user
+preference.  Note that both start_tags and end_tags may be NULL. By default
+start tags are preferred over end tags.</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.TagList" c:type="GstTagList*"/>
         </return-value>
@@ -385,6 +392,12 @@ Subclasses have to do four things:
         </parameters>
       </virtual-method>
       <virtual-method name="parse_tag">
+        <doc xml:space="preserve">parse the tag. Buffer will be exactly of the size determined by
+the identify_tag vfunc before. The parse_tag vfunc may change the size
+stored in *tag_size and return GST_TAG_DEMUX_RESULT_AGAIN to request a
+larger or smaller buffer. It is also permitted to adjust the tag_size to a
+smaller value and then return GST_TAG_DEMUX_RESULT_OK in one go.
+Subclassed MUST override the parse_tag vfunc in their class_init function.</doc>
         <return-value transfer-ownership="none">
           <type name="TagDemuxResult" c:type="GstTagDemuxResult"/>
         </return-value>
@@ -439,6 +452,9 @@ Subclasses should set this in their class_init function.</doc>
         <type name="guint" c:type="guint"/>
       </field>
       <field name="identify_tag">
+        <doc xml:space="preserve">identify tag and determine the size required to parse the
+tag. Buffer may be larger than the specified minimum size.
+Subclassed MUST override this vfunc in their class_init function.</doc>
         <callback name="identify_tag">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -460,6 +476,12 @@ Subclasses should set this in their class_init function.</doc>
         </callback>
       </field>
       <field name="parse_tag">
+        <doc xml:space="preserve">parse the tag. Buffer will be exactly of the size determined by
+the identify_tag vfunc before. The parse_tag vfunc may change the size
+stored in *tag_size and return GST_TAG_DEMUX_RESULT_AGAIN to request a
+larger or smaller buffer. It is also permitted to adjust the tag_size to a
+smaller value and then return GST_TAG_DEMUX_RESULT_OK in one go.
+Subclassed MUST override the parse_tag vfunc in their class_init function.</doc>
         <callback name="parse_tag">
           <return-value transfer-ownership="none">
             <type name="TagDemuxResult" c:type="GstTagDemuxResult"/>
@@ -484,6 +506,10 @@ Subclasses should set this in their class_init function.</doc>
         </callback>
       </field>
       <field name="merge_tags">
+        <doc xml:space="preserve">merge start and end tags. Subclasses may want to override this
+vfunc to allow prioritising of start or end tag according to user
+preference.  Note that both start_tags and end_tags may be NULL. By default
+start tags are preferred over end tags.</doc>
         <callback name="merge_tags">
           <return-value transfer-ownership="full">
             <type name="Gst.TagList" c:type="GstTagList*"/>
@@ -666,6 +692,8 @@ Subclasses have to do the following things:
    function.</doc>
       <implements name="Gst.TagSetter"/>
       <virtual-method name="render_end_tag">
+        <doc xml:space="preserve">create a tag buffer to add to the end of the
+    input stream given a tag list, or NULL</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Buffer" c:type="GstBuffer*"/>
         </return-value>
@@ -679,6 +707,8 @@ Subclasses have to do the following things:
         </parameters>
       </virtual-method>
       <virtual-method name="render_start_tag">
+        <doc xml:space="preserve">create a tag buffer to add to the beginning of the
+    input stream given a tag list, or NULL</doc>
         <return-value transfer-ownership="full">
           <type name="Gst.Buffer" c:type="GstBuffer*"/>
         </return-value>
@@ -712,6 +742,8 @@ of the two render vfuncs.</doc>
         <type name="Gst.ElementClass" c:type="GstElementClass"/>
       </field>
       <field name="render_start_tag">
+        <doc xml:space="preserve">create a tag buffer to add to the beginning of the
+    input stream given a tag list, or NULL</doc>
         <callback name="render_start_tag">
           <return-value transfer-ownership="full">
             <type name="Gst.Buffer" c:type="GstBuffer*"/>
@@ -727,6 +759,8 @@ of the two render vfuncs.</doc>
         </callback>
       </field>
       <field name="render_end_tag">
+        <doc xml:space="preserve">create a tag buffer to add to the end of the
+    input stream given a tag list, or NULL</doc>
         <callback name="render_end_tag">
           <return-value transfer-ownership="full">
             <type name="Gst.Buffer" c:type="GstBuffer*"/>

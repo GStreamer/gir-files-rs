@@ -140,7 +140,7 @@ reloading</doc>
           </parameter>
         </parameters>
       </function>
-      <function name="request" c:identifier="ges_asset_request" throws="1">
+      <function name="request" c:identifier="ges_asset_request" throws="1" glib:async-func="request_async">
         <doc xml:space="preserve">Returns an asset with the given properties. If such an asset already
 exists in the cache (it has been previously created in GES), then a
 reference to the existing asset is returned. Otherwise, a newly created
@@ -189,7 +189,7 @@ asset, or %NULL if an error occurred.</doc>
           </parameter>
         </parameters>
       </function>
-      <function name="request_async" c:identifier="ges_asset_request_async">
+      <function name="request_async" c:identifier="ges_asset_request_async" glib:finish-func="request_finish" glib:sync-func="request">
         <doc xml:space="preserve">Requests an asset with the given properties asynchronously (see
 ges_asset_request()). When the asset has been initialized or fetched
 from the cache, the given callback function will be called. The
@@ -305,6 +305,7 @@ error occurred.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="proxied">
+        <doc xml:space="preserve">Deprecated: 1.18: This vmethod is no longer called.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -318,6 +319,10 @@ error occurred.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="request_id_update">
+        <doc xml:space="preserve">A method called by a #GESProject when an asset has
+failed to load. @error is the error given by
+ges_asset_request_finish (). Returns: %TRUE if a new id for @self was
+passed to @proposed_new_id.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -334,6 +339,13 @@ error occurred.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="start_loading" throws="1">
+        <doc xml:space="preserve">A method to be called when an asset is being requested
+asynchronously. This will be after the properties of the asset have
+been set, so it is tasked with (re)loading the 'state' of the asset.
+The return value should indicated whether the loading is complete, is
+carrying on asynchronously, or an error occurred. The default
+implementation will simply return that loading is already complete (the
+asset is already in a usable state after the properties have been set).</doc>
         <return-value transfer-ownership="none">
           <type name="AssetLoadingReturn" c:type="GESAssetLoadingReturn"/>
         </return-value>
@@ -557,6 +569,13 @@ asset it is now the proxy of/no longer the proxy of.</doc>
         <type name="GObject.ObjectClass" c:type="GObjectClass"/>
       </field>
       <field name="start_loading">
+        <doc xml:space="preserve">A method to be called when an asset is being requested
+asynchronously. This will be after the properties of the asset have
+been set, so it is tasked with (re)loading the 'state' of the asset.
+The return value should indicated whether the loading is complete, is
+carrying on asynchronously, or an error occurred. The default
+implementation will simply return that loading is already complete (the
+asset is already in a usable state after the properties have been set).</doc>
         <callback name="start_loading" throws="1">
           <return-value transfer-ownership="none">
             <type name="AssetLoadingReturn" c:type="GESAssetLoadingReturn"/>
@@ -569,6 +588,11 @@ asset it is now the proxy of/no longer the proxy of.</doc>
         </callback>
       </field>
       <field name="extract">
+        <doc xml:space="preserve">A method that returns a new object of the asset's
+#GESAsset:extractable-type, or %NULL if an error occurs. The default
+implementation will fetch the properties of the #GESExtractable from
+its get_parameters_from_id() class method and set them on a new
+#GESAsset:extractable-type #GObject, which is returned.</doc>
         <callback name="extract" throws="1">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">A newly created object, or %NULL if an
@@ -599,6 +623,7 @@ error occurred.</doc>
         </callback>
       </field>
       <field name="proxied">
+        <doc xml:space="preserve">Deprecated: 1.18: This vmethod is no longer called.</doc>
         <callback name="proxied">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -614,6 +639,10 @@ error occurred.</doc>
         </callback>
       </field>
       <field name="request_id_update">
+        <doc xml:space="preserve">A method called by a #GESProject when an asset has
+failed to load. @error is the error given by
+ges_asset_request_finish (). Returns: %TRUE if a new id for @self was
+passed to @proposed_new_id.</doc>
         <callback name="request_id_update">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -1449,6 +1478,12 @@ do_time_effect_change (GESClip * clip)
       <implements name="Extractable"/>
       <implements name="MetaContainer"/>
       <virtual-method name="create_track_element">
+        <doc xml:space="preserve">Method to create the core #GESTrackElement of a clip
+of this class. If a clip of this class may create several track elements per
+track type, this should be left as %NULL, and
+GESClipClass::create_track_elements should be used instead. Otherwise, you
+should implement this class method and leave
+GESClipClass::create_track_elements as the default implementation</doc>
         <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">The #GESTrackElement created
 by @clip, or %NULL if @clip can not provide a track element for the
@@ -1467,6 +1502,10 @@ given @type or an error occurred.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="create_track_elements">
+        <doc xml:space="preserve">Method to create the (multiple) core
+#GESTrackElement-s of a clip of this class. If
+GESClipClass::create_track_element is implemented, this should be kept as the
+default implementation</doc>
         <return-value transfer-ownership="container">
           <doc xml:space="preserve">A list of
 the #GESTrackElement-s created by @clip for the given @type, or %NULL
@@ -2426,6 +2465,7 @@ The #GESContainer-s to group</doc>
         </parameters>
       </function>
       <virtual-method name="add_child">
+        <doc xml:space="preserve">Virtual method to add a child</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -2439,6 +2479,7 @@ The #GESContainer-s to group</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="child_added">
+        <doc xml:space="preserve">Virtual method that is called right after a #GESTimelineElement is added</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -2452,6 +2493,7 @@ The #GESContainer-s to group</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="child_removed">
+        <doc xml:space="preserve">Virtual method that is called right after a #GESTimelineElement is removed</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -2505,6 +2547,7 @@ be moved to. -1 means no move</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="remove_child">
+        <doc xml:space="preserve">Virtual method to remove a child</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -2751,6 +2794,7 @@ may be stopped internally.</doc>
         <type name="TimelineElementClass" c:type="GESTimelineElementClass"/>
       </field>
       <field name="child_added">
+        <doc xml:space="preserve">Virtual method that is called right after a #GESTimelineElement is added</doc>
         <callback name="child_added">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -2766,6 +2810,7 @@ may be stopped internally.</doc>
         </callback>
       </field>
       <field name="child_removed">
+        <doc xml:space="preserve">Virtual method that is called right after a #GESTimelineElement is removed</doc>
         <callback name="child_removed">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -2781,6 +2826,7 @@ may be stopped internally.</doc>
         </callback>
       </field>
       <field name="add_child">
+        <doc xml:space="preserve">Virtual method to add a child</doc>
         <callback name="add_child">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -2796,6 +2842,7 @@ may be stopped internally.</doc>
         </callback>
       </field>
       <field name="remove_child">
+        <doc xml:space="preserve">Virtual method to remove a child</doc>
         <callback name="remove_child">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -2811,6 +2858,8 @@ may be stopped internally.</doc>
         </callback>
       </field>
       <field name="ungroup">
+        <doc xml:space="preserve">Virtual method to ungroup a container into a list of
+containers</doc>
         <callback name="ungroup">
           <return-value transfer-ownership="full">
             <doc xml:space="preserve">The list of
@@ -2832,6 +2881,8 @@ new #GESContainer-s created from the splitting of @container.</doc>
         </callback>
       </field>
       <field name="group" introspectable="0">
+        <doc xml:space="preserve">Virtual method to group a list of containers together under a
+single container</doc>
         <callback name="group" introspectable="0">
           <return-value>
             <type name="Container" c:type="GESContainer*"/>
@@ -2846,6 +2897,7 @@ new #GESContainer-s created from the splitting of @container.</doc>
         </callback>
       </field>
       <field name="edit">
+        <doc xml:space="preserve">Deprecated</doc>
         <callback name="edit">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the edit of @container completed, %FALSE on failure.</doc>
@@ -3591,6 +3643,11 @@ that is compatible with @self's current state.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="set_asset">
+        <doc xml:space="preserve">This method is called after the #GESAsset of an object is
+set. If your class supports the asset of an object changing, then you
+can use this method to change the parameters of the object to match the
+new asset #GESAsset:id. If setting the asset should be able to fail,
+you should implement @set_asset_full instead.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -3604,6 +3661,9 @@ that is compatible with @self's current state.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="set_asset_full">
+        <doc xml:space="preserve">Like @set_asset, but also allows you to return %FALSE
+to indicate a failure to change the object in response to a change in
+its asset.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -3731,6 +3791,11 @@ the new asset on the object.</doc>
         <type name="gboolean" c:type="gboolean"/>
       </field>
       <field name="set_asset">
+        <doc xml:space="preserve">This method is called after the #GESAsset of an object is
+set. If your class supports the asset of an object changing, then you
+can use this method to change the parameters of the object to match the
+new asset #GESAsset:id. If setting the asset should be able to fail,
+you should implement @set_asset_full instead.</doc>
         <callback name="set_asset">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -3746,6 +3811,9 @@ the new asset on the object.</doc>
         </callback>
       </field>
       <field name="set_asset_full">
+        <doc xml:space="preserve">Like @set_asset, but also allows you to return %FALSE
+to indicate a failure to change the object in response to a change in
+its asset.</doc>
         <callback name="set_asset_full">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -3761,6 +3829,11 @@ the new asset on the object.</doc>
         </callback>
       </field>
       <field name="get_parameters_from_id" introspectable="0">
+        <doc xml:space="preserve">The method to call to get the object
+properties corresponding to a given asset #GESAsset:id. The default
+implementation will simply return no parameters. The default #GESAsset
+will call this to set the returned properties on the extracted object,
+but other subclasses may ignore this method.</doc>
         <callback name="get_parameters_from_id" introspectable="0">
           <return-value>
             <type name="GObject.Parameter" c:type="GParameter*"/>
@@ -3776,6 +3849,14 @@ the new asset on the object.</doc>
         </callback>
       </field>
       <field name="get_id">
+        <doc xml:space="preserve">The method to fetch the #GESAsset:id of some associated asset.
+Note that it may be the case that the object does not have its asset
+set, or even that an asset with such an #GESAsset:id does not exist in
+the GES cache. Instead, this should return the #GESAsset:id that is
+_compatible_ with the current state of the object. The default
+implementation simply returns the currently set asset ID, or the type name
+of the object, which is what is used as the #GESAsset:id by default,
+if no asset is set.</doc>
         <callback name="get_id">
           <return-value transfer-ownership="full">
             <doc xml:space="preserve">The #GESAsset:id of some associated #GESAsset
@@ -3791,6 +3872,15 @@ that is compatible with @self's current state.</doc>
         </callback>
       </field>
       <field name="get_real_extractable_type">
+        <doc xml:space="preserve">The method to call to get the actual
+#GESAsset:extractable-type an asset should have set, given the
+requested #GESAsset:id. The default implementation simply returns the
+same type as given. You can overwrite this if it is more appropriate
+to extract the object from a subclass, depending on the requested
+#GESAsset:id. Note that when an asset is requested, this method will be
+called before the other class methods. In particular, this means that
+the @check_id and @get_parameters_from_id class methods of the returned
+type will be used (instead of our own).</doc>
         <callback name="get_real_extractable_type">
           <return-value transfer-ownership="none">
             <type name="GType" c:type="GType"/>
@@ -3806,6 +3896,8 @@ that is compatible with @self's current state.</doc>
         </callback>
       </field>
       <field name="register_metas">
+        <doc xml:space="preserve">The method to set metadata on an asset. This is called
+on initiation of the asset, but before it begins to load its state.</doc>
         <callback name="register_metas">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -3907,6 +3999,7 @@ the asset for the #GESFormatter that has the highest @rank</doc>
         </return-value>
       </function>
       <virtual-method name="can_load_uri" throws="1">
+        <doc xml:space="preserve">Whether the URI can be loaded</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4389,6 +4482,7 @@ layers will simply play in addition.</doc>
         </return-value>
       </constructor>
       <virtual-method name="get_objects" introspectable="0">
+        <doc xml:space="preserve">method to get the objects contained in the layer</doc>
         <return-value>
           <type name="GLib.List" c:type="GList*">
             <type name="gpointer" c:type="gpointer"/>
@@ -4876,6 +4970,7 @@ efficient way of providing the list of contained #GESClip-s.</doc>
         <type name="GObject.InitiallyUnownedClass" c:type="GInitiallyUnownedClass"/>
       </field>
       <field name="get_objects" introspectable="0">
+        <doc xml:space="preserve">method to get the objects contained in the layer</doc>
         <callback name="get_objects" introspectable="0">
           <return-value>
             <type name="GLib.List" c:type="GList*">
@@ -9775,6 +9870,8 @@ ges_timeline_element_list_children_properties().</doc>
       <implements name="Extractable"/>
       <implements name="MetaContainer"/>
       <virtual-method name="deep_copy">
+        <doc xml:space="preserve">Prepare @copy for pasting as a copy of @self. At least by
+copying the children properties of @self into @copy.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -9850,6 +9947,11 @@ of #GESTrack it can exist in, or will create #GESTrackElement-s for.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="list_children_properties" introspectable="0">
+        <doc xml:space="preserve">List the children properties that have been
+registered for the element. The default implementation is able to fetch
+all of these, so should be sufficient. If you overwrite this, you
+should still call the default implementation to get the full list, and
+then edit its content.</doc>
         <return-value>
           <type name="GObject.ParamSpec" c:type="GParamSpec**"/>
         </return-value>
@@ -9903,6 +10005,9 @@ specification of the child property</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="paste" introspectable="0">
+        <doc xml:space="preserve">Paste @self, which is the @copy prepared by @deep_copy, into
+the timeline at the given @paste_position, with @ref_element as a
+reference, which is the @self that was passed to @deep_copy.</doc>
         <return-value>
           <type name="TimelineElement" c:type="GESTimelineElement*"/>
         </return-value>
@@ -11361,6 +11466,8 @@ and emitting the notify signal.</doc>
         <type name="GObject.InitiallyUnownedClass" c:type="GInitiallyUnownedClass"/>
       </field>
       <field name="set_parent">
+        <doc xml:space="preserve">Method called just before the #GESTimelineElement:parent
+is set.</doc>
         <callback name="set_parent">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if @parent could be set for @self.</doc>
@@ -11379,6 +11486,25 @@ and emitting the notify signal.</doc>
         </callback>
       </field>
       <field name="set_start">
+        <doc xml:space="preserve">Method called just before the #GESTimelineElement:start is
+set. This method should check whether the #GESTimelineElement:start can
+be changed to the new value and to otherwise prepare the element in
+response to what the new value will be. A return of %FALSE means that
+the property should not be set. A return of %TRUE means that the
+property should be set to the value given to the setter and a notify
+emitted. A return of -1 means that the property should not be set but
+the setter should still return %TRUE (normally because the method
+already handled setting the value, potentially to a snapped value, and
+emitted the notify signal).
+#GESTimelineElement:duration is set. This method should check
+whether the #GESTimelineElement:duration can be changed to the new
+value and to otherwise prepare the element in response to what the new
+value will be. A return of %FALSE means that the property should not be
+set. A return of %TRUE means that the property should be set to the
+value given to the setter and a notify emitted. A return of -1 means
+that the property should not be set but the setter should still return
+%TRUE (normally because the method already handled setting the value,
+potentially to a snapped value, and emitted the notify signal).</doc>
         <callback name="set_start">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if @start could be set for @self.</doc>
@@ -11397,6 +11523,12 @@ and emitting the notify signal.</doc>
         </callback>
       </field>
       <field name="set_inpoint">
+        <doc xml:space="preserve">Method called just before the
+#GESTimelineElement:in-point is set to a new value. This method should
+not set the #GESTimelineElement:in-point itself, but should check
+whether it can be changed to the new value and to otherwise prepare the
+element in response to what the new value will be. A return of %FALSE
+means that the property should not be set.</doc>
         <callback name="set_inpoint">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if @inpoint could be set for @self.</doc>
@@ -11433,6 +11565,12 @@ and emitting the notify signal.</doc>
         </callback>
       </field>
       <field name="set_max_duration">
+        <doc xml:space="preserve">Method called just before the
+#GESTimelineElement:max-duration is set. This method should
+not set the #GESTimelineElement:max-duration itself, but should check
+whether it can be changed to the new value and to otherwise prepare the
+element in response to what the new value will be. A return of %FALSE
+means that the property should not be set.</doc>
         <callback name="set_max_duration">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if @maxduration could be set for @self.</doc>
@@ -11451,6 +11589,8 @@ and emitting the notify signal.</doc>
         </callback>
       </field>
       <field name="set_priority">
+        <doc xml:space="preserve">Method called just before the
+#GESTimelineElement:priority is set.</doc>
         <callback name="set_priority">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if @priority could be set for @self.</doc>
@@ -11469,6 +11609,8 @@ and emitting the notify signal.</doc>
         </callback>
       </field>
       <field name="ripple">
+        <doc xml:space="preserve">Set this method to overwrite a redirect to
+ges_timeline_element_edit() in ges_timeline_element_ripple().</doc>
         <callback name="ripple">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the ripple edit of @self completed, %FALSE on
@@ -11488,6 +11630,8 @@ failure.</doc>
         </callback>
       </field>
       <field name="ripple_end">
+        <doc xml:space="preserve">Set this method to overwrite a redirect to
+ges_timeline_element_edit() in ges_timeline_element_ripple_end().</doc>
         <callback name="ripple_end">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the ripple edit of @self completed, %FALSE on
@@ -11525,6 +11669,8 @@ failure.</doc>
         </callback>
       </field>
       <field name="roll_end">
+        <doc xml:space="preserve">Set this method to overwrite a redirect to
+ges_timeline_element_edit() in ges_timeline_element_roll_end().</doc>
         <callback name="roll_end">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the roll edit of @self completed, %FALSE on failure.</doc>
@@ -11543,6 +11689,8 @@ failure.</doc>
         </callback>
       </field>
       <field name="trim">
+        <doc xml:space="preserve">Set this method to overwrite a redirect to
+ges_timeline_element_edit() in ges_timeline_element_trim().</doc>
         <callback name="trim">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the trim edit of @self completed, %FALSE on failure.</doc>
@@ -11561,6 +11709,8 @@ failure.</doc>
         </callback>
       </field>
       <field name="deep_copy">
+        <doc xml:space="preserve">Prepare @copy for pasting as a copy of @self. At least by
+copying the children properties of @self into @copy.</doc>
         <callback name="deep_copy">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -11576,6 +11726,9 @@ failure.</doc>
         </callback>
       </field>
       <field name="paste" introspectable="0">
+        <doc xml:space="preserve">Paste @self, which is the @copy prepared by @deep_copy, into
+the timeline at the given @paste_position, with @ref_element as a
+reference, which is the @self that was passed to @deep_copy.</doc>
         <callback name="paste" introspectable="0">
           <return-value>
             <type name="TimelineElement" c:type="GESTimelineElement*"/>
@@ -11594,6 +11747,11 @@ failure.</doc>
         </callback>
       </field>
       <field name="list_children_properties" introspectable="0">
+        <doc xml:space="preserve">List the children properties that have been
+registered for the element. The default implementation is able to fetch
+all of these, so should be sufficient. If you overwrite this, you
+should still call the default implementation to get the full list, and
+then edit its content.</doc>
         <callback name="list_children_properties" introspectable="0">
           <return-value>
             <type name="GObject.ParamSpec" c:type="GParamSpec**"/>
@@ -11609,6 +11767,11 @@ failure.</doc>
         </callback>
       </field>
       <field name="lookup_child">
+        <doc xml:space="preserve">Find @child, and its registered child property @pspec,
+corresponding to the child property specified by @prop_name. The
+default implementation will search for the first child that matches. If
+you overwrite this, you will likely still want to call the default
+vmethod, which has access to the registered parameter specifications.</doc>
         <callback name="lookup_child">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if a child corresponding to the property was found, in
@@ -11638,6 +11801,7 @@ specification of the child property</doc>
         </callback>
       </field>
       <field name="get_track_types">
+        <doc xml:space="preserve">Return a the track types for the element.</doc>
         <callback name="get_track_types">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">The track types that @self supports.</doc>
@@ -14614,7 +14778,7 @@ contains one frame)</doc>
     <constant name="VERSION_MICRO" value="0" c:type="GES_VERSION_MICRO">
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MINOR" value="24" c:type="GES_VERSION_MINOR">
+    <constant name="VERSION_MINOR" value="25" c:type="GES_VERSION_MINOR">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="VERSION_NANO" value="1" c:type="GES_VERSION_NANO">
@@ -14668,6 +14832,10 @@ account.</doc>
         <type name="SourceClass" c:type="GESSourceClass"/>
       </field>
       <field name="create_source" introspectable="0">
+        <doc xml:space="preserve">method to return the GstElement to put in the source topbin.
+Other elements will be queued, like a videoscale.
+In the case of a VideoUriSource, for example, the subclass will return a decodebin,
+and we will append a videoscale.</doc>
         <callback name="create_source" introspectable="0">
           <return-value>
             <type name="Gst.Element" c:type="GstElement*"/>

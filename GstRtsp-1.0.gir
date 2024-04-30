@@ -3833,6 +3833,7 @@ communication. Free with gst_rtsp_watch_unref () after usage.</doc>
     <record name="RTSPWatchFuncs" c:type="GstRTSPWatchFuncs">
       <doc xml:space="preserve">Callback functions from a #GstRTSPWatch.</doc>
       <field name="message_received">
+        <doc xml:space="preserve">callback when a message was received</doc>
         <callback name="message_received">
           <return-value transfer-ownership="none">
             <type name="RTSPResult" c:type="GstRTSPResult"/>
@@ -3851,6 +3852,7 @@ communication. Free with gst_rtsp_watch_unref () after usage.</doc>
         </callback>
       </field>
       <field name="message_sent">
+        <doc xml:space="preserve">callback when a message was sent</doc>
         <callback name="message_sent">
           <return-value transfer-ownership="none">
             <type name="RTSPResult" c:type="GstRTSPResult"/>
@@ -3869,6 +3871,7 @@ communication. Free with gst_rtsp_watch_unref () after usage.</doc>
         </callback>
       </field>
       <field name="closed">
+        <doc xml:space="preserve">callback when the connection is closed</doc>
         <callback name="closed">
           <return-value transfer-ownership="none">
             <type name="RTSPResult" c:type="GstRTSPResult"/>
@@ -3884,6 +3887,7 @@ communication. Free with gst_rtsp_watch_unref () after usage.</doc>
         </callback>
       </field>
       <field name="error">
+        <doc xml:space="preserve">callback when an error occurred</doc>
         <callback name="error">
           <return-value transfer-ownership="none">
             <type name="RTSPResult" c:type="GstRTSPResult"/>
@@ -3902,6 +3906,8 @@ communication. Free with gst_rtsp_watch_unref () after usage.</doc>
         </callback>
       </field>
       <field name="tunnel_start">
+        <doc xml:space="preserve">a client started a tunneled connection. The tunnelid of the
+  connection must be saved.</doc>
         <callback name="tunnel_start">
           <return-value transfer-ownership="none">
             <type name="RTSPStatusCode" c:type="GstRTSPStatusCode"/>
@@ -3917,6 +3923,9 @@ communication. Free with gst_rtsp_watch_unref () after usage.</doc>
         </callback>
       </field>
       <field name="tunnel_complete">
+        <doc xml:space="preserve">a client finished a tunneled connection. In this callback
+  you usually pair the tunnelid of this connection with the saved one using
+  gst_rtsp_connection_do_tunnel().</doc>
         <callback name="tunnel_complete">
           <return-value transfer-ownership="none">
             <type name="RTSPResult" c:type="GstRTSPResult"/>
@@ -3932,6 +3941,8 @@ communication. Free with gst_rtsp_watch_unref () after usage.</doc>
         </callback>
       </field>
       <field name="error_full">
+        <doc xml:space="preserve">callback when an error occurred with more information than
+  the @error callback.</doc>
         <callback name="error_full">
           <return-value transfer-ownership="none">
             <type name="RTSPResult" c:type="GstRTSPResult"/>
@@ -3956,6 +3967,7 @@ communication. Free with gst_rtsp_watch_unref () after usage.</doc>
         </callback>
       </field>
       <field name="tunnel_lost">
+        <doc xml:space="preserve">callback when the post connection of a tunnel is closed.</doc>
         <callback name="tunnel_lost">
           <return-value transfer-ownership="none">
             <type name="RTSPResult" c:type="GstRTSPResult"/>
@@ -3971,6 +3983,9 @@ communication. Free with gst_rtsp_watch_unref () after usage.</doc>
         </callback>
       </field>
       <field name="tunnel_http_response">
+        <doc xml:space="preserve">callback when an HTTP response to the GET request
+  is about to be sent for a tunneled connection. The response can be
+  modified in the callback. Since: 1.4.</doc>
         <callback name="tunnel_http_response">
           <return-value transfer-ownership="none">
             <type name="RTSPResult" c:type="GstRTSPResult"/>

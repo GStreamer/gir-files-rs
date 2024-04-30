@@ -374,6 +374,7 @@ use an alignment of 7.</doc>
         <type name="ObjectClass" c:type="GstObjectClass"/>
       </field>
       <field name="alloc">
+        <doc xml:space="preserve">implementation that acquires memory</doc>
         <callback name="alloc">
           <return-value transfer-ownership="full" nullable="1">
             <doc xml:space="preserve">a new #GstMemory.</doc>
@@ -396,6 +397,7 @@ use an alignment of 7.</doc>
         </callback>
       </field>
       <field name="free">
+        <doc xml:space="preserve">implementation that releases memory</doc>
         <callback name="free">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -5498,6 +5500,7 @@ array cannot grow.</doc>
         <type name="gsize" c:type="gsize"/>
       </field>
       <field name="resize">
+        <doc xml:space="preserve">Reallocate @data.</doc>
         <callback name="resize">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -8111,6 +8114,7 @@ usage. For plain #GObject @target is the same as @object.</doc>
         <type name="GObject.TypeInterface" c:type="GTypeInterface"/>
       </field>
       <field name="get_child_by_name">
+        <doc xml:space="preserve">Fetch a child object by name</doc>
         <callback name="get_child_by_name">
           <return-value transfer-ownership="full" nullable="1">
             <doc xml:space="preserve">the child object or %NULL if
@@ -8130,6 +8134,7 @@ usage. For plain #GObject @target is the same as @object.</doc>
         </callback>
       </field>
       <field name="get_child_by_index">
+        <doc xml:space="preserve">Fetch a child object by index</doc>
         <callback name="get_child_by_index">
           <return-value transfer-ownership="full" nullable="1">
             <doc xml:space="preserve">the child object or %NULL if
@@ -8149,6 +8154,7 @@ usage. For plain #GObject @target is the same as @object.</doc>
         </callback>
       </field>
       <field name="get_children_count">
+        <doc xml:space="preserve">Get the number of children in @parent</doc>
         <callback name="get_children_count">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">the number of child objects</doc>
@@ -8163,6 +8169,7 @@ usage. For plain #GObject @target is the same as @object.</doc>
         </callback>
       </field>
       <field name="child_added">
+        <doc xml:space="preserve">Called when @child is added to @parent</doc>
         <callback name="child_added">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -8184,6 +8191,7 @@ usage. For plain #GObject @target is the same as @object.</doc>
         </callback>
       </field>
       <field name="child_removed">
+        <doc xml:space="preserve">Called when @child is removed from @parent</doc>
         <callback name="child_removed">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -11917,6 +11925,8 @@ device in the PLAYING state.</doc>
         <type name="ObjectClass" c:type="GstObjectClass"/>
       </field>
       <field name="create_element">
+        <doc xml:space="preserve">Creates the fully configured element to access this device.
+ Subclasses need to override this and return a new element.</doc>
         <callback name="create_element">
           <return-value transfer-ownership="none" nullable="1">
             <doc xml:space="preserve">a new #GstElement configured to use
@@ -11937,6 +11947,9 @@ create a unique name.</doc>
         </callback>
       </field>
       <field name="reconfigure_element">
+        <doc xml:space="preserve">This only needs to be implemented by subclasses if the
+ element can be reconfigured to use a different device. See the documentation
+ for gst_device_reconfigure_element().</doc>
         <callback name="reconfigure_element">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the element could be reconfigured to use this device,
@@ -12256,6 +12269,9 @@ from all relevant providers.</doc>
         </parameters>
       </function>
       <virtual-method name="probe" introspectable="0">
+        <doc xml:space="preserve">Returns a list of devices that are currently available.
+ This should never block. The devices should not have a parent and should
+ be floating.</doc>
         <return-value>
           <type name="GLib.List" c:type="GList*">
             <type name="gpointer" c:type="gpointer"/>
@@ -12603,6 +12619,9 @@ all devices again.</doc>
         <type name="DeviceProviderFactory" c:type="GstDeviceProviderFactory*"/>
       </field>
       <field name="probe" introspectable="0">
+        <doc xml:space="preserve">Returns a list of devices that are currently available.
+ This should never block. The devices should not have a parent and should
+ be floating.</doc>
         <callback name="probe" introspectable="0">
           <return-value>
             <type name="GLib.List" c:type="GList*">
@@ -12617,6 +12636,8 @@ all devices again.</doc>
         </callback>
       </field>
       <field name="start">
+        <doc xml:space="preserve">Starts monitoring for new devices. Only subclasses that can know
+ that devices have been added or remove need to implement this method.</doc>
         <callback name="start">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the device providering could be started</doc>
@@ -12631,6 +12652,8 @@ all devices again.</doc>
         </callback>
       </field>
       <field name="stop">
+        <doc xml:space="preserve">Stops monitoring for new devices. Only subclasses that implement
+ the start() method need to implement this method.</doc>
         <callback name="stop">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -14051,6 +14074,7 @@ MT safe.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="release_pad">
+        <doc xml:space="preserve">called when a request pad is to be released</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -14212,6 +14236,7 @@ MT safe.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="state_changed">
+        <doc xml:space="preserve">called immediately after a new state was set.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -16245,6 +16270,7 @@ functionality.</doc>
         </callback>
       </field>
       <field name="request_new_pad">
+        <doc xml:space="preserve">called when a new pad is requested</doc>
         <callback name="request_new_pad">
           <return-value transfer-ownership="full" nullable="1">
             <doc xml:space="preserve">requested #GstPad if found,
@@ -16274,6 +16300,7 @@ request. Can be %NULL.</doc>
         </callback>
       </field>
       <field name="release_pad">
+        <doc xml:space="preserve">called when a request pad is to be released</doc>
         <callback name="release_pad">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -16289,6 +16316,7 @@ request. Can be %NULL.</doc>
         </callback>
       </field>
       <field name="get_state">
+        <doc xml:space="preserve">get the state of the element</doc>
         <callback name="get_state">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%GST_STATE_CHANGE_SUCCESS if the element has no more pending state
@@ -16323,6 +16351,7 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="set_state">
+        <doc xml:space="preserve">set a new state on the element</doc>
         <callback name="set_state">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">Result of the state change using #GstStateChangeReturn.
@@ -16343,6 +16372,7 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="change_state">
+        <doc xml:space="preserve">called by @set_state to perform an incremental state change</doc>
         <callback name="change_state">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">the #GstStateChangeReturn of the state transition.</doc>
@@ -16361,6 +16391,7 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="state_changed">
+        <doc xml:space="preserve">called immediately after a new state was set.</doc>
         <callback name="state_changed">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -16382,6 +16413,7 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="set_bus">
+        <doc xml:space="preserve">set a #GstBus on the element</doc>
         <callback name="set_bus">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -16399,6 +16431,7 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="provide_clock">
+        <doc xml:space="preserve">gets the #GstClock provided by the element</doc>
         <callback name="provide_clock">
           <return-value transfer-ownership="full" nullable="1">
             <doc xml:space="preserve">the GstClock provided by the
@@ -16416,6 +16449,7 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="set_clock">
+        <doc xml:space="preserve">set the #GstClock on the element</doc>
         <callback name="set_clock">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the element accepted the clock. An element can refuse a
@@ -16438,6 +16472,7 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="send_event">
+        <doc xml:space="preserve">send a #GstEvent to the element</doc>
         <callback name="send_event">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the event was handled. Events that trigger a preroll (such
@@ -16457,6 +16492,7 @@ as flushing seeks and steps) will emit %GST_MESSAGE_ASYNC_DONE.</doc>
         </callback>
       </field>
       <field name="query">
+        <doc xml:space="preserve">perform a #GstQuery on the element</doc>
         <callback name="query">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the query could be performed.
@@ -16477,6 +16513,8 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="post_message">
+        <doc xml:space="preserve">called when a message is posted on the element. Chain up to
+               the parent class' handler to have it posted on the bus.</doc>
         <callback name="post_message">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the message was successfully posted. The function returns
@@ -16498,6 +16536,7 @@ MT safe.</doc>
         </callback>
       </field>
       <field name="set_context">
+        <doc xml:space="preserve">set a #GstContext on the element</doc>
         <callback name="set_context">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -26315,6 +26354,7 @@ Either @newobj and the value pointed to by @oldobj may be %NULL.</doc>
         </parameters>
       </function>
       <virtual-method name="deep_notify">
+        <doc xml:space="preserve">default signal handler</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -26943,6 +26983,7 @@ the elements contained in that bin.</doc>
         <type name="utf8" c:type="const gchar*"/>
       </field>
       <field name="deep_notify">
+        <doc xml:space="preserve">default signal handler</doc>
         <callback name="deep_notify">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -29834,7 +29875,10 @@ of the peer sink pad, if present.</doc>
         </parameters>
       </method>
       <method name="set_offset" c:identifier="gst_pad_set_offset" glib:set-property="offset">
-        <doc xml:space="preserve">Set the offset that will be applied to the running time of @pad.</doc>
+        <doc xml:space="preserve">Set the offset that will be applied to the running time of @pad. Upon next
+buffer, every sticky events (notably segment) will be pushed again with
+their running time adjusted. For that reason this is only reliable on
+source pads.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -33708,6 +33752,7 @@ data @tag names can be something like e.g. "comment". Supplying %NULL for the
         <type name="GObject.TypeInterface" c:type="GTypeInterface"/>
       </field>
       <field name="get_preset_names">
+        <doc xml:space="preserve">virtual method to get list of presets</doc>
         <callback name="get_preset_names">
           <return-value transfer-ownership="full">
             <doc xml:space="preserve">
@@ -33725,6 +33770,7 @@ data @tag names can be something like e.g. "comment". Supplying %NULL for the
         </callback>
       </field>
       <field name="get_property_names">
+        <doc xml:space="preserve">virtual methods to get properties that are persistent</doc>
         <callback name="get_property_names">
           <return-value transfer-ownership="full">
             <doc xml:space="preserve">an
@@ -33742,6 +33788,7 @@ data @tag names can be something like e.g. "comment". Supplying %NULL for the
         </callback>
       </field>
       <field name="load_preset">
+        <doc xml:space="preserve">virtual methods to load a preset into properties</doc>
         <callback name="load_preset">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE for success, %FALSE if e.g. there is no preset with that @name</doc>
@@ -33760,6 +33807,7 @@ data @tag names can be something like e.g. "comment". Supplying %NULL for the
         </callback>
       </field>
       <field name="save_preset">
+        <doc xml:space="preserve">virtual methods to save properties into a preset</doc>
         <callback name="save_preset">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE for success, %FALSE</doc>
@@ -33778,6 +33826,7 @@ data @tag names can be something like e.g. "comment". Supplying %NULL for the
         </callback>
       </field>
       <field name="rename_preset">
+        <doc xml:space="preserve">virtual methods to rename a preset</doc>
         <callback name="rename_preset">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE for success, %FALSE if e.g. there is no preset with @old_name</doc>
@@ -33800,6 +33849,7 @@ data @tag names can be something like e.g. "comment". Supplying %NULL for the
         </callback>
       </field>
       <field name="delete_preset">
+        <doc xml:space="preserve">virtual methods to remove a preset</doc>
         <callback name="delete_preset">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE for success, %FALSE if e.g. there is no preset with that @name</doc>
@@ -33818,6 +33868,7 @@ data @tag names can be something like e.g. "comment". Supplying %NULL for the
         </callback>
       </field>
       <field name="set_meta">
+        <doc xml:space="preserve">virtual methods to set textual meta data to a preset</doc>
         <callback name="set_meta">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE for success, %FALSE if e.g. there is no preset with that @name</doc>
@@ -33844,6 +33895,7 @@ data @tag names can be something like e.g. "comment". Supplying %NULL for the
         </callback>
       </field>
       <field name="get_meta">
+        <doc xml:space="preserve">virtual methods to get textual meta data from a preset</doc>
         <callback name="get_meta">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE for success, %FALSE if e.g. there is no preset with that @name
@@ -39254,6 +39306,7 @@ Applications can activate streams from a collection by using the
         </parameters>
       </constructor>
       <virtual-method name="stream_notify">
+        <doc xml:space="preserve">default signal handler for the stream-notify signal</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -39374,6 +39427,7 @@ streams within the collection.</doc>
         <type name="ObjectClass" c:type="GstObjectClass"/>
       </field>
       <field name="stream_notify">
+        <doc xml:space="preserve">default signal handler for the stream-notify signal</doc>
         <callback name="stream_notify">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -44569,6 +44623,7 @@ instead.</doc>
         <type name="ObjectClass" c:type="GstObjectClass"/>
       </field>
       <field name="prepare">
+        <doc xml:space="preserve">prepare the threadpool</doc>
         <callback name="prepare" throws="1">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -44582,6 +44637,7 @@ instead.</doc>
         </callback>
       </field>
       <field name="cleanup">
+        <doc xml:space="preserve">make sure all threads are stopped</doc>
         <callback name="cleanup">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -44595,6 +44651,7 @@ instead.</doc>
         </callback>
       </field>
       <field name="push">
+        <doc xml:space="preserve">start a new thread</doc>
         <callback name="push" throws="1">
           <return-value transfer-ownership="full" nullable="1">
             <doc xml:space="preserve">a pointer that should be used
@@ -44621,6 +44678,7 @@ instead.</doc>
         </callback>
       </field>
       <field name="join">
+        <doc xml:space="preserve">join a thread</doc>
         <callback name="join">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -45497,6 +45555,7 @@ events may contain values for different #GstPads.</doc>
       <doc xml:space="preserve">The following functions allow you to detect the media type of an unknown
 stream.</doc>
       <field name="peek">
+        <doc xml:space="preserve">Method to peek data.</doc>
         <callback name="peek">
           <return-value transfer-ownership="none">
             <type name="guint8" c:type="const guint8*"/>
@@ -45515,6 +45574,7 @@ stream.</doc>
         </callback>
       </field>
       <field name="suggest">
+        <doc xml:space="preserve">Method to suggest #GstCaps with a given probability.</doc>
         <callback name="suggest">
           <return-value transfer-ownership="none">
             <type name="none" c:type="void"/>
@@ -45537,6 +45597,7 @@ stream.</doc>
         <type name="gpointer" c:type="gpointer"/>
       </field>
       <field name="get_length">
+        <doc xml:space="preserve">Returns the length of current data.</doc>
         <callback name="get_length">
           <return-value transfer-ownership="none">
             <type name="guint64" c:type="guint64"/>
@@ -46045,6 +46106,7 @@ Returns #GST_URI_UNKNOWN if the @handler isn't implemented correctly.</doc>
         <type name="GObject.TypeInterface" c:type="GTypeInterface"/>
       </field>
       <field name="get_type">
+        <doc xml:space="preserve">Method to tell whether the element handles source or sink URI.</doc>
         <callback name="get_type">
           <return-value transfer-ownership="none">
             <type name="URIType" c:type="GstURIType"/>
@@ -46057,6 +46119,7 @@ Returns #GST_URI_UNKNOWN if the @handler isn't implemented correctly.</doc>
         </callback>
       </field>
       <field name="get_protocols">
+        <doc xml:space="preserve">Method to return the list of protocols handled by the element.</doc>
         <callback name="get_protocols">
           <return-value transfer-ownership="none">
             <array c:type="const gchar* const*">
@@ -46071,6 +46134,7 @@ Returns #GST_URI_UNKNOWN if the @handler isn't implemented correctly.</doc>
         </callback>
       </field>
       <field name="get_uri">
+        <doc xml:space="preserve">Method to return the URI currently handled by the element.</doc>
         <callback name="get_uri">
           <return-value transfer-ownership="full" nullable="1">
             <doc xml:space="preserve">the URI currently handled by
@@ -46088,6 +46152,7 @@ Returns #GST_URI_UNKNOWN if the @handler isn't implemented correctly.</doc>
         </callback>
       </field>
       <field name="set_uri">
+        <doc xml:space="preserve">Method to set a new URI.</doc>
         <callback name="set_uri" throws="1">
           <return-value transfer-ownership="none">
             <doc xml:space="preserve">%TRUE if the URI was set successfully, else %FALSE.</doc>
@@ -47301,7 +47366,7 @@ determine a order for the two provided values.</doc>
       <doc xml:space="preserve">The micro version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MINOR" value="24" c:type="GST_VERSION_MINOR">
+    <constant name="VERSION_MINOR" value="25" c:type="GST_VERSION_MINOR">
       <doc xml:space="preserve">The minor version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
