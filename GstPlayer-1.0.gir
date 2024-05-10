@@ -292,7 +292,10 @@ passed. See gst_player_g_main_context_signal_dispatcher_new().
 
 Video is going to be rendered by @video_renderer, or if %NULL is provided
 no special video set up will be done and some default handling will be
-performed.</doc>
+performed.
+
+This also initializes GStreamer via `gst_init()` on the first call if this
+didn't happen before.</doc>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">a new #GstPlayer instance</doc>
           <type name="Player" c:type="GstPlayer*"/>

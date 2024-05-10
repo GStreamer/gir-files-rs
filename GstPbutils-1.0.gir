@@ -1615,7 +1615,7 @@ subtitles), are currently ignored.</doc>
         <doc xml:space="preserve">Converts a string in the "encoding profile serialization format" into a
 GstEncodingProfile. Refer to the encoding-profile documentation for details
 on the format.</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">A newly created GstEncodingProfile or NULL if the
 input string is not a valid encoding profile serialization format.</doc>
           <type name="EncodingProfile" c:type="GstEncodingProfile*"/>
@@ -2046,8 +2046,7 @@ single segment before the encoder, #FALSE otherwise.</doc>
         <doc xml:space="preserve">Converts a GstEncodingProfile to a string in the "Encoding Profile
 serialization format".</doc>
         <return-value transfer-ownership="full">
-          <doc xml:space="preserve">A string representation of the GstEncodingProfile,
-  or NULL if the input is invalid.</doc>
+          <doc xml:space="preserve">A string representation of the GstEncodingProfile.</doc>
           <type name="utf8" c:type="gchar*"/>
         </return-value>
         <parameters>
@@ -2935,6 +2934,32 @@ rate.</doc>
           <doc xml:space="preserve">Sample rate index as from the AudioSpecificConfig (MPEG-4
          container) or ADTS frame header</doc>
           <type name="guint" c:type="guint"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="codec_utils_av1_get_level" c:identifier="gst_codec_utils_av1_get_level" version="1.26">
+      <doc xml:space="preserve">Transform a seq_level_idx into the level string</doc>
+      <return-value transfer-ownership="none" nullable="1">
+        <doc xml:space="preserve">the level string or %NULL if the seq_level_idx is unknown</doc>
+        <type name="utf8" c:type="const gchar*"/>
+      </return-value>
+      <parameters>
+        <parameter name="seq_level_idx" transfer-ownership="none">
+          <doc xml:space="preserve">A seq_level_idx</doc>
+          <type name="guint8" c:type="guint8"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="codec_utils_av1_get_seq_level_idx" c:identifier="gst_codec_utils_av1_get_seq_level_idx" version="1.26">
+      <doc xml:space="preserve">Transform a level string from the caps into the seq_level_idx</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">the seq_level_idx or 31 (max-level) if the level is unknown</doc>
+        <type name="guint8" c:type="guint8"/>
+      </return-value>
+      <parameters>
+        <parameter name="level" transfer-ownership="none">
+          <doc xml:space="preserve">A level string from caps</doc>
+          <type name="utf8" c:type="const gchar*"/>
         </parameter>
       </parameters>
     </function>
