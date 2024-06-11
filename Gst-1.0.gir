@@ -3551,10 +3551,10 @@ the list should be skipped.</doc>
 
 You must make sure that @idx does not exceed the number of
 buffers available.</doc>
-        <return-value transfer-ownership="none" nullable="1">
-          <doc xml:space="preserve">the buffer at @idx in @group
-    or %NULL when there is no buffer. The buffer remains valid as
-    long as @list is valid and buffer is not removed from the list.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the buffer at @idx in @group.
+    The returned buffer remains valid as long as @list is valid and
+    buffer is not removed from the list.</doc>
           <type name="Buffer" c:type="GstBuffer*"/>
         </return-value>
         <parameters>
@@ -3573,9 +3573,9 @@ buffers available.</doc>
 
 You must make sure that @idx does not exceed the number of
 buffers available.</doc>
-        <return-value transfer-ownership="none" nullable="1">
+        <return-value transfer-ownership="none">
           <doc xml:space="preserve">the buffer at @idx in @group.
-    The returned  buffer remains valid as long as @list is valid and
+    The returned buffer remains valid as long as @list is valid and
     the buffer is not removed from the list.</doc>
           <type name="Buffer" c:type="GstBuffer*"/>
         </return-value>
@@ -23361,6 +23361,21 @@ MT safe</doc>
           </instance-parameter>
         </parameters>
       </method>
+      <method name="get_details" c:identifier="gst_message_get_details" version="1.26">
+        <doc xml:space="preserve">Returns the optional details structure of the message. May be NULL if none.
+
+The returned structure must not be freed.</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The details, or NULL if none.</doc>
+          <type name="Structure" c:type="const GstStructure*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="message" transfer-ownership="none">
+            <doc xml:space="preserve">A #GstMessage</doc>
+            <type name="Message" c:type="GstMessage*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
       <method name="get_num_redirect_entries" c:identifier="gst_message_get_num_redirect_entries" version="1.10">
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">the number of entries stored in the message</doc>
@@ -23701,6 +23716,23 @@ The returned structure must not be freed.</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="parse_error_writable_details" c:identifier="gst_message_parse_error_writable_details" version="1.26">
+        <doc xml:space="preserve">Returns the details structure if present or will create one if not present.
+The returned structure must not be freed.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="message" transfer-ownership="none">
+            <doc xml:space="preserve">The writable message object</doc>
+            <type name="Message" c:type="GstMessage*"/>
+          </instance-parameter>
+          <parameter name="structure" direction="out" caller-allocates="0" transfer-ownership="none" nullable="1" optional="1" allow-none="1">
+            <doc xml:space="preserve">A pointer to the returned details</doc>
+            <type name="Structure" c:type="GstStructure**"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="parse_group_id" c:identifier="gst_message_parse_group_id" version="1.2">
         <doc xml:space="preserve">Extract the group from the STREAM_START message.</doc>
         <return-value transfer-ownership="none">
@@ -23778,6 +23810,23 @@ The returned structure must not be freed.</doc>
           <parameter name="structure" direction="out" caller-allocates="0" transfer-ownership="none" nullable="1" optional="1" allow-none="1">
             <doc xml:space="preserve">A pointer to the returned details</doc>
             <type name="Structure" c:type="const GstStructure**"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="parse_info_writable_details" c:identifier="gst_message_parse_info_writable_details" version="1.26">
+        <doc xml:space="preserve">Returns the details structure if present or will create one if not present.
+The returned structure must not be freed.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="message" transfer-ownership="none">
+            <doc xml:space="preserve">The writable message object</doc>
+            <type name="Message" c:type="GstMessage*"/>
+          </instance-parameter>
+          <parameter name="structure" direction="out" caller-allocates="0" transfer-ownership="none" nullable="1" optional="1" allow-none="1">
+            <doc xml:space="preserve">A pointer to the returned details</doc>
+            <type name="Structure" c:type="GstStructure**"/>
           </parameter>
         </parameters>
       </method>
@@ -24406,6 +24455,23 @@ The returned structure must not be freed.</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="parse_warning_writable_details" c:identifier="gst_message_parse_warning_writable_details" version="1.26">
+        <doc xml:space="preserve">Returns the details structure if present or will create one if not present.
+The returned structure must not be freed.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="message" transfer-ownership="none">
+            <doc xml:space="preserve">The writable message object</doc>
+            <type name="Message" c:type="GstMessage*"/>
+          </instance-parameter>
+          <parameter name="structure" direction="out" caller-allocates="0" transfer-ownership="none" nullable="1" optional="1" allow-none="1">
+            <doc xml:space="preserve">A pointer to the returned details</doc>
+            <type name="Structure" c:type="GstStructure**"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="ref" c:identifier="gst_message_ref" introspectable="0">
         <doc xml:space="preserve">Convenience macro to increase the reference count of the message.</doc>
         <return-value transfer-ownership="full">
@@ -24444,6 +24510,23 @@ The returned structure must not be freed.</doc>
           <parameter name="buffering_left" transfer-ownership="none">
             <doc xml:space="preserve">amount of buffering time left in milliseconds</doc>
             <type name="gint64" c:type="gint64"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_details" c:identifier="gst_message_set_details" version="1.26">
+        <doc xml:space="preserve">Add @details to @message. Will fail if the message already has details set on
+it or if it is not writable.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="message" transfer-ownership="none">
+            <doc xml:space="preserve">A #GstMessage</doc>
+            <type name="Message" c:type="GstMessage*"/>
+          </instance-parameter>
+          <parameter name="details" transfer-ownership="full" nullable="1" allow-none="1">
+            <doc xml:space="preserve">A GstStructure with details</doc>
+            <type name="Structure" c:type="GstStructure*"/>
           </parameter>
         </parameters>
       </method>
@@ -24627,6 +24710,23 @@ freeing it.</doc>
         <parameters>
           <instance-parameter name="msg" transfer-ownership="none">
             <doc xml:space="preserve">the message to unref</doc>
+            <type name="Message" c:type="GstMessage*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="writable_details" c:identifier="gst_message_writable_details" version="1.26">
+        <doc xml:space="preserve">Returns the details structure of the @message. If not present it will be
+created. Use this function (instead of gst_message_get_details()) if you
+want to write to the @details structure.
+
+The returned structure must not be freed.</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The details, or NULL if none.</doc>
+          <type name="Structure" c:type="GstStructure*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="message" transfer-ownership="none">
+            <doc xml:space="preserve">A writable #GstMessage</doc>
             <type name="Message" c:type="GstMessage*"/>
           </instance-parameter>
         </parameters>
@@ -42164,9 +42264,10 @@ printf("%" GST_TIME_FORMAT "\n", GST_TIME_ARGS(ts));
     <function-macro name="TIME_TO_TIMEVAL" c:identifier="GST_TIME_TO_TIMEVAL" introspectable="0">
       <doc xml:space="preserve">Converts a #GstClockTime to a GTimeVal
 
-&gt; on 32-bit systems, a timeval has a range of only 2^32 - 1 seconds,
-&gt; which is about 68 years.  Expect trouble if you want to schedule stuff
-&gt; in your pipeline for 2038.</doc>
+&gt; on many 32-bit systems, a timeval has a range of only 2^32 - 1 seconds,
+&gt; which is about 68 years. Expect trouble if you want to schedule stuff
+&gt; in your pipeline for 2038. This macro asserts that this case does not
+&gt; happen.</doc>
       <parameters>
         <parameter name="t">
           <doc xml:space="preserve">The #GstClockTime to convert</doc>
@@ -49444,6 +49545,45 @@ would write out.</doc>
         <parameter name="args" transfer-ownership="none">
           <doc xml:space="preserve">optional arguments for the format</doc>
           <type name="va_list" c:type="va_list"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="debug_print_object" c:identifier="gst_debug_print_object" version="1.26">
+      <doc xml:space="preserve">Returns a string that represents @ptr. This is safe to call with
+%GstStructure, %GstCapsFeatures, %GstMiniObject s (e.g. %GstCaps,
+%GstBuffer or %GstMessage), and %GObjects (e.g. %GstElement or %GstPad).
+
+The string representation is meant to be used for debugging purposes and
+might change between GStreamer versions.
+
+Passing other kind of pointers might or might not work and is generally
+unsafe to do.</doc>
+      <return-value transfer-ownership="full">
+        <doc xml:space="preserve">a string containing a string
+    representation of the object</doc>
+        <type name="utf8" c:type="gchar*"/>
+      </return-value>
+      <parameters>
+        <parameter name="ptr" transfer-ownership="none" nullable="1" allow-none="1">
+          <doc xml:space="preserve">the object</doc>
+          <type name="gpointer" c:type="gconstpointer"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="debug_print_segment" c:identifier="gst_debug_print_segment" version="1.26">
+      <doc xml:space="preserve">Returns a string that represents @segments.
+
+The string representation is meant to be used for debugging purposes and
+might change between GStreamer versions.</doc>
+      <return-value transfer-ownership="full">
+        <doc xml:space="preserve">a string containing a string
+    representation of the segment</doc>
+        <type name="utf8" c:type="gchar*"/>
+      </return-value>
+      <parameters>
+        <parameter name="segment" transfer-ownership="none" nullable="1" allow-none="1">
+          <doc xml:space="preserve">the %GstSegment</doc>
+          <type name="Segment" c:type="const GstSegment*"/>
         </parameter>
       </parameters>
     </function>

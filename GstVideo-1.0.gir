@@ -12483,10 +12483,10 @@ operation of video-sources or operators.</doc>
         <doc xml:space="preserve">Flip vertically</doc>
       </member>
       <member name="ul_lr" value="6" c:identifier="GST_VIDEO_ORIENTATION_UL_LR" glib:nick="ul-lr" glib:name="GST_VIDEO_ORIENTATION_UL_LR">
-        <doc xml:space="preserve">Flip across upper left/lower right diagonal</doc>
+        <doc xml:space="preserve">Rotate counter-clockwise 90 degrees and flip vertically</doc>
       </member>
       <member name="ur_ll" value="7" c:identifier="GST_VIDEO_ORIENTATION_UR_LL" glib:nick="ur-ll" glib:name="GST_VIDEO_ORIENTATION_UR_LL">
-        <doc xml:space="preserve">Flip across upper right/lower left diagonal</doc>
+        <doc xml:space="preserve">Rotate clockwise 90 degrees and flip vertically</doc>
       </member>
       <member name="auto" value="8" c:identifier="GST_VIDEO_ORIENTATION_AUTO" glib:nick="auto" glib:name="GST_VIDEO_ORIENTATION_AUTO">
         <doc xml:space="preserve">Select flip method based on image-orientation tag</doc>
