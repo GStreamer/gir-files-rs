@@ -14464,7 +14464,7 @@ before create_track_elements is called.</doc>
           </parameter>
         </parameters>
       </function>
-      <function name="new" c:identifier="ges_uri_clip_asset_new">
+      <function name="new" c:identifier="ges_uri_clip_asset_new" glib:finish-func="finish" glib:sync-func="request_sync">
         <doc xml:space="preserve">Creates a #GESUriClipAsset for @uri
 
 Example of request of a GESUriClipAsset:
@@ -14515,7 +14515,7 @@ ges_uri_clip_asset_new (uri, (GAsyncReadyCallback) filesource_asset_loaded_cb, u
           </parameter>
         </parameters>
       </function>
-      <function name="request_sync" c:identifier="ges_uri_clip_asset_request_sync" throws="1">
+      <function name="request_sync" c:identifier="ges_uri_clip_asset_request_sync" throws="1" glib:async-func="new">
         <doc xml:space="preserve">Creates a #GESUriClipAsset for @uri synchonously. You should avoid
 to use it in application, and rather create #GESUriClipAsset asynchronously</doc>
         <return-value transfer-ownership="full">

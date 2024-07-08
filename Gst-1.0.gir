@@ -4196,7 +4196,10 @@ This function takes ownership of @config.</doc>
       </virtual-method>
       <virtual-method name="start">
         <doc xml:space="preserve">Start the bufferpool. The default implementation will preallocate
-min-buffers buffers and put them in the queue.</doc>
+min-buffers buffers and put them in the queue.
+
+Subclasses do not need to chain up to the parent's default implementation
+if they don't want min-buffers based preallocation.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">whether the pool could be started.</doc>
           <type name="gboolean" c:type="gboolean"/>

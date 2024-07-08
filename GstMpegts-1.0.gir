@@ -2210,6 +2210,28 @@ a single language</doc>
           </parameter>
         </parameters>
       </function>
+      <function name="from_metadata" c:identifier="gst_mpegts_descriptor_from_metadata" version="1.26">
+        <return-value transfer-ownership="full">
+          <type name="Descriptor" c:type="GstMpegtsDescriptor*"/>
+        </return-value>
+        <parameters>
+          <parameter name="metadata_descriptor" transfer-ownership="none">
+            <type name="MetadataDescriptor" c:type="const GstMpegtsMetadataDescriptor*"/>
+          </parameter>
+        </parameters>
+      </function>
+      <function name="from_metadata_pointer" c:identifier="gst_mpegts_descriptor_from_metadata_pointer" version="1.26">
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a #GstMpegtsDescriptor from the metadata pointer descriptor.</doc>
+          <type name="Descriptor" c:type="GstMpegtsDescriptor*"/>
+        </return-value>
+        <parameters>
+          <parameter name="metadata_pointer_descriptor" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstMpegtsMetadataPointerDescriptor</doc>
+            <type name="MetadataPointerDescriptor" c:type="const GstMpegtsMetadataPointerDescriptor*"/>
+          </parameter>
+        </parameters>
+      </function>
       <function name="from_registration" c:identifier="gst_mpegts_descriptor_from_registration">
         <doc xml:space="preserve">Creates a %GST_MTS_DESC_REGISTRATION #GstMpegtsDescriptor</doc>
         <return-value transfer-ownership="full">
@@ -2664,6 +2686,19 @@ Consult the relevant specifications for more details.</doc>
         </array>
       </field>
     </record>
+    <enumeration name="MetadataApplicationFormat" version="1.26" c:type="GstMpegtsMetadataApplicationFormat">
+      <doc xml:space="preserve">@GST_MPEGTS_METADATA_APPLICATION_FORMAT_ISAN ISO 15706-1 (ISAN) encoded in its binary form
+@GST_MPEGTS_METADATA_APPLICATION_FORMAT_VSAN ISO 15706-2 (V-ISAN) encoded in its binary form
+@GST_MPEGTS_METADATA_APPLICATION_FORMAT_IDENTIFIER_FIELD Defined by the metadata_application_format_identifier field
+
+metadata_application_format valid values. See ISO/IEC 13818-1:2023(E) Table 2-84.</doc>
+      <member name="isan" value="16" c:identifier="GST_MPEGTS_METADATA_APPLICATION_FORMAT_ISAN">
+      </member>
+      <member name="vsan" value="17" c:identifier="GST_MPEGTS_METADATA_APPLICATION_FORMAT_VSAN">
+      </member>
+      <member name="identifier_field" value="65535" c:identifier="GST_MPEGTS_METADATA_APPLICATION_FORMAT_IDENTIFIER_FIELD">
+      </member>
+    </enumeration>
     <record name="MetadataDescriptor" c:type="GstMpegtsMetadataDescriptor" version="1.24" glib:type-name="GstMpegtsMetadataDescriptor" glib:get-type="gst_mpegts_metadata_descriptor_get_type" c:symbol-prefix="metadata_descriptor">
       <doc xml:space="preserve">The metadata descriptor specifies parameters of a metadata service carried in an MPEG-2 Transport Stream (or Program Stream). The descriptor is included in the PMT in the descriptor loop for the elementary stream that carries the
 metadata service. The descriptor specifies the format of the associated metadata, and contains the value of the
@@ -2673,7 +2708,7 @@ Note that this structure does not include all of the metadata_descriptor items, 
 See ISO/IEC 13818-1:2018 Section 2.6.60 and Section 2.6.61 for more information.</doc>
       <field name="metadata_application_format" writable="1">
         <doc xml:space="preserve">specifies the application responsible for defining usage, syntax and semantics</doc>
-        <type name="guint16" c:type="guint16"/>
+        <type name="MetadataApplicationFormat" c:type="GstMpegtsMetadataApplicationFormat"/>
       </field>
       <field name="metadata_format" writable="1">
         <doc xml:space="preserve">indicates the format and coding of the metadata</doc>
@@ -2711,6 +2746,36 @@ See ISO/IEC 13818-1:2018 Section 2.6.60 and Section 2.6.61 for more information.
         <doc xml:space="preserve">Defined by metadata_format_identifier field.</doc>
       </member>
     </enumeration>
+    <record name="MetadataPointerDescriptor" c:type="GstMpegtsMetadataPointerDescriptor" version="1.26" glib:type-name="GstMpegtsMetadataPointerDescriptor" glib:get-type="gst_mpegts_metadata_pointer_descriptor_get_type" c:symbol-prefix="metadata_pointer_descriptor">
+      <doc xml:space="preserve">This structure is not complete. The following fields are missing in comparison to the standard (ISO/IEC 13818-1:2023 Section 2.6.58):
+* metadata_locator_record_flag: hardcoded to 0. Indicating no metadata_locator_record present in the descriptor.
+* MPEG_carriage_flags: hardcoded to 0b00, indicating the metadata is carried in the same transport steam.
+* metadata_locator_record_length.
+* transport_stream_location.
+* transport_stream_id.
+
+See also: gst_mpegts_descriptor_from_metadata_pointer</doc>
+      <field name="metadata_application_format" writable="1">
+        <doc xml:space="preserve">specifies the application responsible for defining usage, syntax and semantics</doc>
+        <type name="MetadataApplicationFormat" c:type="GstMpegtsMetadataApplicationFormat"/>
+      </field>
+      <field name="metadata_format" writable="1">
+        <doc xml:space="preserve">indicates the format and coding of the metadata</doc>
+        <type name="MetadataFormat" c:type="GstMpegtsMetadataFormat"/>
+      </field>
+      <field name="metadata_format_identifier" writable="1">
+        <doc xml:space="preserve">format identifier (equivalent to registration descriptor), for example 0x4B4C4641 ('KLVA') to indicate SMPTE 336 KLV, or 0x49443320 ('ID3 ').</doc>
+        <type name="guint32" c:type="guint32"/>
+      </field>
+      <field name="metadata_service_id" writable="1">
+        <doc xml:space="preserve">metadata service to which this metadata descriptor applies, typically 0x00</doc>
+        <type name="guint8" c:type="guint8"/>
+      </field>
+      <field name="program_number" writable="1">
+        <doc xml:space="preserve">Indicates the program in which the metadata is carried.</doc>
+        <type name="guint16" c:type="guint16"/>
+      </field>
+    </record>
     <enumeration name="MiscDescriptorType" c:type="GstMpegtsMiscDescriptorType">
       <doc xml:space="preserve">The type of #GstMpegtsDescriptor
 
@@ -4791,6 +4856,28 @@ a single language</doc>
         <parameter name="language" transfer-ownership="none">
           <doc xml:space="preserve">ISO-639-2 language 3-char code</doc>
           <type name="utf8" c:type="const gchar*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="descriptor_from_metadata" c:identifier="gst_mpegts_descriptor_from_metadata" moved-to="Descriptor.from_metadata" version="1.26">
+      <return-value transfer-ownership="full">
+        <type name="Descriptor" c:type="GstMpegtsDescriptor*"/>
+      </return-value>
+      <parameters>
+        <parameter name="metadata_descriptor" transfer-ownership="none">
+          <type name="MetadataDescriptor" c:type="const GstMpegtsMetadataDescriptor*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="descriptor_from_metadata_pointer" c:identifier="gst_mpegts_descriptor_from_metadata_pointer" moved-to="Descriptor.from_metadata_pointer" version="1.26">
+      <return-value transfer-ownership="full">
+        <doc xml:space="preserve">a #GstMpegtsDescriptor from the metadata pointer descriptor.</doc>
+        <type name="Descriptor" c:type="GstMpegtsDescriptor*"/>
+      </return-value>
+      <parameters>
+        <parameter name="metadata_pointer_descriptor" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstMpegtsMetadataPointerDescriptor</doc>
+          <type name="MetadataPointerDescriptor" c:type="const GstMpegtsMetadataPointerDescriptor*"/>
         </parameter>
       </parameters>
     </function>
