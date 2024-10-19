@@ -6293,10 +6293,90 @@ are not copied; the returned #GstCaps owns the structures.</doc>
           </parameter>
         </parameters>
       </constructor>
+      <constructor name="new_id_str_empty_simple" c:identifier="gst_caps_new_id_str_empty_simple" version="1.26">
+        <doc xml:space="preserve">Creates a new #GstCaps that contains one #GstStructure with name
+@media_type.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">the new #GstCaps</doc>
+          <type name="Caps" c:type="GstCaps*"/>
+        </return-value>
+        <parameters>
+          <parameter name="media_type" transfer-ownership="none">
+            <doc xml:space="preserve">the media type of the structure</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <constructor name="new_id_str_simple" c:identifier="gst_caps_new_id_str_simple" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Creates a new #GstCaps that contains one #GstStructure.  The
+structure is defined by the arguments, which have the same format
+as gst_structure_new().</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">the new #GstCaps</doc>
+          <type name="Caps" c:type="GstCaps*"/>
+        </return-value>
+        <parameters>
+          <parameter name="media_type" transfer-ownership="none">
+            <doc xml:space="preserve">the media type of the structure</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">first field to set</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="..." transfer-ownership="none">
+            <doc xml:space="preserve">additional arguments</doc>
+            <varargs/>
+          </parameter>
+        </parameters>
+      </constructor>
       <constructor name="new_simple" c:identifier="gst_caps_new_simple" introspectable="0">
         <doc xml:space="preserve">Creates a new #GstCaps that contains one #GstStructure.  The
 structure is defined by the arguments, which have the same format
 as gst_structure_new().</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">the new #GstCaps</doc>
+          <type name="Caps" c:type="GstCaps*"/>
+        </return-value>
+        <parameters>
+          <parameter name="media_type" transfer-ownership="none">
+            <doc xml:space="preserve">the media type of the structure</doc>
+            <type name="utf8" c:type="const char*"/>
+          </parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">first field to set</doc>
+            <type name="utf8" c:type="const char*"/>
+          </parameter>
+          <parameter name="..." transfer-ownership="none">
+            <doc xml:space="preserve">additional arguments</doc>
+            <varargs/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <constructor name="new_static_str_empty_simple" c:identifier="gst_caps_new_static_str_empty_simple" version="1.26">
+        <doc xml:space="preserve">Creates a new #GstCaps that contains one #GstStructure with name
+@media_type.
+
+@media_type needs to be valid for the remaining lifetime of the process, e.g.
+has to be a static string.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">the new #GstCaps</doc>
+          <type name="Caps" c:type="GstCaps*"/>
+        </return-value>
+        <parameters>
+          <parameter name="media_type" transfer-ownership="none">
+            <doc xml:space="preserve">the media type of the structure</doc>
+            <type name="utf8" c:type="const char*"/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <constructor name="new_static_str_simple" c:identifier="gst_caps_new_static_str_simple" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Creates a new #GstCaps that contains one #GstStructure.  The
+structure is defined by the arguments, which have the same format
+as gst_structure_new().
+
+@media_type, @fieldname and all other fieldnames need to be valid for the
+remaining lifetime of the process, e.g. have to be static strings.</doc>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">the new #GstCaps</doc>
           <type name="Caps" c:type="GstCaps*"/>
@@ -6563,6 +6643,70 @@ gst_structure_set().</doc>
           <parameter name="index" transfer-ownership="none">
             <doc xml:space="preserve">the index of the structure</doc>
             <type name="guint" c:type="guint"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="id_str_set_simple" c:identifier="gst_caps_id_str_set_simple" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Sets fields in a #GstCaps.  The arguments must be passed in the same
+manner as gst_structure_id_str_set(), and be %NULL-terminated.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="caps" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstCaps to set</doc>
+            <type name="Caps" c:type="GstCaps*"/>
+          </instance-parameter>
+          <parameter name="field" transfer-ownership="none">
+            <doc xml:space="preserve">first field to set</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="..." transfer-ownership="none">
+            <doc xml:space="preserve">additional parameters</doc>
+            <varargs/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="id_str_set_simple_valist" c:identifier="gst_caps_id_str_set_simple_valist" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Sets fields in a #GstCaps.  The arguments must be passed in the same
+manner as gst_structure_id_str_set(), and be %NULL-terminated.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="caps" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstCaps to set</doc>
+            <type name="Caps" c:type="GstCaps*"/>
+          </instance-parameter>
+          <parameter name="field" transfer-ownership="none">
+            <doc xml:space="preserve">first field to set</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="varargs" transfer-ownership="none">
+            <doc xml:space="preserve">additional parameters</doc>
+            <type name="va_list" c:type="va_list"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="id_str_set_value" c:identifier="gst_caps_id_str_set_value" version="1.26">
+        <doc xml:space="preserve">Sets the given @field on all structures of @caps to the given @value.
+This is a convenience function for calling gst_structure_set_value() on
+all structures of @caps.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="caps" transfer-ownership="none">
+            <doc xml:space="preserve">a writable caps</doc>
+            <type name="Caps" c:type="GstCaps*"/>
+          </instance-parameter>
+          <parameter name="field" transfer-ownership="none">
+            <doc xml:space="preserve">name of the field to set</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="value" transfer-ownership="none">
+            <doc xml:space="preserve">value to set the field to</doc>
+            <type name="GObject.Value" c:type="const GValue*"/>
           </parameter>
         </parameters>
       </method>
@@ -6996,6 +7140,54 @@ manner as gst_structure_set(), and be %NULL-terminated.</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="set_simple_static_str" c:identifier="gst_caps_set_simple_static_str" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Sets fields in a #GstCaps.  The arguments must be passed in the same
+manner as gst_structure_set(), and be %NULL-terminated.
+
+@field and all other field names need to be valid for the remaining lifetime
+of the process, e.g. have to be static strings.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="caps" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstCaps to set</doc>
+            <type name="Caps" c:type="GstCaps*"/>
+          </instance-parameter>
+          <parameter name="field" transfer-ownership="none">
+            <doc xml:space="preserve">first field to set</doc>
+            <type name="utf8" c:type="const char*"/>
+          </parameter>
+          <parameter name="..." transfer-ownership="none">
+            <doc xml:space="preserve">additional parameters</doc>
+            <varargs/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_simple_static_str_valist" c:identifier="gst_caps_set_simple_static_str_valist" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Sets fields in a #GstCaps.  The arguments must be passed in the same
+manner as gst_structure_set(), and be %NULL-terminated.
+
+@field and all other field names need to be valid for the remaining lifetime
+of the process, e.g. have to be static strings.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="caps" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstCaps to set</doc>
+            <type name="Caps" c:type="GstCaps*"/>
+          </instance-parameter>
+          <parameter name="field" transfer-ownership="none">
+            <doc xml:space="preserve">first field to set</doc>
+            <type name="utf8" c:type="const char*"/>
+          </parameter>
+          <parameter name="varargs" transfer-ownership="none">
+            <doc xml:space="preserve">additional parameters</doc>
+            <type name="va_list" c:type="va_list"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="set_simple_valist" c:identifier="gst_caps_set_simple_valist" introspectable="0">
         <doc xml:space="preserve">Sets fields in a #GstCaps.  The arguments must be passed in the same
 manner as gst_structure_set(), and be %NULL-terminated.</doc>
@@ -7021,6 +7213,31 @@ manner as gst_structure_set(), and be %NULL-terminated.</doc>
         <doc xml:space="preserve">Sets the given @field on all structures of @caps to the given @value.
 This is a convenience function for calling gst_structure_set_value() on
 all structures of @caps.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="caps" transfer-ownership="none">
+            <doc xml:space="preserve">a writable caps</doc>
+            <type name="Caps" c:type="GstCaps*"/>
+          </instance-parameter>
+          <parameter name="field" transfer-ownership="none">
+            <doc xml:space="preserve">name of the field to set</doc>
+            <type name="utf8" c:type="const char*"/>
+          </parameter>
+          <parameter name="value" transfer-ownership="none">
+            <doc xml:space="preserve">value to set the field to</doc>
+            <type name="GObject.Value" c:type="const GValue*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_value_static_str" c:identifier="gst_caps_set_value_static_str" version="1.26">
+        <doc xml:space="preserve">Sets the given @field on all structures of @caps to the given @value.
+This is a convenience function for calling gst_structure_set_value() on
+all structures of @caps.
+
+@field needs to be valid for the remaining lifetime of the process, e.g.
+has to be a static string.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -7274,9 +7491,10 @@ unfixed.</doc>
           <type name="CapsFeatures" c:type="GstCapsFeatures*"/>
         </return-value>
       </constructor>
-      <constructor name="new_id" c:identifier="gst_caps_features_new_id" version="1.2" introspectable="0">
+      <constructor name="new_id" c:identifier="gst_caps_features_new_id" version="1.2" introspectable="0" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Creates a new #GstCapsFeatures with the given features.
 The last argument must be 0.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_caps_features_new_id_str().</doc-deprecated>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">a new, empty #GstCapsFeatures</doc>
           <type name="CapsFeatures" c:type="GstCapsFeatures*"/>
@@ -7292,8 +7510,44 @@ The last argument must be 0.</doc>
           </parameter>
         </parameters>
       </constructor>
-      <constructor name="new_id_valist" c:identifier="gst_caps_features_new_id_valist" version="1.2" introspectable="0">
+      <constructor name="new_id_str" c:identifier="gst_caps_features_new_id_str" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Creates a new #GstCapsFeatures with the given features.
+The last argument must be 0.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a new, empty #GstCapsFeatures</doc>
+          <type name="CapsFeatures" c:type="GstCapsFeatures*"/>
+        </return-value>
+        <parameters>
+          <parameter name="feature1" transfer-ownership="none">
+            <doc xml:space="preserve">name of first feature to set</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="..." transfer-ownership="none">
+            <doc xml:space="preserve">additional features</doc>
+            <varargs/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <constructor name="new_id_str_valist" c:identifier="gst_caps_features_new_id_str_valist" version="1.26" introspectable="0">
         <doc xml:space="preserve">Creates a new #GstCapsFeatures with the given features.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a new, empty #GstCapsFeatures</doc>
+          <type name="CapsFeatures" c:type="GstCapsFeatures*"/>
+        </return-value>
+        <parameters>
+          <parameter name="feature1" transfer-ownership="none">
+            <doc xml:space="preserve">name of first feature to set</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="varargs" transfer-ownership="none">
+            <doc xml:space="preserve">variable argument list</doc>
+            <type name="va_list" c:type="va_list"/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <constructor name="new_id_valist" c:identifier="gst_caps_features_new_id_valist" version="1.2" introspectable="0" deprecated="1" deprecated-version="1.26">
+        <doc xml:space="preserve">Creates a new #GstCapsFeatures with the given features.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_caps_features_new_id_str_valist().</doc-deprecated>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">a new, empty #GstCapsFeatures</doc>
           <type name="CapsFeatures" c:type="GstCapsFeatures*"/>
@@ -7319,6 +7573,63 @@ The last argument must be 0.</doc>
           <parameter name="feature" transfer-ownership="none">
             <doc xml:space="preserve">The feature</doc>
             <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <constructor name="new_single_static_str" c:identifier="gst_caps_features_new_single_static_str" version="1.26">
+        <doc xml:space="preserve">Creates a new #GstCapsFeatures with a single feature.
+
+@feature needs to be valid for the remaining lifetime of the process, e.g. has
+to be a static string.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a new #GstCapsFeatures</doc>
+          <type name="CapsFeatures" c:type="GstCapsFeatures*"/>
+        </return-value>
+        <parameters>
+          <parameter name="feature" transfer-ownership="none">
+            <doc xml:space="preserve">The feature</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <constructor name="new_static_str" c:identifier="gst_caps_features_new_static_str" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Creates a new #GstCapsFeatures with the given features.
+The last argument must be %NULL.
+
+@feature1 and all other features need to be valid for the remaining lifetime
+of the process, e.g. have to be a static string.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a new, empty #GstCapsFeatures</doc>
+          <type name="CapsFeatures" c:type="GstCapsFeatures*"/>
+        </return-value>
+        <parameters>
+          <parameter name="feature1" transfer-ownership="none">
+            <doc xml:space="preserve">name of first feature to set</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="..." transfer-ownership="none">
+            <doc xml:space="preserve">additional features</doc>
+            <varargs/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <constructor name="new_static_str_valist" c:identifier="gst_caps_features_new_static_str_valist" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Creates a new #GstCapsFeatures with the given features.
+
+@feature1 and all other features need to be valid for the remaining lifetime
+of the process, e.g. have to be a static string.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a new, empty #GstCapsFeatures</doc>
+          <type name="CapsFeatures" c:type="GstCapsFeatures*"/>
+        </return-value>
+        <parameters>
+          <parameter name="feature1" transfer-ownership="none">
+            <doc xml:space="preserve">name of first feature to set</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="varargs" transfer-ownership="none">
+            <doc xml:space="preserve">variable argument list</doc>
+            <type name="va_list" c:type="va_list"/>
           </parameter>
         </parameters>
       </constructor>
@@ -7355,8 +7666,9 @@ The last argument must be 0.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="add_id" c:identifier="gst_caps_features_add_id" version="1.2">
+      <method name="add_id" c:identifier="gst_caps_features_add_id" version="1.2" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Adds @feature to @features.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_caps_features_add_id_str().</doc-deprecated>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -7368,6 +7680,41 @@ The last argument must be 0.</doc>
           <parameter name="feature" transfer-ownership="none">
             <doc xml:space="preserve">a feature.</doc>
             <type name="GLib.Quark" c:type="GQuark"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="add_id_str" c:identifier="gst_caps_features_add_id_str" version="1.26">
+        <doc xml:space="preserve">Adds @feature to @features.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="features" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstCapsFeatures.</doc>
+            <type name="CapsFeatures" c:type="GstCapsFeatures*"/>
+          </instance-parameter>
+          <parameter name="feature" transfer-ownership="none">
+            <doc xml:space="preserve">a feature.</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="add_static_str" c:identifier="gst_caps_features_add_static_str" version="1.26">
+        <doc xml:space="preserve">Adds @feature to @features.
+
+@feature needs to be valid for the remaining lifetime of the process, e.g. has
+to be a static string.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="features" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstCapsFeatures.</doc>
+            <type name="CapsFeatures" c:type="GstCapsFeatures*"/>
+          </instance-parameter>
+          <parameter name="feature" transfer-ownership="none">
+            <doc xml:space="preserve">a feature.</doc>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </method>
@@ -7388,8 +7735,9 @@ The last argument must be 0.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="contains_id" c:identifier="gst_caps_features_contains_id" version="1.2">
+      <method name="contains_id" c:identifier="gst_caps_features_contains_id" version="1.2" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Checks if @features contains @feature.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_caps_features_contains_id_str().</doc-deprecated>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">%TRUE if @features contains @feature.</doc>
           <type name="gboolean" c:type="gboolean"/>
@@ -7402,6 +7750,23 @@ The last argument must be 0.</doc>
           <parameter name="feature" transfer-ownership="none">
             <doc xml:space="preserve">a feature</doc>
             <type name="GLib.Quark" c:type="GQuark"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="contains_id_str" c:identifier="gst_caps_features_contains_id_str" version="1.26">
+        <doc xml:space="preserve">Checks if @features contains @feature.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if @features contains @feature.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="features" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstCapsFeatures.</doc>
+            <type name="CapsFeatures" c:type="const GstCapsFeatures*"/>
+          </instance-parameter>
+          <parameter name="feature" transfer-ownership="none">
+            <doc xml:space="preserve">a feature</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
           </parameter>
         </parameters>
       </method>
@@ -7448,11 +7813,29 @@ have a parent when this function is called.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="get_nth_id" c:identifier="gst_caps_features_get_nth_id" version="1.2">
+      <method name="get_nth_id" c:identifier="gst_caps_features_get_nth_id" version="1.2" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Returns the @i-th feature of @features.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_caps_features_get_nth_id_str().</doc-deprecated>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">The @i-th feature of @features.</doc>
           <type name="GLib.Quark" c:type="GQuark"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="features" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstCapsFeatures.</doc>
+            <type name="CapsFeatures" c:type="const GstCapsFeatures*"/>
+          </instance-parameter>
+          <parameter name="i" transfer-ownership="none">
+            <doc xml:space="preserve">index of the feature</doc>
+            <type name="guint" c:type="guint"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_nth_id_str" c:identifier="gst_caps_features_get_nth_id_str" version="1.26">
+        <doc xml:space="preserve">Returns the @i-th feature of @features.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">The @i-th feature of @features.</doc>
+          <type name="IdStr" c:type="const GstIdStr*"/>
         </return-value>
         <parameters>
           <instance-parameter name="features" transfer-ownership="none">
@@ -7524,8 +7907,9 @@ have a parent when this function is called.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="remove_id" c:identifier="gst_caps_features_remove_id" version="1.2">
+      <method name="remove_id" c:identifier="gst_caps_features_remove_id" version="1.2" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Removes @feature from @features.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_caps_features_remove_id_str().</doc-deprecated>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -7537,6 +7921,22 @@ have a parent when this function is called.</doc>
           <parameter name="feature" transfer-ownership="none">
             <doc xml:space="preserve">a feature.</doc>
             <type name="GLib.Quark" c:type="GQuark"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="remove_id_str" c:identifier="gst_caps_features_remove_id_str" version="1.26">
+        <doc xml:space="preserve">Removes @feature from @features.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="features" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstCapsFeatures.</doc>
+            <type name="CapsFeatures" c:type="GstCapsFeatures*"/>
+          </instance-parameter>
+          <parameter name="feature" transfer-ownership="none">
+            <doc xml:space="preserve">a feature.</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
           </parameter>
         </parameters>
       </method>
@@ -8575,10 +8975,10 @@ unscheduled with gst_clock_id_unschedule().</doc>
         </parameters>
       </virtual-method>
       <method name="add_observation" c:identifier="gst_clock_add_observation">
-        <doc xml:space="preserve">The time @master of the master clock and the time @slave of the slave
-clock are added to the list of observations. If enough observations
-are available, a linear regression algorithm is run on the
-observations and @clock is recalibrated.
+        <doc xml:space="preserve">The time @observation_external of the external or master clock and the time
+@observation_internal of the internal or slave clock are added to the list of
+observations. If enough observations are available, a linear regression
+algorithm is run on the observations and @clock is recalibrated.
 
 If this functions returns %TRUE, @r_squared will contain the
 correlation coefficient of the interpolation. A value of 1.0
@@ -8595,12 +8995,12 @@ regression algorithm.</doc>
             <doc xml:space="preserve">a #GstClock</doc>
             <type name="Clock" c:type="GstClock*"/>
           </instance-parameter>
-          <parameter name="slave" transfer-ownership="none">
-            <doc xml:space="preserve">a time on the slave</doc>
+          <parameter name="observation_internal" transfer-ownership="none">
+            <doc xml:space="preserve">a time on the internal clock</doc>
             <type name="ClockTime" c:type="GstClockTime"/>
           </parameter>
-          <parameter name="master" transfer-ownership="none">
-            <doc xml:space="preserve">a time on the master</doc>
+          <parameter name="observation_external" transfer-ownership="none">
+            <doc xml:space="preserve">a time on the external clock</doc>
             <type name="ClockTime" c:type="GstClockTime"/>
           </parameter>
           <parameter name="r_squared" direction="out" caller-allocates="0" transfer-ownership="full">
@@ -8611,8 +9011,8 @@ regression algorithm.</doc>
       </method>
       <method name="add_observation_unapplied" c:identifier="gst_clock_add_observation_unapplied" version="1.6">
         <doc xml:space="preserve">Add a clock observation to the internal slaving algorithm the same as
-gst_clock_add_observation(), and return the result of the master clock
-estimation, without updating the internal calibration.
+gst_clock_add_observation(), and return the result of the external or master
+clock estimation, without updating the internal calibration.
 
 The caller can then take the results and call gst_clock_set_calibration()
 with the values, or some modified version of them.</doc>
@@ -8626,12 +9026,12 @@ regression algorithm.</doc>
             <doc xml:space="preserve">a #GstClock</doc>
             <type name="Clock" c:type="GstClock*"/>
           </instance-parameter>
-          <parameter name="slave" transfer-ownership="none">
-            <doc xml:space="preserve">a time on the slave</doc>
+          <parameter name="observation_internal" transfer-ownership="none">
+            <doc xml:space="preserve">a time on the internal clock</doc>
             <type name="ClockTime" c:type="GstClockTime"/>
           </parameter>
-          <parameter name="master" transfer-ownership="none">
-            <doc xml:space="preserve">a time on the master</doc>
+          <parameter name="observation_external" transfer-ownership="none">
+            <doc xml:space="preserve">a time on the external clock</doc>
             <type name="ClockTime" c:type="GstClockTime"/>
           </parameter>
           <parameter name="r_squared" direction="out" caller-allocates="0" transfer-ownership="full">
@@ -10810,6 +11210,12 @@ Used to generate `gst_device_provider_register_*(GstPlugin* plugin)`.</doc>
     <function-macro name="DYNAMIC_TYPE_FACTORY_CAST" c:identifier="GST_DYNAMIC_TYPE_FACTORY_CAST" introspectable="0">
       <parameters>
         <parameter name="obj">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="DYNAMIC_TYPE_FACTORY_CLASS" c:identifier="GST_DYNAMIC_TYPE_FACTORY_CLASS" introspectable="0">
+      <parameters>
+        <parameter name="klass">
         </parameter>
       </parameters>
     </function-macro>
@@ -13514,8 +13920,8 @@ As an example, you may define the element named "stream-filter"
 with the namespace `my` as following:
 
 ```
-#define _pre_register_init \
-  my_stream_filter_pre_register (plugin);
+#define _pre_register_init  *   my_stream_filter_pre_register (plugin);
+;
 GST_ELEMENT_REGISTER_DEFINE_WITH_CODE (stream_filter, "stream-filter", GST_RANK_PRIMARY, MY_TYPE_STREAM_FILTER, _pre_register_init)
 ```</doc>
       <parameters>
@@ -18261,9 +18667,10 @@ check the name of a custom event.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="has_name_id" c:identifier="gst_event_has_name_id" version="1.18">
+      <method name="has_name_id" c:identifier="gst_event_has_name_id" version="1.18" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Checks if @event has the given @name. This function is usually used to
 check the name of a custom event.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_event_has_name().</doc-deprecated>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">%TRUE if @name matches the name of the event structure.</doc>
           <type name="gboolean" c:type="gboolean"/>
@@ -20409,6 +20816,281 @@ whenever the datastructure changes.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <record name="IdStr" c:type="GstIdStr" version="1.26" glib:type-name="GstIdStr" glib:get-type="gst_id_str_get_type" c:symbol-prefix="id_str">
+      <doc xml:space="preserve">A #GstIdStr is string type optimized for short strings and used for structure
+names, structure field names and in other places.
+
+Strings up to 16 bytes (including NUL terminator) are stored inline, other
+strings are stored on the heap.
+
+```cpp
+GstIdStr s = GST_ID_STR_INIT;
+
+gst_id_str_set (&amp;s, "Hello, World!");
+g_print ("%s\n", gst_id_str_as_str (&amp;s));
+
+gst_id_str_clear (&amp;s);
+```</doc>
+      <field name="pointer" readable="0" private="1">
+        <type name="gpointer" c:type="gpointer"/>
+      </field>
+      <field name="padding" readable="0" private="1">
+        <array zero-terminated="0" fixed-size="8">
+          <type name="guint8" c:type="guint8"/>
+        </array>
+      </field>
+      <constructor name="new" c:identifier="gst_id_str_new" version="1.26">
+        <doc xml:space="preserve">Returns a newly heap allocated empty string.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">A heap-allocated string.</doc>
+          <type name="IdStr" c:type="GstIdStr*"/>
+        </return-value>
+      </constructor>
+      <method name="as_str" c:identifier="gst_id_str_as_str" version="1.26">
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the NUL-terminated string representation of @s.</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="s" transfer-ownership="none">
+            <doc xml:space="preserve">A %GstIdStr</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="clear" c:identifier="gst_id_str_clear" version="1.26">
+        <doc xml:space="preserve">Clears @s and sets it to the empty string.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="s" transfer-ownership="none">
+            <doc xml:space="preserve">A %GstIdStr</doc>
+            <type name="IdStr" c:type="GstIdStr*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="copy" c:identifier="gst_id_str_copy" version="1.26">
+        <doc xml:space="preserve">Copies @s into newly allocated heap memory.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">A heap-allocated copy of @s.</doc>
+          <type name="IdStr" c:type="GstIdStr*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="s" transfer-ownership="none">
+            <doc xml:space="preserve">A %GstIdStr</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="copy_into" c:identifier="gst_id_str_copy_into" version="1.26">
+        <doc xml:space="preserve">Copies @s into @d.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="d" transfer-ownership="none">
+            <doc xml:space="preserve">The destination %GstIdStr</doc>
+            <type name="IdStr" c:type="GstIdStr*"/>
+          </instance-parameter>
+          <parameter name="s" transfer-ownership="none">
+            <doc xml:space="preserve">The source %GstIdStr</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="free" c:identifier="gst_id_str_free" version="1.26">
+        <doc xml:space="preserve">Frees @s. This should only be called for heap-allocated #GstIdStr.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="s" transfer-ownership="none">
+            <doc xml:space="preserve">A heap allocated %GstIdStr</doc>
+            <type name="IdStr" c:type="GstIdStr*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_len" c:identifier="gst_id_str_get_len" version="1.26">
+        <doc xml:space="preserve">Returns the length of @s, exluding the NUL-terminator. This is equivalent to
+calling `strcmp()` but potentially faster.</doc>
+        <return-value transfer-ownership="none">
+          <type name="gsize" c:type="gsize"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="s" transfer-ownership="none">
+            <doc xml:space="preserve">A %GstIdStr</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="init" c:identifier="gst_id_str_init" version="1.26">
+        <doc xml:space="preserve">Initializes a (usually stack-allocated) id string @s. The newly-initialized
+id string will contain an empty string by default as value.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="s" transfer-ownership="none">
+            <doc xml:space="preserve">A %GstIdStr</doc>
+            <type name="IdStr" c:type="GstIdStr*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="is_equal" c:identifier="gst_id_str_is_equal" version="1.26">
+        <doc xml:space="preserve">Compares @s1 and @s2 for equality.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if @s1 and @s2 are equal.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="s1" transfer-ownership="none">
+            <doc xml:space="preserve">A %GstIdStr</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </instance-parameter>
+          <parameter name="s2" transfer-ownership="none">
+            <doc xml:space="preserve">A %GstIdStr</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="is_equal_to_str" c:identifier="gst_id_str_is_equal_to_str" version="1.26">
+        <doc xml:space="preserve">Compares @s1 and @s2 for equality.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if @s1 and @s2 are equal.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="s1" transfer-ownership="none">
+            <doc xml:space="preserve">A %GstIdStr</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </instance-parameter>
+          <parameter name="s2" transfer-ownership="none">
+            <doc xml:space="preserve">A string</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="is_equal_to_str_with_len" c:identifier="gst_id_str_is_equal_to_str_with_len" version="1.26">
+        <doc xml:space="preserve">Compares @s1 and @s2 with length @len for equality. @s2 does not have to be
+NUL-terminated and @len should not include the NUL-terminator.
+
+This is generally faster than gst_id_str_is_equal_to_str() if the length is
+already known.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if @s1 and @s2 are equal.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="s1" transfer-ownership="none">
+            <doc xml:space="preserve">A %GstIdStr</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </instance-parameter>
+          <parameter name="s2" transfer-ownership="none">
+            <doc xml:space="preserve">A string</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="len" transfer-ownership="none">
+            <doc xml:space="preserve">Length of @s2.</doc>
+            <type name="gsize" c:type="gsize"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="move" c:identifier="gst_id_str_move" version="1.26">
+        <doc xml:space="preserve">Moves @s into @d and resets @s.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="d" transfer-ownership="none">
+            <doc xml:space="preserve">The destination %GstIdStr</doc>
+            <type name="IdStr" c:type="GstIdStr*"/>
+          </instance-parameter>
+          <parameter name="s" transfer-ownership="none">
+            <doc xml:space="preserve">The source %GstIdStr</doc>
+            <type name="IdStr" c:type="GstIdStr*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set" c:identifier="gst_id_str_set" version="1.26">
+        <doc xml:space="preserve">Sets @s to the string @value.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="s" transfer-ownership="none">
+            <doc xml:space="preserve">A %GstIdStr</doc>
+            <type name="IdStr" c:type="GstIdStr*"/>
+          </instance-parameter>
+          <parameter name="value" transfer-ownership="none">
+            <doc xml:space="preserve">A NUL-terminated string</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_static_str" c:identifier="gst_id_str_set_static_str" version="1.26">
+        <doc xml:space="preserve">Sets @s to the string @value. @value needs to be valid for the remaining
+lifetime of the process, e.g. has to be a static string.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="s" transfer-ownership="none">
+            <doc xml:space="preserve">A %GstIdStr</doc>
+            <type name="IdStr" c:type="GstIdStr*"/>
+          </instance-parameter>
+          <parameter name="value" transfer-ownership="none">
+            <doc xml:space="preserve">A NUL-terminated string</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_static_str_with_len" c:identifier="gst_id_str_set_static_str_with_len" version="1.26">
+        <doc xml:space="preserve">Sets @s to the string @value of length @len. @value needs to be valid for the
+remaining lifetime of the process, e.g. has to be a static string.
+
+@value does not have to be NUL-terminated and @len should not include the
+NUL-terminator.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="s" transfer-ownership="none">
+            <doc xml:space="preserve">A %GstIdStr</doc>
+            <type name="IdStr" c:type="GstIdStr*"/>
+          </instance-parameter>
+          <parameter name="value" transfer-ownership="none">
+            <doc xml:space="preserve">A string</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="len" transfer-ownership="none">
+            <doc xml:space="preserve">Length of the string</doc>
+            <type name="gsize" c:type="gsize"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_with_len" c:identifier="gst_id_str_set_with_len" version="1.26">
+        <doc xml:space="preserve">Sets @s to the string @value of length @len. @value does not have to be
+NUL-terminated and @len should not include the NUL-terminator.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="s" transfer-ownership="none">
+            <doc xml:space="preserve">A %GstIdStr</doc>
+            <type name="IdStr" c:type="GstIdStr*"/>
+          </instance-parameter>
+          <parameter name="value" transfer-ownership="none">
+            <doc xml:space="preserve">A string</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="len" transfer-ownership="none">
+            <doc xml:space="preserve">Length of the string</doc>
+            <type name="gsize" c:type="gsize"/>
+          </parameter>
+        </parameters>
+      </method>
+    </record>
     <class name="Int64Range" c:symbol-prefix="int64_range" glib:type-name="GstInt64Range" glib:get-type="gst_int64_range_get_type" glib:fundamental="1">
       <doc xml:space="preserve">A fundamental type that describes a #gint64 range</doc>
     </class>
@@ -37567,8 +38249,8 @@ This can be used in pad templates.</doc>
 structure.
 Example:
 |[&lt;!-- language="C" --&gt;
-static GstStaticPadTemplate my_src_template = \
-  GST_STATIC_PAD_TEMPLATE("src", GST_PAD_SRC, GST_PAD_ALWAYS,
+static GstStaticPadTemplate my_src_template =  *   GST_STATIC_PAD_TEMPLATE("src", GST_PAD_SRC, GST_PAD_ALWAYS,
+,
                           GST_STATIC_CAPS_ANY);
 ]|</doc>
       <parameters>
@@ -39067,7 +39749,7 @@ gst_element_set_state(). Only @GST_STATE_CHANGE_FAILURE is a real failure.</doc>
                               This typically happens with live sources.</doc>
       </member>
     </enumeration>
-    <record name="StaticCaps" c:type="GstStaticCaps">
+    <record name="StaticCaps" c:type="GstStaticCaps" glib:type-name="GstStaticCaps" glib:get-type="gst_static_caps_get_type" c:symbol-prefix="static_caps">
       <doc xml:space="preserve">Data structure to initialize #GstCaps from a string description usually
 used in conjunction with GST_STATIC_CAPS() and gst_static_caps_get() to
 instantiate a #GstCaps.</doc>
@@ -39112,7 +39794,7 @@ instantiate a #GstCaps.</doc>
         </parameters>
       </method>
     </record>
-    <record name="StaticPadTemplate" c:type="GstStaticPadTemplate">
+    <record name="StaticPadTemplate" c:type="GstStaticPadTemplate" glib:type-name="GstStaticPadTemplate" glib:get-type="gst_static_pad_template_get_type" c:symbol-prefix="static_pad_template">
       <doc xml:space="preserve">Structure describing the #GstStaticPadTemplate.</doc>
       <field name="name_template" writable="1">
         <doc xml:space="preserve">the name of the template</doc>
@@ -39767,14 +40449,14 @@ values are explicitly typed.
 
 Some types have special delimiters:
 
-- [GstValueArray](GST_TYPE_ARRAY) are inside curly brackets (`{` and `}`).
-  For example `a-structure, array={1, 2, 3}`
+- [GstValueArray](GST_TYPE_ARRAY) are inside "less and greater than" (`&lt;` and
+  `&gt;`). For example `a-structure, array=&lt;1, 2, 3&gt;
 - Ranges are inside brackets (`[` and `]`). For example `a-structure,
   range=[1, 6, 2]` 1 being the min value, 6 the maximum and 2 the step. To
   specify a #GST_TYPE_INT64_RANGE you need to explicitly specify it like:
   `a-structure, a-int64-range=(gint64) [1, 5]`
-- [GstValueList](GST_TYPE_LIST) are inside "less and greater than" (`&lt;` and
-  `&gt;`). For example `a-structure, list=&lt;1, 2, 3&gt;
+- [GstValueList](GST_TYPE_LIST) are inside curly brackets (`{` and `}`).
+  For example `a-structure, list={1, 2, 3}`
 
 Structures are delimited either by a null character `\0` or a semicolon `;`
 the latter allowing to store multiple structures in the same string (see
@@ -39903,7 +40585,7 @@ Free-function: gst_structure_free</doc>
           </parameter>
         </parameters>
       </constructor>
-      <constructor name="new_id" c:identifier="gst_structure_new_id" introspectable="0">
+      <constructor name="new_id" c:identifier="gst_structure_new_id" introspectable="0" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Creates a new #GstStructure with the given name as a GQuark, followed by
 fieldname quark, GType, argument(s) "triplets" in the same format as
 gst_structure_id_set(). Basically a convenience wrapper around
@@ -39912,6 +40594,7 @@ gst_structure_new_id_empty() and gst_structure_id_set().
 The last variable argument must be %NULL (or 0).
 
 Free-function: gst_structure_free</doc>
+        <doc-deprecated xml:space="preserve">Use gst_structure_new_id_str().</doc-deprecated>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">a new #GstStructure</doc>
           <type name="Structure" c:type="GstStructure*"/>
@@ -39931,10 +40614,11 @@ Free-function: gst_structure_free</doc>
           </parameter>
         </parameters>
       </constructor>
-      <constructor name="new_id_empty" c:identifier="gst_structure_new_id_empty">
+      <constructor name="new_id_empty" c:identifier="gst_structure_new_id_empty" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Creates a new, empty #GstStructure with the given name as a GQuark.
 
 Free-function: gst_structure_free</doc>
+        <doc-deprecated xml:space="preserve">Use gst_structure_new_id_str_empty().</doc-deprecated>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">a new, empty #GstStructure</doc>
           <type name="Structure" c:type="GstStructure*"/>
@@ -39943,6 +40627,153 @@ Free-function: gst_structure_free</doc>
           <parameter name="quark" transfer-ownership="none">
             <doc xml:space="preserve">name of new structure</doc>
             <type name="GLib.Quark" c:type="GQuark"/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <constructor name="new_id_str" c:identifier="gst_structure_new_id_str" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Creates a new #GstStructure with the given name as a GQuark, followed by
+fieldname GstIdStr, GType, argument(s) "triplets" in the same format as
+gst_structure_id_str_set(). Basically a convenience wrapper around
+gst_structure_new_id_str_empty() and gst_structure_id_str_set().
+
+The last variable argument must be %NULL (or 0).
+
+Free-function: gst_structure_free</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a new #GstStructure</doc>
+          <type name="Structure" c:type="GstStructure*"/>
+        </return-value>
+        <parameters>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:space="preserve">name of new structure</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the GstIdStr for the name of the field to set</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="..." transfer-ownership="none">
+            <doc xml:space="preserve">variable arguments</doc>
+            <varargs/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <constructor name="new_id_str_empty" c:identifier="gst_structure_new_id_str_empty" version="1.26">
+        <doc xml:space="preserve">Creates a new, empty #GstStructure with the given name.
+
+Free-function: gst_structure_free</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a new, empty #GstStructure</doc>
+          <type name="Structure" c:type="GstStructure*"/>
+        </return-value>
+        <parameters>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:space="preserve">name of new structure</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <constructor name="new_id_str_valist" c:identifier="gst_structure_new_id_str_valist" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Creates a new #GstStructure with the given @name.  Structure fields
+are set according to the varargs in a manner similar to
+gst_structure_new_id_str().
+
+Free-function: gst_structure_free</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a new #GstStructure</doc>
+          <type name="Structure" c:type="GstStructure*"/>
+        </return-value>
+        <parameters>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:space="preserve">name of new structure</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="firstfield" transfer-ownership="none">
+            <doc xml:space="preserve">name of first field to set</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="varargs" transfer-ownership="none">
+            <doc xml:space="preserve">variable argument list</doc>
+            <type name="va_list" c:type="va_list"/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <constructor name="new_static_str" c:identifier="gst_structure_new_static_str" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Creates a new #GstStructure with the given name.  Parses the
+list of variable arguments and sets fields to the values listed.
+Variable arguments should be passed as field name, field type,
+and value.  Last variable argument should be %NULL.
+
+@name, @firstfield and all field names need to be valid for the remaining
+lifetime of the process, e.g. have to be a static string.
+
+Free-function: gst_structure_free</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a new #GstStructure</doc>
+          <type name="Structure" c:type="GstStructure*"/>
+        </return-value>
+        <parameters>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:space="preserve">name of new structure</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="firstfield" transfer-ownership="none">
+            <doc xml:space="preserve">name of first field to set</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="..." transfer-ownership="none">
+            <doc xml:space="preserve">additional arguments</doc>
+            <varargs/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <constructor name="new_static_str_empty" c:identifier="gst_structure_new_static_str_empty" version="1.26">
+        <doc xml:space="preserve">Creates a new, empty #GstStructure with the given @name.
+
+See gst_structure_set_name() for constraints on the @name parameter.
+
+@name needs to be valid for the remaining lifetime of the process, e.g. has
+to be a static string.
+
+Free-function: gst_structure_free</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a new, empty #GstStructure</doc>
+          <type name="Structure" c:type="GstStructure*"/>
+        </return-value>
+        <parameters>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:space="preserve">name of new structure</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <constructor name="new_static_str_valist" c:identifier="gst_structure_new_static_str_valist" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Creates a new #GstStructure with the given @name.  Structure fields
+are set according to the varargs in a manner similar to
+gst_structure_new().
+
+See gst_structure_set_name() for constraints on the @name parameter.
+
+@name, @firstfield and all field names need to be valid for the remaining
+lifetime of the process, e.g. have to be a static string.
+
+Free-function: gst_structure_free</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a new #GstStructure</doc>
+          <type name="Structure" c:type="GstStructure*"/>
+        </return-value>
+        <parameters>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:space="preserve">name of new structure</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="firstfield" transfer-ownership="none">
+            <doc xml:space="preserve">name of first field to set</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="varargs" transfer-ownership="none">
+            <doc xml:space="preserve">variable argument list</doc>
+            <type name="va_list" c:type="va_list"/>
           </parameter>
         </parameters>
       </constructor>
@@ -40006,10 +40837,35 @@ Free-function: gst_structure_free</doc>
           </instance-parameter>
         </parameters>
       </method>
-      <method name="filter_and_map_in_place" c:identifier="gst_structure_filter_and_map_in_place" version="1.6">
+      <method name="filter_and_map_in_place" c:identifier="gst_structure_filter_and_map_in_place" version="1.6" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Calls the provided function once for each field in the #GstStructure. In
 contrast to gst_structure_foreach(), the function may modify the fields.
 In contrast to gst_structure_map_in_place(), the field is removed from
+the structure if %FALSE is returned from the function.
+The structure must be mutable.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_structure_filter_and_map_in_place_id_str().</doc-deprecated>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="GstStructure*"/>
+          </instance-parameter>
+          <parameter name="func" transfer-ownership="none" scope="call" closure="1">
+            <doc xml:space="preserve">a function to call for each field</doc>
+            <type name="StructureFilterMapFunc" c:type="GstStructureFilterMapFunc"/>
+          </parameter>
+          <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">private data</doc>
+            <type name="gpointer" c:type="gpointer"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="filter_and_map_in_place_id_str" c:identifier="gst_structure_filter_and_map_in_place_id_str" version="1.26">
+        <doc xml:space="preserve">Calls the provided function once for each field in the #GstStructure. In
+contrast to gst_structure_foreach_id_str(), the function may modify the fields.
+In contrast to gst_structure_map_in_place_id_str(), the field is removed from
 the structure if %FALSE is returned from the function.
 The structure must be mutable.</doc>
         <return-value transfer-ownership="none">
@@ -40022,7 +40878,7 @@ The structure must be mutable.</doc>
           </instance-parameter>
           <parameter name="func" transfer-ownership="none" scope="call" closure="1">
             <doc xml:space="preserve">a function to call for each field</doc>
-            <type name="StructureFilterMapFunc" c:type="GstStructureFilterMapFunc"/>
+            <type name="StructureFilterMapIdStrFunc" c:type="GstStructureFilterMapIdStrFunc"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1">
             <doc xml:space="preserve">private data</doc>
@@ -40175,10 +41031,11 @@ integer to @target that is a subset of the existing field.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="foreach" c:identifier="gst_structure_foreach">
+      <method name="foreach" c:identifier="gst_structure_foreach" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Calls the provided function once for each field in the #GstStructure. The
 function must not modify the fields. Also see gst_structure_map_in_place()
 and gst_structure_filter_and_map_in_place().</doc>
+        <doc-deprecated xml:space="preserve">Use gst_structure_foreach_id_str().</doc-deprecated>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">%TRUE if the supplied function returns %TRUE For each of the fields,
 %FALSE otherwise.</doc>
@@ -40192,6 +41049,30 @@ and gst_structure_filter_and_map_in_place().</doc>
           <parameter name="func" transfer-ownership="none" scope="call" closure="1">
             <doc xml:space="preserve">a function to call for each field</doc>
             <type name="StructureForeachFunc" c:type="GstStructureForeachFunc"/>
+          </parameter>
+          <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">private data</doc>
+            <type name="gpointer" c:type="gpointer"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="foreach_id_str" c:identifier="gst_structure_foreach_id_str" version="1.26">
+        <doc xml:space="preserve">Calls the provided function once for each field in the #GstStructure. The
+function must not modify the fields. Also see gst_structure_map_in_place_id_str()
+and gst_structure_filter_and_map_in_place_id_str().</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if the supplied function returns %TRUE For each of the fields,
+%FALSE otherwise.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="const GstStructure*"/>
+          </instance-parameter>
+          <parameter name="func" transfer-ownership="none" scope="call" closure="1">
+            <doc xml:space="preserve">a function to call for each field</doc>
+            <type name="StructureForeachIdStrFunc" c:type="GstStructureForeachIdStrFunc"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1">
             <doc xml:space="preserve">private data</doc>
@@ -40627,11 +41508,25 @@ function returns %FALSE.</doc>
           </instance-parameter>
         </parameters>
       </method>
-      <method name="get_name_id" c:identifier="gst_structure_get_name_id">
+      <method name="get_name_id" c:identifier="gst_structure_get_name_id" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Get the name of @structure as a GQuark.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_structure_get_name_id_str().</doc-deprecated>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">the quark representing the name of the structure.</doc>
           <type name="GLib.Quark" c:type="GQuark"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="const GstStructure*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_name_id_str" c:identifier="gst_structure_get_name_id_str" version="1.26">
+        <doc xml:space="preserve">Get the name of @structure as a GstIdStr.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the name of the structure.</doc>
+          <type name="IdStr" c:type="const GstIdStr*"/>
         </return-value>
         <parameters>
           <instance-parameter name="structure" transfer-ownership="none">
@@ -40809,7 +41704,7 @@ name.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="id_get" c:identifier="gst_structure_id_get" introspectable="0">
+      <method name="id_get" c:identifier="gst_structure_id_get" introspectable="0" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Parses the variable arguments and reads fields from @structure accordingly.
 Variable arguments should be in the form field id quark, field type
 (as a GType), pointer(s) to a variable(s) to hold the return value(s).
@@ -40825,6 +41720,7 @@ For refcounted (mini)objects you will receive a new reference which
 you must release with a suitable _unref\() when no longer needed. For
 strings and boxed types you will receive a copy which you will need to
 release with either g_free() or the suitable function for the boxed type.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_structure_id_str_get().</doc-deprecated>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">%FALSE if there was a problem reading any of the fields (e.g.
     because the field requested did not exist, or was of a type other
@@ -40846,10 +41742,11 @@ release with either g_free() or the suitable function for the boxed type.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="id_get_valist" c:identifier="gst_structure_id_get_valist" introspectable="0">
+      <method name="id_get_valist" c:identifier="gst_structure_id_get_valist" introspectable="0" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Parses the variable arguments and reads fields from @structure accordingly.
 valist-variant of gst_structure_id_get(). Look at the documentation of
 gst_structure_id_get() for more details.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_structure_id_str_get_valist().</doc-deprecated>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">%TRUE, or %FALSE if there was a problem reading any of the fields</doc>
           <type name="gboolean" c:type="gboolean"/>
@@ -40887,8 +41784,9 @@ name identifier.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="id_has_field" c:identifier="gst_structure_id_has_field">
+      <method name="id_has_field" c:identifier="gst_structure_id_has_field" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Check if @structure contains a field named @field.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_structure_id_str_has_field().</doc-deprecated>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">%TRUE if the structure contains a field with the given name</doc>
           <type name="gboolean" c:type="gboolean"/>
@@ -40904,8 +41802,9 @@ name identifier.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="id_has_field_typed" c:identifier="gst_structure_id_has_field_typed">
+      <method name="id_has_field_typed" c:identifier="gst_structure_id_has_field_typed" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Check if @structure contains a field named @field and with GType @type.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_structure_id_str_has_field_typed().</doc-deprecated>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">%TRUE if the structure contains a field with the given name and type</doc>
           <type name="gboolean" c:type="gboolean"/>
@@ -40925,12 +41824,13 @@ name identifier.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="id_set" c:identifier="gst_structure_id_set" introspectable="0">
+      <method name="id_set" c:identifier="gst_structure_id_set" introspectable="0" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Identical to gst_structure_set, except that field names are
 passed using the GQuark for the field name. This allows more efficient
 setting of the structure if the caller already knows the associated
 quark values.
 The last variable argument must be %NULL.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_structure_id_str_set().</doc-deprecated>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -40949,8 +41849,9 @@ The last variable argument must be %NULL.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="id_set_valist" c:identifier="gst_structure_id_set_valist" introspectable="0">
+      <method name="id_set_valist" c:identifier="gst_structure_id_set_valist" introspectable="0" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">va_list form of gst_structure_id_set().</doc>
+        <doc-deprecated xml:space="preserve">Use gst_structure_id_str_set_valist().</doc-deprecated>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -40969,10 +41870,11 @@ The last variable argument must be %NULL.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="id_set_value" c:identifier="gst_structure_id_set_value">
+      <method name="id_set_value" c:identifier="gst_structure_id_set_value" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Sets the field with the given GQuark @field to @value.  If the field
 does not exist, it is created.  If the field exists, the previous
 value is replaced and freed.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_structure_id_str_set_value().</doc-deprecated>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -40991,10 +41893,304 @@ value is replaced and freed.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="id_take_value" c:identifier="gst_structure_id_take_value">
+      <method name="id_str_get" c:identifier="gst_structure_id_str_get" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Parses the variable arguments and reads fields from @structure accordingly.
+Variable arguments should be in the form field name (as GstIdStr), field type
+(as a GType), pointer(s) to a variable(s) to hold the return value(s). The
+last variable argument should be %NULL.
+
+For refcounted (mini)objects you will receive a new reference which
+you must release with a suitable _unref\() when no longer needed. For
+strings and boxed types you will receive a copy which you will need to
+release with either g_free() or the suitable function for the boxed type.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%FALSE if there was a problem reading any of the fields (e.g.
+    because the field requested did not exist, or was of a type other
+    than the type specified), otherwise %TRUE.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="const GstStructure*"/>
+          </instance-parameter>
+          <parameter name="first_fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the name of the first field to read</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="..." transfer-ownership="none">
+            <doc xml:space="preserve">variable arguments</doc>
+            <varargs/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="id_str_get_field_type" c:identifier="gst_structure_id_str_get_field_type" version="1.26">
+        <doc xml:space="preserve">Finds the field with the given name, and returns the type of the
+value it contains.  If the field is not found, G_TYPE_INVALID is
+returned.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the #GValue of the field</doc>
+          <type name="GType" c:type="GType"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="const GstStructure*"/>
+          </instance-parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the name of the field</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="id_str_get_valist" c:identifier="gst_structure_id_str_get_valist" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Parses the variable arguments and reads fields from @structure accordingly.
+valist-variant of gst_structure_id_str_get(). Look at the documentation of
+gst_structure_id_str_get() for more details.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE, or %FALSE if there was a problem reading any of the fields</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="const GstStructure*"/>
+          </instance-parameter>
+          <parameter name="first_fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the name of the first field to read</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="args" transfer-ownership="none">
+            <doc xml:space="preserve">variable arguments</doc>
+            <type name="va_list" c:type="va_list"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="id_str_get_value" c:identifier="gst_structure_id_str_get_value" version="1.26">
+        <doc xml:space="preserve">Get the value of the field with name @fieldname.</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">the #GValue corresponding to the field with the given
+name.</doc>
+          <type name="GObject.Value" c:type="const GValue*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="const GstStructure*"/>
+          </instance-parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the name of the field to get</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="id_str_has_field" c:identifier="gst_structure_id_str_has_field" version="1.26">
+        <doc xml:space="preserve">Check if @structure contains a field named @fieldname.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if the structure contains a field with the given name</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="const GstStructure*"/>
+          </instance-parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the name of a field</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="id_str_has_field_typed" c:identifier="gst_structure_id_str_has_field_typed" version="1.26">
+        <doc xml:space="preserve">Check if @structure contains a field named @fieldname and with GType @type.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if the structure contains a field with the given name and type</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="const GstStructure*"/>
+          </instance-parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the name of a field</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="type" transfer-ownership="none">
+            <doc xml:space="preserve">the type of a value</doc>
+            <type name="GType" c:type="GType"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="id_str_nth_field_name" c:identifier="gst_structure_id_str_nth_field_name" version="1.26">
+        <doc xml:space="preserve">Get the name (as a GstIdStr) of the given field number,
+counting from 0 onwards.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the name of the given field number</doc>
+          <type name="IdStr" c:type="const GstIdStr*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="const GstStructure*"/>
+          </instance-parameter>
+          <parameter name="index" transfer-ownership="none">
+            <doc xml:space="preserve">the index to get the name of</doc>
+            <type name="guint" c:type="guint"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="id_str_remove_field" c:identifier="gst_structure_id_str_remove_field" version="1.26">
+        <doc xml:space="preserve">Removes the field with the given name.  If the field with the given
+name does not exist, the structure is unchanged.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="GstStructure*"/>
+          </instance-parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the name of the field to remove</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="id_str_remove_fields" c:identifier="gst_structure_id_str_remove_fields" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Removes the fields with the given names. If a field does not exist, the
+argument is ignored.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="GstStructure*"/>
+          </instance-parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the name of the field to remove</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="..." transfer-ownership="none">
+            <doc xml:space="preserve">%NULL-terminated list of more fieldnames to remove</doc>
+            <varargs/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="id_str_remove_fields_valist" c:identifier="gst_structure_id_str_remove_fields_valist" version="1.26" introspectable="0">
+        <doc xml:space="preserve">va_list form of gst_structure_id_str_remove_fields().</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="GstStructure*"/>
+          </instance-parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the name of the field to remove</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="varargs" transfer-ownership="none">
+            <doc xml:space="preserve">%NULL-terminated list of more fieldnames to remove</doc>
+            <type name="va_list" c:type="va_list"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="id_str_set" c:identifier="gst_structure_id_str_set" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Identical to gst_structure_set, except that field names are
+passed using a GstIdStr for the field name. This allows more efficient
+setting of the structure if the caller already owns the associated
+GstIdStr values or if they can be built from static literals.
+The last variable argument must be %NULL.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="GstStructure*"/>
+          </instance-parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the the name of the field to set</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="..." transfer-ownership="none">
+            <doc xml:space="preserve">variable arguments</doc>
+            <varargs/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="id_str_set_valist" c:identifier="gst_structure_id_str_set_valist" version="1.26" introspectable="0">
+        <doc xml:space="preserve">va_list form of gst_structure_id_str_set().</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="GstStructure*"/>
+          </instance-parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the name of the field to set</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="varargs" transfer-ownership="none">
+            <doc xml:space="preserve">variable arguments</doc>
+            <type name="va_list" c:type="va_list"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="id_str_set_value" c:identifier="gst_structure_id_str_set_value" version="1.26">
+        <doc xml:space="preserve">Sets the field with the given name @field to @value.  If the field
+does not exist, it is created.  If the field exists, the previous
+value is replaced and freed.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="GstStructure*"/>
+          </instance-parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the name of the field to set</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="value" transfer-ownership="none">
+            <doc xml:space="preserve">the new value of the field</doc>
+            <type name="GObject.Value" c:type="const GValue*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="id_str_take_value" c:identifier="gst_structure_id_str_take_value" version="1.26">
+        <doc xml:space="preserve">Sets the field with the given GstIdStr @field to @value.  If the field
+does not exist, it is created.  If the field exists, the previous
+value is replaced and freed.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="GstStructure*"/>
+          </instance-parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the name of the field to set</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+          <parameter name="value" transfer-ownership="full">
+            <doc xml:space="preserve">the new value of the field</doc>
+            <type name="GObject.Value" c:type="GValue*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="id_take_value" c:identifier="gst_structure_id_take_value" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Sets the field with the given GQuark @field to @value.  If the field
 does not exist, it is created.  If the field exists, the previous
 value is replaced and freed.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_structure_id_str_take_value().</doc-deprecated>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -41066,10 +42262,11 @@ structure name and for all fields that are existing in @superset,
           </parameter>
         </parameters>
       </method>
-      <method name="map_in_place" c:identifier="gst_structure_map_in_place">
+      <method name="map_in_place" c:identifier="gst_structure_map_in_place" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Calls the provided function once for each field in the #GstStructure. In
 contrast to gst_structure_foreach(), the function may modify but not delete the
 fields. The structure must be mutable.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_structure_map_in_place_id_str().</doc-deprecated>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">%TRUE if the supplied function returns %TRUE For each of the fields,
 %FALSE otherwise.</doc>
@@ -41083,6 +42280,30 @@ fields. The structure must be mutable.</doc>
           <parameter name="func" transfer-ownership="none" scope="call" closure="1">
             <doc xml:space="preserve">a function to call for each field</doc>
             <type name="StructureMapFunc" c:type="GstStructureMapFunc"/>
+          </parameter>
+          <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">private data</doc>
+            <type name="gpointer" c:type="gpointer"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="map_in_place_id_str" c:identifier="gst_structure_map_in_place_id_str" version="1.26">
+        <doc xml:space="preserve">Calls the provided function once for each field in the #GstStructure. In
+contrast to gst_structure_foreach_id_str(), the function may modify but not delete the
+fields. The structure must be mutable.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if the supplied function returns %TRUE For each of the fields,
+%FALSE otherwise.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="GstStructure*"/>
+          </instance-parameter>
+          <parameter name="func" transfer-ownership="none" scope="call" closure="1">
+            <doc xml:space="preserve">a function to call for each field</doc>
+            <type name="StructureMapIdStrFunc" c:type="GstStructureMapIdStrFunc"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1">
             <doc xml:space="preserve">private data</doc>
@@ -41326,6 +42547,45 @@ letter and can be followed by letters, numbers and any of "/-_.:".</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="set_name_id_str" c:identifier="gst_structure_set_name_id_str" version="1.26">
+        <doc xml:space="preserve">Sets the name of the structure to the given @name.  The string
+provided is copied before being used. It must not be empty, start with a
+letter and can be followed by letters, numbers and any of "/-_.:".</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="GstStructure*"/>
+          </instance-parameter>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:space="preserve">the new name of the structure</doc>
+            <type name="IdStr" c:type="const GstIdStr*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_name_static_str" c:identifier="gst_structure_set_name_static_str" version="1.26">
+        <doc xml:space="preserve">Sets the name of the structure to the given @name.  The string
+provided is copied before being used. It must not be empty, start with a
+letter and can be followed by letters, numbers and any of "/-_.:".
+
+@name needs to be valid for the remaining lifetime of the process, e.g. has
+to be a static string.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="GstStructure*"/>
+          </instance-parameter>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:space="preserve">the new name of the structure</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="set_parent_refcount" c:identifier="gst_structure_set_parent_refcount">
         <doc xml:space="preserve">Sets the parent_refcount field of #GstStructure. This field is used to
 determine whether a structure is mutable or not. This function should only be
@@ -41343,6 +42603,55 @@ the MT Refcounting section of the design documents.</doc>
           <parameter name="refcount" transfer-ownership="none">
             <doc xml:space="preserve">a pointer to the parent's refcount</doc>
             <type name="gint" c:type="gint*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_static_str" c:identifier="gst_structure_set_static_str" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Parses the variable arguments and sets fields accordingly. Fields that
+weren't already part of the structure are added as needed.
+Variable arguments should be in the form field name, field type
+(as a GType), value(s).  The last variable argument should be %NULL.
+
+@fieldname and all other field names needs to be valid for the remaining
+lifetime of the process, e.g. has to be a static string.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="GstStructure*"/>
+          </instance-parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the name of the field to set</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="..." transfer-ownership="none">
+            <doc xml:space="preserve">variable arguments</doc>
+            <varargs/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_static_str_valist" c:identifier="gst_structure_set_static_str_valist" version="1.26" introspectable="0">
+        <doc xml:space="preserve">va_list form of gst_structure_set_static_str().
+
+@fieldname and all other field names needs to be valid for the remaining
+lifetime of the process, e.g. has to be a static string.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="GstStructure*"/>
+          </instance-parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the name of the field to set</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="varargs" transfer-ownership="none">
+            <doc xml:space="preserve">variable arguments</doc>
+            <type name="va_list" c:type="va_list"/>
           </parameter>
         </parameters>
       </method>
@@ -41388,10 +42697,60 @@ value is replaced and freed.</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="set_value_static_str" c:identifier="gst_structure_set_value_static_str" version="1.26">
+        <doc xml:space="preserve">Sets the field with the given name @field to @value.  If the field
+does not exist, it is created.  If the field exists, the previous
+value is replaced and freed.
+
+@fieldname needs to be valid for the remaining lifetime of the process, e.g.
+has to be a static string.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="GstStructure*"/>
+          </instance-parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the name of the field to set</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="value" transfer-ownership="none">
+            <doc xml:space="preserve">the new value of the field</doc>
+            <type name="GObject.Value" c:type="const GValue*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="take_value" c:identifier="gst_structure_take_value">
         <doc xml:space="preserve">Sets the field with the given name @field to @value.  If the field
 does not exist, it is created.  If the field exists, the previous
 value is replaced and freed. The function will take ownership of @value.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="structure" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStructure</doc>
+            <type name="Structure" c:type="GstStructure*"/>
+          </instance-parameter>
+          <parameter name="fieldname" transfer-ownership="none">
+            <doc xml:space="preserve">the name of the field to set</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="value" transfer-ownership="full">
+            <doc xml:space="preserve">the new value of the field</doc>
+            <type name="GObject.Value" c:type="GValue*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="take_value_static_str" c:identifier="gst_structure_take_value_static_str" version="1.26">
+        <doc xml:space="preserve">Sets the field with the given name @field to @value.  If the field
+does not exist, it is created.  If the field exists, the previous
+value is replaced and freed. The function will take ownership of @value.
+
+@fieldname needs to be valid for the remaining lifetime of the process, e.g.
+has to be a static string.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -41494,6 +42853,30 @@ should be removed.</doc>
         </parameter>
       </parameters>
     </callback>
+    <callback name="StructureFilterMapIdStrFunc" c:type="GstStructureFilterMapIdStrFunc" version="1.26">
+      <doc xml:space="preserve">A function that will be called in gst_structure_filter_and_map_in_place_id_str().
+The function may modify @value, and the value will be removed from the
+structure if %FALSE is returned.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if the field should be preserved, %FALSE if it
+should be removed.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="fieldname" transfer-ownership="none">
+          <doc xml:space="preserve">the #GstIdStr field name</doc>
+          <type name="IdStr" c:type="const GstIdStr*"/>
+        </parameter>
+        <parameter name="value" transfer-ownership="none">
+          <doc xml:space="preserve">the #GValue of the field</doc>
+          <type name="GObject.Value" c:type="GValue*"/>
+        </parameter>
+        <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1" closure="2">
+          <doc xml:space="preserve">user data</doc>
+          <type name="gpointer" c:type="gpointer"/>
+        </parameter>
+      </parameters>
+    </callback>
     <callback name="StructureForeachFunc" c:type="GstStructureForeachFunc">
       <doc xml:space="preserve">A function that will be called in gst_structure_foreach(). The function may
 not modify @value.</doc>
@@ -41517,6 +42900,29 @@ the foreach operation should stop with %FALSE.</doc>
         </parameter>
       </parameters>
     </callback>
+    <callback name="StructureForeachIdStrFunc" c:type="GstStructureForeachIdStrFunc" version="1.26">
+      <doc xml:space="preserve">A function that will be called in gst_structure_foreach_id_str(). The
+function may not modify @value.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if the foreach operation should continue, %FALSE if
+the foreach operation should stop with %FALSE.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="fieldname" transfer-ownership="none">
+          <doc xml:space="preserve">the #GstIdStr field name</doc>
+          <type name="IdStr" c:type="const GstIdStr*"/>
+        </parameter>
+        <parameter name="value" transfer-ownership="none">
+          <doc xml:space="preserve">the #GValue of the field</doc>
+          <type name="GObject.Value" c:type="const GValue*"/>
+        </parameter>
+        <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1" closure="2">
+          <doc xml:space="preserve">user data</doc>
+          <type name="gpointer" c:type="gpointer"/>
+        </parameter>
+      </parameters>
+    </callback>
     <callback name="StructureMapFunc" c:type="GstStructureMapFunc">
       <doc xml:space="preserve">A function that will be called in gst_structure_map_in_place(). The function
 may modify @value.</doc>
@@ -41529,6 +42935,29 @@ the map operation should stop with %FALSE.</doc>
         <parameter name="field_id" transfer-ownership="none">
           <doc xml:space="preserve">the #GQuark of the field name</doc>
           <type name="GLib.Quark" c:type="GQuark"/>
+        </parameter>
+        <parameter name="value" transfer-ownership="none">
+          <doc xml:space="preserve">the #GValue of the field</doc>
+          <type name="GObject.Value" c:type="GValue*"/>
+        </parameter>
+        <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1" closure="2">
+          <doc xml:space="preserve">user data</doc>
+          <type name="gpointer" c:type="gpointer"/>
+        </parameter>
+      </parameters>
+    </callback>
+    <callback name="StructureMapIdStrFunc" c:type="GstStructureMapIdStrFunc" version="1.26">
+      <doc xml:space="preserve">A function that will be called in gst_structure_map_in_place_id_str(). The
+function may modify @value.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if the map operation should continue, %FALSE if
+the map operation should stop with %FALSE.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="fieldname" transfer-ownership="none">
+          <doc xml:space="preserve">the #GstIdStr field name</doc>
+          <type name="IdStr" c:type="const GstIdStr*"/>
         </parameter>
         <parameter name="value" transfer-ownership="none">
           <doc xml:space="preserve">the #GValue of the field</doc>
@@ -45655,7 +47084,7 @@ events may contain values for different #GstPads.</doc>
         <doc xml:space="preserve">the value is related to a #GstPad</doc>
       </member>
     </enumeration>
-    <record name="TypeFind" c:type="GstTypeFind">
+    <record name="TypeFind" c:type="GstTypeFind" glib:type-name="GstTypeFind" glib:get-type="gst_type_find_get_type" c:symbol-prefix="type_find">
       <doc xml:space="preserve">The following functions allow you to detect the media type of an unknown
 stream.</doc>
       <field name="peek">
@@ -52014,18 +53443,6 @@ the GStreamer core. See gst_segtrap_is_enabled() for more information.</doc>
         </parameter>
       </parameters>
     </function>
-    <function name="static_caps_get_type" c:identifier="gst_static_caps_get_type">
-      <attribute name="doc.skip" value="true"/>
-      <return-value transfer-ownership="none">
-        <type name="GType" c:type="GType"/>
-      </return-value>
-    </function>
-    <function name="static_pad_template_get_type" c:identifier="gst_static_pad_template_get_type">
-      <attribute name="doc.skip" value="true"/>
-      <return-value transfer-ownership="none">
-        <type name="GType" c:type="GType"/>
-      </return-value>
-    </function>
     <function name="stream_error_quark" c:identifier="gst_stream_error_quark" moved-to="StreamError.quark">
       <attribute name="doc.skip" value="true"/>
       <return-value transfer-ownership="none">
@@ -52478,12 +53895,6 @@ Use %NULL for @detail to register to all hooks.</doc>
           <type name="GObject.Callback" c:type="GCallback"/>
         </parameter>
       </parameters>
-    </function>
-    <function name="type_find_get_type" c:identifier="gst_type_find_get_type">
-      <attribute name="doc.skip" value="true"/>
-      <return-value transfer-ownership="none">
-        <type name="GType" c:type="GType"/>
-      </return-value>
     </function>
     <function name="type_find_register" c:identifier="gst_type_find_register" moved-to="TypeFind.register">
       <doc xml:space="preserve">Registers a new typefind function to be used for typefinding. After
