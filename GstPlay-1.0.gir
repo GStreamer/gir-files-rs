@@ -1673,8 +1673,8 @@ matching #GstPlayVideoInfo.</doc>
           </parameter>
         </parameters>
       </function>
-      <function name="parse_buffering_percent" c:identifier="gst_play_message_parse_buffering_percent" version="1.20">
-        <doc xml:space="preserve">Parse the given buffering-percent @msg and extract the corresponding value</doc>
+      <function name="parse_buffering" c:identifier="gst_play_message_parse_buffering" version="1.26">
+        <doc xml:space="preserve">Parse the given buffering @msg and extract the corresponding value</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -1689,8 +1689,42 @@ matching #GstPlayVideoInfo.</doc>
           </parameter>
         </parameters>
       </function>
-      <function name="parse_duration_updated" c:identifier="gst_play_message_parse_duration_updated" version="1.20">
-        <doc xml:space="preserve">Parse the given duration @msg and extract the corresponding #GstClockTime</doc>
+      <function name="parse_buffering_percent" c:identifier="gst_play_message_parse_buffering_percent" version="1.20" deprecated="1" deprecated-version="1.26">
+        <doc xml:space="preserve">Parse the given buffering @msg and extract the corresponding value</doc>
+        <doc-deprecated xml:space="preserve">Use gst_play_message_parse_buffering().</doc-deprecated>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="msg" transfer-ownership="none">
+            <doc xml:space="preserve">A #GstMessage</doc>
+            <type name="Gst.Message" c:type="GstMessage*"/>
+          </parameter>
+          <parameter name="percent" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
+            <doc xml:space="preserve">the resulting buffering percent</doc>
+            <type name="guint" c:type="guint*"/>
+          </parameter>
+        </parameters>
+      </function>
+      <function name="parse_duration_changed" c:identifier="gst_play_message_parse_duration_changed" version="1.26">
+        <doc xml:space="preserve">Parse the given duration-changed @msg and extract the corresponding #GstClockTime</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="msg" transfer-ownership="none">
+            <doc xml:space="preserve">A #GstMessage</doc>
+            <type name="Gst.Message" c:type="GstMessage*"/>
+          </parameter>
+          <parameter name="duration" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
+            <doc xml:space="preserve">the resulting duration</doc>
+            <type name="Gst.ClockTime" c:type="GstClockTime*"/>
+          </parameter>
+        </parameters>
+      </function>
+      <function name="parse_duration_updated" c:identifier="gst_play_message_parse_duration_updated" version="1.20" deprecated="1" deprecated-version="1.26">
+        <doc xml:space="preserve">Parse the given duration-changed @msg and extract the corresponding #GstClockTime</doc>
+        <doc-deprecated xml:space="preserve">Use gst_play_message_parse_duration_changed().</doc-deprecated>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -1726,7 +1760,7 @@ matching #GstPlayVideoInfo.</doc>
         </parameters>
       </function>
       <function name="parse_media_info_updated" c:identifier="gst_play_message_parse_media_info_updated" version="1.20">
-        <doc xml:space="preserve">Parse the given @msg and extract the corresponding media information</doc>
+        <doc xml:space="preserve">Parse the given media-info-updated @msg and extract the corresponding media information</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -1742,7 +1776,7 @@ matching #GstPlayVideoInfo.</doc>
         </parameters>
       </function>
       <function name="parse_muted_changed" c:identifier="gst_play_message_parse_muted_changed" version="1.20">
-        <doc xml:space="preserve">Parse the given @msg and extract the corresponding audio muted state</doc>
+        <doc xml:space="preserve">Parse the given mute-changed @msg and extract the corresponding audio muted state</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -1758,7 +1792,23 @@ matching #GstPlayVideoInfo.</doc>
         </parameters>
       </function>
       <function name="parse_position_updated" c:identifier="gst_play_message_parse_position_updated" version="1.20">
-        <doc xml:space="preserve">Parse the given position @msg and extract the corresponding #GstClockTime</doc>
+        <doc xml:space="preserve">Parse the given position-updated @msg and extract the corresponding #GstClockTime</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="msg" transfer-ownership="none">
+            <doc xml:space="preserve">A #GstMessage</doc>
+            <type name="Gst.Message" c:type="GstMessage*"/>
+          </parameter>
+          <parameter name="position" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
+            <doc xml:space="preserve">the resulting position</doc>
+            <type name="Gst.ClockTime" c:type="GstClockTime*"/>
+          </parameter>
+        </parameters>
+      </function>
+      <function name="parse_seek_done" c:identifier="gst_play_message_parse_seek_done" version="1.26">
+        <doc xml:space="preserve">Parse the given seek-done @msg and extract the corresponding #GstClockTime</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -1774,7 +1824,7 @@ matching #GstPlayVideoInfo.</doc>
         </parameters>
       </function>
       <function name="parse_state_changed" c:identifier="gst_play_message_parse_state_changed" version="1.20">
-        <doc xml:space="preserve">Parse the given state @msg and extract the corresponding #GstPlayState</doc>
+        <doc xml:space="preserve">Parse the given state-changed @msg and extract the corresponding #GstPlayState</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -1805,8 +1855,24 @@ matching #GstPlayVideoInfo.</doc>
           </parameter>
         </parameters>
       </function>
+      <function name="parse_uri_loaded" c:identifier="gst_play_message_parse_uri_loaded" version="1.26">
+        <doc xml:space="preserve">Parse the given uri-loaded @msg and extract the corresponding value</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="msg" transfer-ownership="none">
+            <doc xml:space="preserve">A #GstMessage</doc>
+            <type name="Gst.Message" c:type="GstMessage*"/>
+          </parameter>
+          <parameter name="uri" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
+            <doc xml:space="preserve">the resulting URI</doc>
+            <type name="utf8" c:type="gchar**"/>
+          </parameter>
+        </parameters>
+      </function>
       <function name="parse_video_dimensions_changed" c:identifier="gst_play_message_parse_video_dimensions_changed" version="1.20">
-        <doc xml:space="preserve">Parse the given @msg and extract the corresponding video dimensions</doc>
+        <doc xml:space="preserve">Parse the given video-dimensions-changed @msg and extract the corresponding video dimensions</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -1826,7 +1892,7 @@ matching #GstPlayVideoInfo.</doc>
         </parameters>
       </function>
       <function name="parse_volume_changed" c:identifier="gst_play_message_parse_volume_changed" version="1.20">
-        <doc xml:space="preserve">Parse the given @msg and extract the corresponding audio volume</doc>
+        <doc xml:space="preserve">Parse the given volume-changed @msg and extract the corresponding audio volume</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -1842,7 +1908,7 @@ matching #GstPlayVideoInfo.</doc>
         </parameters>
       </function>
       <function name="parse_warning" c:identifier="gst_play_message_parse_warning" version="1.20">
-        <doc xml:space="preserve">Parse the given error @msg and extract the corresponding #GError warning</doc>
+        <doc xml:space="preserve">Parse the given warning @msg and extract the corresponding #GError</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -2555,8 +2621,8 @@ freed using gst_play_visualization_free().</doc>
         </parameter>
       </parameters>
     </function>
-    <function name="play_message_parse_buffering_percent" c:identifier="gst_play_message_parse_buffering_percent" moved-to="PlayMessage.parse_buffering_percent" version="1.20">
-      <doc xml:space="preserve">Parse the given buffering-percent @msg and extract the corresponding value</doc>
+    <function name="play_message_parse_buffering" c:identifier="gst_play_message_parse_buffering" moved-to="PlayMessage.parse_buffering" version="1.26">
+      <doc xml:space="preserve">Parse the given buffering @msg and extract the corresponding value</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -2571,8 +2637,42 @@ freed using gst_play_visualization_free().</doc>
         </parameter>
       </parameters>
     </function>
-    <function name="play_message_parse_duration_updated" c:identifier="gst_play_message_parse_duration_updated" moved-to="PlayMessage.parse_duration_updated" version="1.20">
-      <doc xml:space="preserve">Parse the given duration @msg and extract the corresponding #GstClockTime</doc>
+    <function name="play_message_parse_buffering_percent" c:identifier="gst_play_message_parse_buffering_percent" moved-to="PlayMessage.parse_buffering_percent" version="1.20" deprecated="1" deprecated-version="1.26">
+      <doc xml:space="preserve">Parse the given buffering @msg and extract the corresponding value</doc>
+      <doc-deprecated xml:space="preserve">Use gst_play_message_parse_buffering().</doc-deprecated>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="msg" transfer-ownership="none">
+          <doc xml:space="preserve">A #GstMessage</doc>
+          <type name="Gst.Message" c:type="GstMessage*"/>
+        </parameter>
+        <parameter name="percent" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
+          <doc xml:space="preserve">the resulting buffering percent</doc>
+          <type name="guint" c:type="guint*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="play_message_parse_duration_changed" c:identifier="gst_play_message_parse_duration_changed" moved-to="PlayMessage.parse_duration_changed" version="1.26">
+      <doc xml:space="preserve">Parse the given duration-changed @msg and extract the corresponding #GstClockTime</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="msg" transfer-ownership="none">
+          <doc xml:space="preserve">A #GstMessage</doc>
+          <type name="Gst.Message" c:type="GstMessage*"/>
+        </parameter>
+        <parameter name="duration" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
+          <doc xml:space="preserve">the resulting duration</doc>
+          <type name="Gst.ClockTime" c:type="GstClockTime*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="play_message_parse_duration_updated" c:identifier="gst_play_message_parse_duration_updated" moved-to="PlayMessage.parse_duration_updated" version="1.20" deprecated="1" deprecated-version="1.26">
+      <doc xml:space="preserve">Parse the given duration-changed @msg and extract the corresponding #GstClockTime</doc>
+      <doc-deprecated xml:space="preserve">Use gst_play_message_parse_duration_changed().</doc-deprecated>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -2608,7 +2708,7 @@ freed using gst_play_visualization_free().</doc>
       </parameters>
     </function>
     <function name="play_message_parse_media_info_updated" c:identifier="gst_play_message_parse_media_info_updated" moved-to="PlayMessage.parse_media_info_updated" version="1.20">
-      <doc xml:space="preserve">Parse the given @msg and extract the corresponding media information</doc>
+      <doc xml:space="preserve">Parse the given media-info-updated @msg and extract the corresponding media information</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -2624,7 +2724,7 @@ freed using gst_play_visualization_free().</doc>
       </parameters>
     </function>
     <function name="play_message_parse_muted_changed" c:identifier="gst_play_message_parse_muted_changed" moved-to="PlayMessage.parse_muted_changed" version="1.20">
-      <doc xml:space="preserve">Parse the given @msg and extract the corresponding audio muted state</doc>
+      <doc xml:space="preserve">Parse the given mute-changed @msg and extract the corresponding audio muted state</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -2640,7 +2740,23 @@ freed using gst_play_visualization_free().</doc>
       </parameters>
     </function>
     <function name="play_message_parse_position_updated" c:identifier="gst_play_message_parse_position_updated" moved-to="PlayMessage.parse_position_updated" version="1.20">
-      <doc xml:space="preserve">Parse the given position @msg and extract the corresponding #GstClockTime</doc>
+      <doc xml:space="preserve">Parse the given position-updated @msg and extract the corresponding #GstClockTime</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="msg" transfer-ownership="none">
+          <doc xml:space="preserve">A #GstMessage</doc>
+          <type name="Gst.Message" c:type="GstMessage*"/>
+        </parameter>
+        <parameter name="position" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
+          <doc xml:space="preserve">the resulting position</doc>
+          <type name="Gst.ClockTime" c:type="GstClockTime*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="play_message_parse_seek_done" c:identifier="gst_play_message_parse_seek_done" moved-to="PlayMessage.parse_seek_done" version="1.26">
+      <doc xml:space="preserve">Parse the given seek-done @msg and extract the corresponding #GstClockTime</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -2656,7 +2772,7 @@ freed using gst_play_visualization_free().</doc>
       </parameters>
     </function>
     <function name="play_message_parse_state_changed" c:identifier="gst_play_message_parse_state_changed" moved-to="PlayMessage.parse_state_changed" version="1.20">
-      <doc xml:space="preserve">Parse the given state @msg and extract the corresponding #GstPlayState</doc>
+      <doc xml:space="preserve">Parse the given state-changed @msg and extract the corresponding #GstPlayState</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -2687,8 +2803,24 @@ freed using gst_play_visualization_free().</doc>
         </parameter>
       </parameters>
     </function>
+    <function name="play_message_parse_uri_loaded" c:identifier="gst_play_message_parse_uri_loaded" moved-to="PlayMessage.parse_uri_loaded" version="1.26">
+      <doc xml:space="preserve">Parse the given uri-loaded @msg and extract the corresponding value</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="msg" transfer-ownership="none">
+          <doc xml:space="preserve">A #GstMessage</doc>
+          <type name="Gst.Message" c:type="GstMessage*"/>
+        </parameter>
+        <parameter name="uri" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
+          <doc xml:space="preserve">the resulting URI</doc>
+          <type name="utf8" c:type="gchar**"/>
+        </parameter>
+      </parameters>
+    </function>
     <function name="play_message_parse_video_dimensions_changed" c:identifier="gst_play_message_parse_video_dimensions_changed" moved-to="PlayMessage.parse_video_dimensions_changed" version="1.20">
-      <doc xml:space="preserve">Parse the given @msg and extract the corresponding video dimensions</doc>
+      <doc xml:space="preserve">Parse the given video-dimensions-changed @msg and extract the corresponding video dimensions</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -2708,7 +2840,7 @@ freed using gst_play_visualization_free().</doc>
       </parameters>
     </function>
     <function name="play_message_parse_volume_changed" c:identifier="gst_play_message_parse_volume_changed" moved-to="PlayMessage.parse_volume_changed" version="1.20">
-      <doc xml:space="preserve">Parse the given @msg and extract the corresponding audio volume</doc>
+      <doc xml:space="preserve">Parse the given volume-changed @msg and extract the corresponding audio volume</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -2724,7 +2856,7 @@ freed using gst_play_visualization_free().</doc>
       </parameters>
     </function>
     <function name="play_message_parse_warning" c:identifier="gst_play_message_parse_warning" moved-to="PlayMessage.parse_warning" version="1.20">
-      <doc xml:space="preserve">Parse the given error @msg and extract the corresponding #GError warning</doc>
+      <doc xml:space="preserve">Parse the given warning @msg and extract the corresponding #GError</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>

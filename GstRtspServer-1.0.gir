@@ -10399,7 +10399,7 @@ to a client. This is usually used when sending RTP/RTCP over TCP.</doc>
             <doc xml:space="preserve">a #GstRTSPStreamTransport</doc>
             <type name="RTSPStreamTransport" c:type="GstRTSPStreamTransport*"/>
           </instance-parameter>
-          <parameter name="send_rtp" transfer-ownership="none" scope="notified">
+          <parameter name="send_rtp" transfer-ownership="none" scope="notified" closure="2">
             <doc xml:space="preserve">a callback called when RTP should be sent</doc>
             <type name="RTSPSendFunc" c:type="GstRTSPSendFunc"/>
           </parameter>
@@ -10453,7 +10453,7 @@ to a client. This is usually used when sending RTP/RTCP over TCP.</doc>
             <doc xml:space="preserve">a #GstRTSPStreamTransport</doc>
             <type name="RTSPStreamTransport" c:type="GstRTSPStreamTransport*"/>
           </instance-parameter>
-          <parameter name="send_rtp_list" transfer-ownership="none" scope="notified">
+          <parameter name="send_rtp_list" transfer-ownership="none" scope="notified" closure="2">
             <doc xml:space="preserve">a callback called when RTP should be sent</doc>
             <type name="RTSPSendListFunc" c:type="GstRTSPSendListFunc"/>
           </parameter>

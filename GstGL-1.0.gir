@@ -3056,7 +3056,7 @@ second argument is @data.</doc>
             <doc xml:space="preserve">some data to pass to @compare_func</doc>
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
-          <parameter name="compare_func" transfer-ownership="none" scope="call">
+          <parameter name="compare_func" transfer-ownership="none" scope="call" closure="0">
             <doc xml:space="preserve">a comparison function to run</doc>
             <type name="GLib.CompareFunc" c:type="GCompareFunc"/>
           </parameter>
@@ -3177,7 +3177,7 @@ second argument is @data.</doc>
             <doc xml:space="preserve">some data to pass to @compare_func</doc>
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
-          <parameter name="compare_func" transfer-ownership="none" scope="call">
+          <parameter name="compare_func" transfer-ownership="none" scope="call" closure="0">
             <doc xml:space="preserve">a comparison function to run</doc>
             <type name="GLib.CompareFunc" c:type="GCompareFunc"/>
           </parameter>

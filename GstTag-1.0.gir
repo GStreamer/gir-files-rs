@@ -133,6 +133,34 @@ The allowed values are:
       <doc xml:space="preserve">ISO speed used when capturing an image. (integer)</doc>
       <type name="utf8" c:type="gchar*"/>
     </constant>
+    <constant name="TAG_CAPTURING_LIGHT_SOURCE" value="capturing-light-source" c:type="GST_TAG_CAPTURING_LIGHT_SOURCE" version="1.26">
+      <doc xml:space="preserve">Light source used when capturing an image. (string)
+
+The allowed values are:
+  "unknown"
+  "daylight"
+  "fluorescent"
+  "tungsten"
+  "flash"
+  "fine-weather"
+  "cloudy-weather"
+  "shade"
+  "daylight-fluorescent"
+  "day-white-fluorescent"
+  "cool-white-fluorescent"
+  "white-fluorescent"
+  "warm-white-fluorescent"
+  "standard-light-A"
+  "standard-light-B"
+  "standard-light-C"
+  "D55"
+  "D65"
+  "D75"
+  "D50"
+  "iso-studio-tungsten"
+  "other"</doc>
+      <type name="utf8" c:type="gchar*"/>
+    </constant>
     <constant name="TAG_CAPTURING_METERING_MODE" value="capturing-metering-mode" c:type="GST_TAG_CAPTURING_METERING_MODE">
       <doc xml:space="preserve">Defines the way a camera determines the exposure. (string)
 
