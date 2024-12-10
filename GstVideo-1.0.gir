@@ -15837,7 +15837,7 @@ parameters.</doc>
           <doc xml:space="preserve">User Data Unregistered UUID</doc>
           <type name="guint8" c:type="guint8*"/>
         </parameter>
-        <parameter name="data" transfer-ownership="none">
+        <parameter name="data" transfer-ownership="none" nullable="1" allow-none="1">
           <doc xml:space="preserve">SEI User Data Unregistered buffer</doc>
           <type name="guint8" c:type="guint8*"/>
         </parameter>

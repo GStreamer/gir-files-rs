@@ -47016,6 +47016,40 @@ contextual data, which they must not modify.</doc>
           <type name="gpointer" c:type="gpointer"/>
         </array>
       </field>
+      <method name="set_use_structure_params" c:identifier="gst_tracer_class_set_use_structure_params" version="1.26">
+        <doc xml:space="preserve">Sets whether the tracer should use structure parameters for configuration.
+This function configures how parameters should be passed when instantiating
+the tracer.
+
+This is typically called in the tracer's class initialization function to
+indicate its parameter handling preference.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="tracer_class" transfer-ownership="none">
+            <type name="TracerClass" c:type="GstTracerClass*"/>
+          </instance-parameter>
+          <parameter name="use_structure_params" transfer-ownership="none">
+            <doc xml:space="preserve">%TRUE to use structure parameters, %FALSE otherwise</doc>
+            <type name="gboolean" c:type="gboolean"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="uses_structure_params" c:identifier="gst_tracer_class_uses_structure_params" version="1.26">
+        <doc xml:space="preserve">If set, the tracer subsystem will consider parameters passed to the
+`GST_TRACERS` environment variable as a #GstStructure and use its
+fields as properties to instanciate the tracer.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if the tracer uses structure parameters, %FALSE otherwise</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="tracer_class" transfer-ownership="none">
+            <type name="TracerClass" c:type="GstTracerClass*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
     </record>
     <class name="TracerFactory" c:symbol-prefix="tracer_factory" c:type="GstTracerFactory" version="1.8" parent="PluginFeature" glib:type-name="GstTracerFactory" glib:get-type="gst_tracer_factory_get_type" glib:type-struct="TracerFactoryClass">
       <doc xml:space="preserve">Use gst_tracer_factory_get_list() to get a list of tracer factories known to
@@ -49661,15 +49695,20 @@ to call gst_vec_deque_sort() first.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="push_tail_struct" c:identifier="gst_vec_deque_push_tail_struct">
+      <method name="push_tail_struct" c:identifier="gst_vec_deque_push_tail_struct" version="1.26" introspectable="0">
+        <doc xml:space="preserve">Pushes the element at address @p_struct to the tail of the queue @array
+(Copies the contents of a structure of the struct_size specified when
+creating the queue into the array).</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
           <instance-parameter name="array" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstVecDeque object</doc>
             <type name="VecDeque" c:type="GstVecDeque*"/>
           </instance-parameter>
           <parameter name="p_struct" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">address of element or structure to push to the tail of the queue</doc>
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
         </parameters>
@@ -54414,6 +54453,18 @@ the result.</doc>
         <parameter name="b" transfer-ownership="none">
           <doc xml:space="preserve">a filename to compare with @a</doc>
           <type name="filename" c:type="const gchar*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="util_floor_log2" c:identifier="gst_util_floor_log2" version="1.26">
+      <doc xml:space="preserve">Returns smallest integral value not bigger than log2(v).</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">a computed #guint val.</doc>
+        <type name="guint" c:type="guint"/>
+      </return-value>
+      <parameters>
+        <parameter name="x" transfer-ownership="none">
+          <type name="guint32" c:type="guint32"/>
         </parameter>
       </parameters>
     </function>
