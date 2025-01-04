@@ -13943,8 +13943,8 @@ As an example, you may define the element named "stream-filter"
 with the namespace `my` as following:
 
 ```
-#define _pre_register_init  *   my_stream_filter_pre_register (plugin);
-;
+#define _pre_register_init \
+  my_stream_filter_pre_register (plugin);
 GST_ELEMENT_REGISTER_DEFINE_WITH_CODE (stream_filter, "stream-filter", GST_RANK_PRIMARY, MY_TYPE_STREAM_FILTER, _pre_register_init)
 ```</doc>
       <parameters>
@@ -25428,8 +25428,8 @@ created. Use this function (instead of gst_message_get_details()) if you
 want to write to the @details structure.
 
 The returned structure must not be freed.</doc>
-        <return-value transfer-ownership="none" nullable="1">
-          <doc xml:space="preserve">The details, or NULL if none.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">The details</doc>
           <type name="Structure" c:type="GstStructure*"/>
         </return-value>
         <parameters>
@@ -38319,8 +38319,8 @@ This can be used in pad templates.</doc>
 structure.
 Example:
 |[&lt;!-- language="C" --&gt;
-static GstStaticPadTemplate my_src_template =  *   GST_STATIC_PAD_TEMPLATE("src", GST_PAD_SRC, GST_PAD_ALWAYS,
-,
+static GstStaticPadTemplate my_src_template = \
+  GST_STATIC_PAD_TEMPLATE("src", GST_PAD_SRC, GST_PAD_ALWAYS,
                           GST_STATIC_CAPS_ANY);
 ]|</doc>
       <parameters>

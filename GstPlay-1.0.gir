@@ -899,7 +899,8 @@ in nanoseconds.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="set_audio_track" c:identifier="gst_play_set_audio_track" version="1.20">
+      <method name="set_audio_track" c:identifier="gst_play_set_audio_track" version="1.20" deprecated="1" deprecated-version="1.26">
+        <doc-deprecated xml:space="preserve">Use gst_play_set_audio_track_id() instead.</doc-deprecated>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">%TRUE or %FALSE
 
@@ -930,6 +931,24 @@ Sets the audio track @stream_index.</doc>
           <parameter name="enabled" transfer-ownership="none">
             <doc xml:space="preserve">TRUE or FALSE</doc>
             <type name="gboolean" c:type="gboolean"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_audio_track_id" c:identifier="gst_play_set_audio_track_id" version="1.26">
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE or %FALSE
+
+Sets the audio track @stream_id.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="play" transfer-ownership="none">
+            <doc xml:space="preserve">#GstPlay instance</doc>
+            <type name="Play" c:type="GstPlay*"/>
+          </instance-parameter>
+          <parameter name="stream_id" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">stream id</doc>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </method>
@@ -1061,7 +1080,8 @@ value.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="set_subtitle_track" c:identifier="gst_play_set_subtitle_track" version="1.20">
+      <method name="set_subtitle_track" c:identifier="gst_play_set_subtitle_track" version="1.20" deprecated="1" deprecated-version="1.26">
+        <doc-deprecated xml:space="preserve">Use gst_play_set_subtitle_track_id() instead.</doc-deprecated>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">%TRUE or %FALSE
 
@@ -1092,6 +1112,24 @@ Sets the subtitle stack @stream_index.</doc>
           <parameter name="enabled" transfer-ownership="none">
             <doc xml:space="preserve">TRUE or FALSE</doc>
             <type name="gboolean" c:type="gboolean"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_subtitle_track_id" c:identifier="gst_play_set_subtitle_track_id" version="1.26">
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE or %FALSE
+
+Sets the subtitle track @stream_id.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="play" transfer-ownership="none">
+            <doc xml:space="preserve">#GstPlay instance</doc>
+            <type name="Play" c:type="GstPlay*"/>
+          </instance-parameter>
+          <parameter name="stream_id" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">stream id</doc>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </method>
@@ -1129,6 +1167,33 @@ rendered.</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="set_track_ids" c:identifier="gst_play_set_track_ids" version="1.26">
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE or %FALSE
+
+Sets the selected track stream ids. Setting %NULL as stream id disables the
+corresponding track.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="play" transfer-ownership="none">
+            <doc xml:space="preserve">#GstPlay instance</doc>
+            <type name="Play" c:type="GstPlay*"/>
+          </instance-parameter>
+          <parameter name="audio_stream_id" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">audio stream id</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="video_stream_id" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">video stream id</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="subtitle_stream_id" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">subtitle stream id</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="set_uri" c:identifier="gst_play_set_uri" glib:set-property="uri" version="1.20">
         <doc xml:space="preserve">Sets the next URI to play.</doc>
         <return-value transfer-ownership="none">
@@ -1145,7 +1210,8 @@ rendered.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="set_video_track" c:identifier="gst_play_set_video_track" version="1.20">
+      <method name="set_video_track" c:identifier="gst_play_set_video_track" version="1.20" deprecated="1" deprecated-version="1.26">
+        <doc-deprecated xml:space="preserve">Use gst_play_set_video_track_id() instead.</doc-deprecated>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">%TRUE or %FALSE
 
@@ -1176,6 +1242,24 @@ Sets the video track @stream_index.</doc>
           <parameter name="enabled" transfer-ownership="none">
             <doc xml:space="preserve">TRUE or FALSE</doc>
             <type name="gboolean" c:type="gboolean"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_video_track_id" c:identifier="gst_play_set_video_track_id" version="1.26">
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE or %FALSE
+
+Sets the video track @stream_id.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="play" transfer-ownership="none">
+            <doc xml:space="preserve">#GstPlay instance</doc>
+            <type name="Play" c:type="GstPlay*"/>
+          </instance-parameter>
+          <parameter name="stream_id" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">stream id</doc>
+            <type name="utf8" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </method>
@@ -1740,7 +1824,7 @@ matching #GstPlayVideoInfo.</doc>
         </parameters>
       </function>
       <function name="parse_error" c:identifier="gst_play_message_parse_error" version="1.20">
-        <doc xml:space="preserve">Parse the given error @msg and extract the corresponding #GError</doc>
+        <doc xml:space="preserve">Parse the given error @msg and extract the corresponding #GError.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -2211,12 +2295,26 @@ unknown.</doc>
           </instance-parameter>
         </parameters>
       </method>
-      <method name="get_index" c:identifier="gst_play_stream_info_get_index" version="1.20">
+      <method name="get_index" c:identifier="gst_play_stream_info_get_index" version="1.20" deprecated="1" deprecated-version="1.26">
         <doc xml:space="preserve">Function to get stream index from #GstPlayStreamInfo instance or -1 if
 unknown.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_play_stream_info_get_stream_id().</doc-deprecated>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">the stream index of this stream.</doc>
           <type name="gint" c:type="gint"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="info" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPlayStreamInfo</doc>
+            <type name="PlayStreamInfo" c:type="const GstPlayStreamInfo*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_stream_id" c:identifier="gst_play_stream_info_get_stream_id" version="1.26">
+        <doc xml:space="preserve">A string stream id identifying this #GstPlayStreamInfo.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">stream id string.</doc>
+          <type name="utf8" c:type="const gchar*"/>
         </return-value>
         <parameters>
           <instance-parameter name="info" transfer-ownership="none">
@@ -2688,7 +2786,7 @@ freed using gst_play_visualization_free().</doc>
       </parameters>
     </function>
     <function name="play_message_parse_error" c:identifier="gst_play_message_parse_error" moved-to="PlayMessage.parse_error" version="1.20">
-      <doc xml:space="preserve">Parse the given error @msg and extract the corresponding #GError</doc>
+      <doc xml:space="preserve">Parse the given error @msg and extract the corresponding #GError.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
