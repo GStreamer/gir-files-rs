@@ -48999,7 +48999,7 @@ determine a order for the two provided values.</doc>
       <doc xml:space="preserve">The major version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MICRO" value="0" c:type="GST_VERSION_MICRO">
+    <constant name="VERSION_MICRO" value="50" c:type="GST_VERSION_MICRO">
       <doc xml:space="preserve">The micro version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
@@ -54559,6 +54559,40 @@ the result in @res_n and @res_d.</doc>
         <parameter name="res_d" direction="out" caller-allocates="0" transfer-ownership="full">
           <doc xml:space="preserve">Pointer to #gint to hold the result denominator</doc>
           <type name="gint" c:type="gint*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="util_fraction_multiply_int64" c:identifier="gst_util_fraction_multiply_int64" version="1.26">
+      <doc xml:space="preserve">Multiplies the fractions @a_n/@a_d and @b_n/@b_d and stores
+the result in @res_n and @res_d.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%FALSE on overflow, %TRUE otherwise.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="a_n" transfer-ownership="none">
+          <doc xml:space="preserve">Numerator of first value</doc>
+          <type name="gint64" c:type="gint64"/>
+        </parameter>
+        <parameter name="a_d" transfer-ownership="none">
+          <doc xml:space="preserve">Denominator of first value</doc>
+          <type name="gint64" c:type="gint64"/>
+        </parameter>
+        <parameter name="b_n" transfer-ownership="none">
+          <doc xml:space="preserve">Numerator of second value</doc>
+          <type name="gint64" c:type="gint64"/>
+        </parameter>
+        <parameter name="b_d" transfer-ownership="none">
+          <doc xml:space="preserve">Denominator of second value</doc>
+          <type name="gint64" c:type="gint64"/>
+        </parameter>
+        <parameter name="res_n" direction="out" caller-allocates="0" transfer-ownership="full">
+          <doc xml:space="preserve">Pointer to #gint to hold the result numerator</doc>
+          <type name="gint64" c:type="gint64*"/>
+        </parameter>
+        <parameter name="res_d" direction="out" caller-allocates="0" transfer-ownership="full">
+          <doc xml:space="preserve">Pointer to #gint to hold the result denominator</doc>
+          <type name="gint64" c:type="gint64*"/>
         </parameter>
       </parameters>
     </function>

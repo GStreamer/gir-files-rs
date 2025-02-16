@@ -2750,7 +2750,7 @@ in debugging.</doc>
       <doc xml:space="preserve">The major version of GStreamer's gst-plugins-base libraries at compile time.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="PLUGINS_BASE_VERSION_MICRO" value="0" c:type="GST_PLUGINS_BASE_VERSION_MICRO">
+    <constant name="PLUGINS_BASE_VERSION_MICRO" value="50" c:type="GST_PLUGINS_BASE_VERSION_MICRO">
       <doc xml:space="preserve">The micro version of GStreamer's gst-plugins-base libraries at compile time.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
@@ -2958,9 +2958,9 @@ rate.</doc>
     </function>
     <function name="codec_utils_av1_create_av1c_from_caps" c:identifier="gst_codec_utils_av1_create_av1c_from_caps" version="1.26">
       <doc xml:space="preserve">Creates the corresponding AV1 Codec Configuration Record</doc>
-      <return-value transfer-ownership="full">
-        <doc xml:space="preserve">The AV1 Codec Configuration Record, or NULL if
-there was an error.</doc>
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">The AV1 Codec Configuration Record, or
+%NULL if there was an error.</doc>
         <type name="Gst.Buffer" c:type="GstBuffer*"/>
       </return-value>
       <parameters>
@@ -2972,8 +2972,9 @@ there was an error.</doc>
     </function>
     <function name="codec_utils_av1_create_caps_from_av1c" c:identifier="gst_codec_utils_av1_create_caps_from_av1c" version="1.26">
       <doc xml:space="preserve">Parses the provided @av1c and returns the corresponding caps</doc>
-      <return-value transfer-ownership="full">
-        <doc xml:space="preserve">The parsed AV1 caps, or NULL if there is an error</doc>
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">The parsed AV1 caps, or %NULL if there
+is an error</doc>
         <type name="Gst.Caps" c:type="GstCaps*"/>
       </return-value>
       <parameters>
@@ -3286,6 +3287,105 @@ is expected to have the same format as for gst_codec_utils_h264_get_profile().</
         </parameter>
         <parameter name="len" transfer-ownership="none">
           <doc xml:space="preserve">Length of the data available in @profile_tier_level.</doc>
+          <type name="guint" c:type="guint"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="codec_utils_h266_caps_set_level_tier_and_profile" c:identifier="gst_codec_utils_h266_caps_set_level_tier_and_profile" version="1.26">
+      <doc xml:space="preserve">Sets the level, tier and profile in @caps if it can be determined from
+@decoder_configuration. See gst_codec_utils_h266_get_level(),
+gst_codec_utils_h266_get_tier() and gst_codec_utils_h266_get_profile()
+for more details on the parameters.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if the level, tier, profile could be set, %FALSE otherwise.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="caps" transfer-ownership="none">
+          <doc xml:space="preserve">the #GstCaps to which the level, tier and profile are to be added</doc>
+          <type name="Gst.Caps" c:type="GstCaps*"/>
+        </parameter>
+        <parameter name="decoder_configuration" transfer-ownership="none">
+          <doc xml:space="preserve">Pointer to the VvcDecoderConfigurationRecord struct as defined in ISO/IEC 14496-15</doc>
+          <array length="2" zero-terminated="0" c:type="const guint8*">
+            <type name="guint8" c:type="guint8"/>
+          </array>
+        </parameter>
+        <parameter name="len" transfer-ownership="none">
+          <doc xml:space="preserve">Length of the data available in @decoder_configuration.</doc>
+          <type name="guint" c:type="guint"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="codec_utils_h266_get_level" c:identifier="gst_codec_utils_h266_get_level" version="1.26">
+      <doc xml:space="preserve">Converts the level indication (general_level_idc) in the stream's
+ptl_record structure into a string.</doc>
+      <return-value transfer-ownership="none" nullable="1">
+        <doc xml:space="preserve">The level as a const string, or %NULL if there is an error.</doc>
+        <type name="utf8" c:type="const gchar*"/>
+      </return-value>
+      <parameters>
+        <parameter name="ptl_record" transfer-ownership="none">
+          <doc xml:space="preserve">Pointer to the VvcPTLRecord structure as defined in ISO/IEC 14496-15.</doc>
+          <array length="1" zero-terminated="0" c:type="const guint8*">
+            <type name="guint8" c:type="guint8"/>
+          </array>
+        </parameter>
+        <parameter name="len" transfer-ownership="none">
+          <doc xml:space="preserve">Length of the data available in @ptl_record.</doc>
+          <type name="guint" c:type="guint"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="codec_utils_h266_get_level_idc" c:identifier="gst_codec_utils_h266_get_level_idc" version="1.26">
+      <doc xml:space="preserve">Transform a level string from the caps into the level_idc</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">the level_idc or 0 if the level is unknown</doc>
+        <type name="guint8" c:type="guint8"/>
+      </return-value>
+      <parameters>
+        <parameter name="level" transfer-ownership="none">
+          <doc xml:space="preserve">A level string from caps</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="codec_utils_h266_get_profile" c:identifier="gst_codec_utils_h266_get_profile" version="1.26">
+      <doc xml:space="preserve">Converts the profile indication (general_profile_idc) in the stream's
+ptl_record structure into a string.</doc>
+      <return-value transfer-ownership="none" nullable="1">
+        <doc xml:space="preserve">The profile as a const string, or %NULL if there is an error.</doc>
+        <type name="utf8" c:type="const gchar*"/>
+      </return-value>
+      <parameters>
+        <parameter name="ptl_record" transfer-ownership="none">
+          <doc xml:space="preserve">Pointer to the VvcPTLRecord structure as defined in ISO/IEC 14496-15.</doc>
+          <array length="1" zero-terminated="0" c:type="const guint8*">
+            <type name="guint8" c:type="guint8"/>
+          </array>
+        </parameter>
+        <parameter name="len" transfer-ownership="none">
+          <doc xml:space="preserve">Length of the data available in @ptl_record</doc>
+          <type name="guint" c:type="guint"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="codec_utils_h266_get_tier" c:identifier="gst_codec_utils_h266_get_tier" version="1.26">
+      <doc xml:space="preserve">Converts the tier indication (general_tier_flag) in the stream's
+ptl_record structure into a string.</doc>
+      <return-value transfer-ownership="none" nullable="1">
+        <doc xml:space="preserve">The tier as a const string, or %NULL if there is an error.</doc>
+        <type name="utf8" c:type="const gchar*"/>
+      </return-value>
+      <parameters>
+        <parameter name="ptl_record" transfer-ownership="none">
+          <doc xml:space="preserve">Pointer to the VvcPTLRecord structure as defined in ISO/IEC 14496-15.</doc>
+          <array length="1" zero-terminated="0" c:type="const guint8*">
+            <type name="guint8" c:type="guint8"/>
+          </array>
+        </parameter>
+        <parameter name="len" transfer-ownership="none">
+          <doc xml:space="preserve">Length of the data available in @ptl_record.</doc>
           <type name="guint" c:type="guint"/>
         </parameter>
       </parameters>

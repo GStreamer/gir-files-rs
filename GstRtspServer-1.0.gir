@@ -6687,6 +6687,32 @@ bits per second.</doc>
           </parameter>
         </parameters>
       </function>
+      <virtual-method name="create_backchannel_stream" version="1.26">
+        <doc xml:space="preserve">Called by the factory from #GstRTSPMediaFactoryClass::construct(). The default implementation
+creates the * #GstRTSPStream for the backchannel receiver by calling
+gst_rtsp_onvif_media_collect_backchannel (media). Implementations
+that want to create the backchannel later should return TRUE here
+and call gst_rtsp_onvif_media_collect_backchannel() later, but must
+do so before the media finishes preparing.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">TRUE on success. FALSE on a fatal error.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="factory" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstRTSPOnvifMediaFactory</doc>
+            <type name="RTSPOnvifMediaFactory" c:type="GstRTSPOnvifMediaFactory*"/>
+          </instance-parameter>
+          <parameter name="media" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstRTSPOnvifMedia</doc>
+            <type name="RTSPOnvifMedia" c:type="GstRTSPOnvifMedia*"/>
+          </parameter>
+          <parameter name="ctx" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstRTSPContext</doc>
+            <type name="RTSPContext" c:type="GstRTSPContext*"/>
+          </parameter>
+        </parameters>
+      </virtual-method>
       <virtual-method name="has_backchannel_support" invoker="has_backchannel_support" version="1.14">
         <doc xml:space="preserve">Returns %TRUE if an ONVIF backchannel is supported by the media factory.</doc>
         <return-value transfer-ownership="none">
@@ -6845,8 +6871,30 @@ prepare.</doc>
           </parameters>
         </callback>
       </field>
+      <field name="create_backchannel_stream">
+        <callback name="create_backchannel_stream">
+          <return-value transfer-ownership="none">
+            <doc xml:space="preserve">TRUE on success. FALSE on a fatal error.</doc>
+            <type name="gboolean" c:type="gboolean"/>
+          </return-value>
+          <parameters>
+            <parameter name="factory" transfer-ownership="none">
+              <doc xml:space="preserve">a #GstRTSPOnvifMediaFactory</doc>
+              <type name="RTSPOnvifMediaFactory" c:type="GstRTSPOnvifMediaFactory*"/>
+            </parameter>
+            <parameter name="media" transfer-ownership="none">
+              <doc xml:space="preserve">a #GstRTSPOnvifMedia</doc>
+              <type name="RTSPOnvifMedia" c:type="GstRTSPOnvifMedia*"/>
+            </parameter>
+            <parameter name="ctx" transfer-ownership="none">
+              <doc xml:space="preserve">a #GstRTSPContext</doc>
+              <type name="RTSPContext" c:type="GstRTSPContext*"/>
+            </parameter>
+          </parameters>
+        </callback>
+      </field>
       <field name="_gst_reserved" readable="0" private="1">
-        <array zero-terminated="0" fixed-size="20">
+        <array zero-terminated="0" fixed-size="19">
           <type name="gpointer" c:type="gpointer"/>
         </array>
       </field>
