@@ -2,19 +2,24 @@
 <!-- This file was automatically generated from C sources - DO NOT EDIT!
 To affect the contents of this file, edit the original C definitions,
 and/or use gtk-doc annotations.  -->
-<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
+<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:doc="http://www.gtk.org/introspection/doc/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
   <include name="Gst" version="1.0"/>
   <include name="GstBase" version="1.0"/>
   <include name="GstGL" version="1.0"/>
   <include name="GstVideo" version="1.0"/>
   <package name="gstreamer-gl-egl-1.0"/>
   <c:include name="gst/gl/egl/egl.h"/>
+  <doc:format name="unknown"/>
   <namespace name="GstGLEGL" version="1.0" shared-library="libgstgl-1.0.so.0" c:identifier-prefixes="Gst" c:symbol-prefixes="gst">
     <class name="GLDisplayEGL" c:symbol-prefix="gl_display_egl" c:type="GstGLDisplayEGL" parent="GstGL.GLDisplay" glib:type-name="GstGLDisplayEGL" glib:get-type="gst_gl_display_egl_get_type" glib:type-struct="GLDisplayEGLClass">
       <doc xml:space="preserve">the contents of a #GstGLDisplayEGL are private and should only be accessed
 through the provided API</doc>
       <constructor name="new" c:identifier="gst_gl_display_egl_new">
-        <doc xml:space="preserve">Create a new #GstGLDisplayEGL using the default EGL_DEFAULT_DISPLAY.</doc>
+        <doc xml:space="preserve">Create a new #GstGLDisplayEGL using the default EGL_DEFAULT_DISPLAY.
+
+The returned #GstGLDisplayEGL will by default free all EGL resources when
+finalized. See gst_gl_display_egl_set_foreign() for details on if you need
+the EGLDisplay to remain alive.</doc>
         <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a new #GstGLDisplayEGL or %NULL</doc>
           <type name="GLDisplayEGL" c:type="GstGLDisplayEGL*"/>
@@ -42,7 +47,12 @@ EGL_PLATFORM_SURFACELESS_MESA extension.</doc>
         <doc xml:space="preserve">Creates a EGL display connection from a native Display.
 
 This function will return the same value for multiple calls with the same
-@display.</doc>
+@display.
+
+The returned #GstGLDisplayEGL will *not* be marked as foreign and will free
+some display global EGL resources on finalization. If an external API/user
+will be also handling the lifetime of the `EGLDisplay`, you should mark the
+returned #GstGLDisplayEGL as foreign by calling gst_gl_display_egl_set_foreign().</doc>
         <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a new #GstGLDisplayEGL</doc>
           <type name="GLDisplayEGL" c:type="GstGLDisplayEGL*"/>
@@ -73,6 +83,36 @@ This function will return the same value for multiple calls with the same
           </parameter>
         </parameters>
       </function>
+      <method name="set_foreign" c:identifier="gst_gl_display_egl_set_foreign" version="1.26">
+        <doc xml:space="preserve">Configure whether or not this EGL display is foreign and is managed by an
+external application/library.
+
+A display marked as foreign will not have display global resources freed when
+this display is finalized. As such, any external API using the same
+`EGLDisplay` must keep the `EGLDisplay` alive while GStreamer is using any
+EGL or GL resources associated with that `EGLDisplay`.  The reverse is also
+true and a foreign #GstGLDisplayEGL must not be used after the associated
+`EGLDisplay` has been destroyed externally with `eglTerminate()`.
+
+A non-foreign #GstGLDisplayEGL will destroy the associated `EGLDisplay` on
+finalization. This can also be useful when a user would like GStreamer to
+assume ownership of the `EGLDisplay` after calling e.g.
+gst_gl_display_egl_new_with_egl_display().</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="display_egl" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstGLDisplayEGL</doc>
+            <type name="GLDisplayEGL" c:type="GstGLDisplayEGL*"/>
+          </instance-parameter>
+          <parameter name="foreign" transfer-ownership="none">
+            <doc xml:space="preserve">whether @display_egl should be marked as containing a foreign
+          `EGLDisplay`</doc>
+            <type name="gboolean" c:type="gboolean"/>
+          </parameter>
+        </parameters>
+      </method>
       <field name="parent">
         <type name="GstGL.GLDisplay" c:type="GstGLDisplay"/>
       </field>

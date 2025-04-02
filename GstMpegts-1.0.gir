@@ -2,10 +2,11 @@
 <!-- This file was automatically generated from C sources - DO NOT EDIT!
 To affect the contents of this file, edit the original C definitions,
 and/or use gtk-doc annotations.  -->
-<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
+<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:doc="http://www.gtk.org/introspection/doc/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
   <include name="Gst" version="1.0"/>
   <package name="gstreamer-mpegts-1.0"/>
   <c:include name="gst/mpegts/mpegts.h"/>
+  <doc:format name="unknown"/>
   <namespace name="GstMpegts" version="1.0" shared-library="libgstmpegts-1.0.so.0" c:identifier-prefixes="GstMpegts" c:symbol-prefixes="gst_mpegts,gst">
     <enumeration name="ATSCDescriptorType" c:type="GstMpegtsATSCDescriptorType">
       <doc xml:space="preserve">These values correspond to the registered descriptor type from
@@ -940,8 +941,9 @@ Consult the relevant specifications for more details.</doc>
         </parameters>
       </method>
       <method name="get_event" c:identifier="gst_mpegts_dvb_linkage_descriptor_get_event">
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">The #GstMpegtsDVBLinkageEvent or %NULL if an error happened</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The #GstMpegtsDVBLinkageEvent or %NULL
+if an error happened</doc>
           <type name="DVBLinkageEvent" c:type="const GstMpegtsDVBLinkageEvent*"/>
         </return-value>
         <parameters>
@@ -952,8 +954,9 @@ Consult the relevant specifications for more details.</doc>
         </parameters>
       </method>
       <method name="get_extended_event" c:identifier="gst_mpegts_dvb_linkage_descriptor_get_extended_event">
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">an #GstMpegtsDVBLinkageExtendedEvent array or %NULL if an error happened</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">an #GstMpegtsDVBLinkageExtendedEvent array or %NULL if an error
+happened</doc>
           <array name="GLib.PtrArray" c:type="const GPtrArray*">
             <type name="DVBLinkageExtendedEvent"/>
           </array>
@@ -966,8 +969,9 @@ Consult the relevant specifications for more details.</doc>
         </parameters>
       </method>
       <method name="get_mobile_hand_over" c:identifier="gst_mpegts_dvb_linkage_descriptor_get_mobile_hand_over">
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">The #GstMpegtsDVBLinkageMobileHandOver or %NULL if an error happened</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The #GstMpegtsDVBLinkageMobileHandOver
+or %NULL if an error happened</doc>
           <type name="DVBLinkageMobileHandOver" c:type="const GstMpegtsDVBLinkageMobileHandOver*"/>
         </return-value>
         <parameters>
@@ -2117,8 +2121,9 @@ See ISO/IEC 13818-1:2018 Section 2.6.62 and 2.6.63 for details.</doc>
       </method>
       <function name="from_custom" c:identifier="gst_mpegts_descriptor_from_custom">
         <doc xml:space="preserve">Creates a #GstMpegtsDescriptor with custom @tag and @data</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:space="preserve">#GstMpegtsDescriptor</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">#GstMpegtsDescriptor, or %NULL if input
+is invalid</doc>
           <type name="Descriptor" c:type="GstMpegtsDescriptor*"/>
         </return-value>
         <parameters>
@@ -2169,8 +2174,9 @@ See ISO/IEC 13818-1:2018 Section 2.6.62 and 2.6.63 for details.</doc>
         <doc xml:space="preserve">Creates a #GstMpegtsDescriptor to be a %GST_MTS_DESC_DVB_NETWORK_NAME,
 with the network name @name. The data field of the #GstMpegtsDescriptor
 will be allocated, and transferred to the caller.</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:space="preserve">the #GstMpegtsDescriptor or %NULL on fail</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">the #GstMpegtsDescriptor or %NULL on
+failure.</doc>
           <type name="Descriptor" c:type="GstMpegtsDescriptor*"/>
         </return-value>
         <parameters>
@@ -2184,8 +2190,9 @@ will be allocated, and transferred to the caller.</doc>
         <doc xml:space="preserve">Fills a #GstMpegtsDescriptor to be a %GST_MTS_DESC_DVB_SERVICE.
 The data field of the #GstMpegtsDescriptor will be allocated,
 and transferred to the caller.</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:space="preserve">the #GstMpegtsDescriptor or %NULL on fail</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">the #GstMpegtsDescriptor or %NULL on
+failure</doc>
           <type name="Descriptor" c:type="GstMpegtsDescriptor*"/>
         </return-value>
         <parameters>
@@ -3125,6 +3132,19 @@ stream</doc>
         </return-value>
       </constructor>
     </record>
+    <function-macro name="REG_TO_UINT32" c:identifier="GST_MPEGTS_REG_TO_UINT32" introspectable="0">
+      <attribute name="doc.skip" value="true"/>
+      <parameters>
+        <parameter name="a">
+        </parameter>
+        <parameter name="b">
+        </parameter>
+        <parameter name="c">
+        </parameter>
+        <parameter name="d">
+        </parameter>
+      </parameters>
+    </function-macro>
     <bitfield name="RegistrationId" version="1.20" c:type="GstMpegtsRegistrationId">
       <doc xml:space="preserve">Well-known registration ids, expressed as native-endian 32bit integers. These
 are used in descriptors of type %GST_MTS_DESC_REGISTRATION. Unless specified
@@ -3745,9 +3765,9 @@ the section (i.e. the first byte should contain the `table_id` field).</doc>
       </constructor>
       <method name="get_atsc_cvct" c:identifier="gst_mpegts_section_get_atsc_cvct">
         <doc xml:space="preserve">Returns the #GstMpegtsAtscVCT contained in the @section</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">The #GstMpegtsAtscVCT contained in the section, or %NULL if an error
-happened.</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The #GstMpegtsAtscVCT contained in the
+section, or %NULL if an error happened.</doc>
           <type name="AtscVCT" c:type="const GstMpegtsAtscVCT*"/>
         </return-value>
         <parameters>
@@ -3787,9 +3807,9 @@ happened.</doc>
       </method>
       <method name="get_atsc_mgt" c:identifier="gst_mpegts_section_get_atsc_mgt">
         <doc xml:space="preserve">Returns the #GstMpegtsAtscMGT contained in the @section.</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">The #GstMpegtsAtscMGT contained in the section, or %NULL if an error
-happened.</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The #GstMpegtsAtscMGT contained in the
+section, or %NULL if an error happened.</doc>
           <type name="AtscMGT" c:type="const GstMpegtsAtscMGT*"/>
         </return-value>
         <parameters>
@@ -3829,9 +3849,9 @@ happened.</doc>
       </method>
       <method name="get_atsc_tvct" c:identifier="gst_mpegts_section_get_atsc_tvct">
         <doc xml:space="preserve">Returns the #GstMpegtsAtscVCT contained in the @section</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">The #GstMpegtsAtscVCT contained in the section, or %NULL if an error
-happened.</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The #GstMpegtsAtscVCT contained in the
+section, or %NULL if an error happened.</doc>
           <type name="AtscVCT" c:type="const GstMpegtsAtscVCT*"/>
         </return-value>
         <parameters>
@@ -3843,9 +3863,9 @@ happened.</doc>
       </method>
       <method name="get_bat" c:identifier="gst_mpegts_section_get_bat">
         <doc xml:space="preserve">Returns the #GstMpegtsBAT contained in the @section.</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">The #GstMpegtsBAT contained in the section, or %NULL if an error
-happened.</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The #GstMpegtsBAT contained in the
+section, or %NULL if an error happened.</doc>
           <type name="BAT" c:type="const GstMpegtsBAT*"/>
         </return-value>
         <parameters>
@@ -3860,10 +3880,10 @@ happened.</doc>
 
 Returns the array of #GstMpegtsDescriptor contained in the Conditional
 Access Table.</doc>
-        <return-value transfer-ownership="container">
-          <doc xml:space="preserve">The array
-of #GstMpegtsDescriptor contained in the section, or %NULL if an error
-happened. Release with #g_array_unref when done.</doc>
+        <return-value transfer-ownership="container" nullable="1">
+          <doc xml:space="preserve">
+The array of #GstMpegtsDescriptor contained in the section, or %NULL if an
+error happened. Release with #g_array_unref when done.</doc>
           <array name="GLib.PtrArray" c:type="GPtrArray*">
             <type name="Descriptor"/>
           </array>
@@ -3890,9 +3910,9 @@ happened. Release with #g_array_unref when done.</doc>
       </method>
       <method name="get_eit" c:identifier="gst_mpegts_section_get_eit">
         <doc xml:space="preserve">Returns the #GstMpegtsEIT contained in the @section.</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">The #GstMpegtsEIT contained in the section, or %NULL if an error
-happened.</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The #GstMpegtsEIT contained in the
+section, or %NULL if an error happened.</doc>
           <type name="EIT" c:type="const GstMpegtsEIT*"/>
         </return-value>
         <parameters>
@@ -3904,9 +3924,9 @@ happened.</doc>
       </method>
       <method name="get_nit" c:identifier="gst_mpegts_section_get_nit">
         <doc xml:space="preserve">Returns the #GstMpegtsNIT contained in the @section.</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">The #GstMpegtsNIT contained in the section, or %NULL if an error
-happened.</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The #GstMpegtsNIT contained in the
+section, or %NULL if an error happened.</doc>
           <type name="NIT" c:type="const GstMpegtsNIT*"/>
         </return-value>
         <parameters>
@@ -3923,11 +3943,11 @@ Returns the array of #GstMpegtsPatProgram contained in the section.
 
 Note: The PAT `transport_stream_id` field corresponds to the
 "subtable_extension" field of the provided @section.</doc>
-        <return-value transfer-ownership="container">
-          <doc xml:space="preserve">The
-#GstMpegtsPatProgram contained in the section, or %NULL if an error happened
-or the @section did not contain a valid PAT. Release with #g_ptr_array_unref
-when done.</doc>
+        <return-value transfer-ownership="container" nullable="1">
+          <doc xml:space="preserve">
+The #GstMpegtsPatProgram contained in the section, or %NULL if an error
+happened or the @section did not contain a valid PAT. Release with
+#g_ptr_array_unref when done.</doc>
           <array name="GLib.PtrArray" c:type="GPtrArray*">
             <type name="PatProgram"/>
           </array>
@@ -3941,9 +3961,9 @@ when done.</doc>
       </method>
       <method name="get_pmt" c:identifier="gst_mpegts_section_get_pmt">
         <doc xml:space="preserve">Parses the Program Map Table contained in the @section.</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">The #GstMpegtsPMT contained in the section, or %NULL if an error
-happened.</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The #GstMpegtsPMT contained in the
+section, or %NULL if an error happened.</doc>
           <type name="PMT" c:type="const GstMpegtsPMT*"/>
         </return-value>
         <parameters>
@@ -3955,9 +3975,9 @@ happened.</doc>
       </method>
       <method name="get_scte_sit" c:identifier="gst_mpegts_section_get_scte_sit">
         <doc xml:space="preserve">Returns the #GstMpegtsSCTESIT contained in the @section.</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">The #GstMpegtsSCTESIT contained in the section, or %NULL if an error
-happened.</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The #GstMpegtsSCTESIT contained in the
+section, or %NULL if an error happened.</doc>
           <type name="SCTESIT" c:type="const GstMpegtsSCTESIT*"/>
         </return-value>
         <parameters>
@@ -3969,9 +3989,9 @@ happened.</doc>
       </method>
       <method name="get_sdt" c:identifier="gst_mpegts_section_get_sdt">
         <doc xml:space="preserve">Returns the #GstMpegtsSDT contained in the @section.</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">The #GstMpegtsSDT contained in the section, or %NULL if an error
-happened.</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The #GstMpegtsSDT contained in the
+section, or %NULL if an error happened.</doc>
           <type name="SDT" c:type="const GstMpegtsSDT*"/>
         </return-value>
         <parameters>
@@ -3983,9 +4003,9 @@ happened.</doc>
       </method>
       <method name="get_sit" c:identifier="gst_mpegts_section_get_sit" version="1.20">
         <doc xml:space="preserve">Returns the #GstMpegtsSIT contained in the @section.</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">The #GstMpegtsSIT contained in the section, or %NULL if an error
-happened.</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The #GstMpegtsSIT contained in the
+section, or %NULL if an error happened.</doc>
           <type name="SIT" c:type="const GstMpegtsSIT*"/>
         </return-value>
         <parameters>
@@ -3997,9 +4017,10 @@ happened.</doc>
       </method>
       <method name="get_tdt" c:identifier="gst_mpegts_section_get_tdt">
         <doc xml:space="preserve">Returns the #GstDateTime of the TDT</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:space="preserve">The #GstDateTime contained in the section, or %NULL
-if an error happened. Release with #gst_date_time_unref when done.</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">The #GstDateTime contained in the
+section, or %NULL if an error happened. Release with #gst_date_time_unref
+when done.</doc>
           <type name="Gst.DateTime" c:type="GstDateTime*"/>
         </return-value>
         <parameters>
@@ -4011,9 +4032,9 @@ if an error happened. Release with #gst_date_time_unref when done.</doc>
       </method>
       <method name="get_tot" c:identifier="gst_mpegts_section_get_tot">
         <doc xml:space="preserve">Returns the #GstMpegtsTOT contained in the @section.</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">The #GstMpegtsTOT contained in the section, or %NULL if an error
-happened.</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The #GstMpegtsTOT contained in the
+section, or %NULL if an error happened.</doc>
           <type name="TOT" c:type="const GstMpegtsTOT*"/>
         </return-value>
         <parameters>
@@ -4027,10 +4048,10 @@ happened.</doc>
         <doc xml:space="preserve">Parses a Transport Stream Description Table.
 
 Returns the array of #GstMpegtsDescriptor contained in the section</doc>
-        <return-value transfer-ownership="container">
-          <doc xml:space="preserve">The array
-of #GstMpegtsDescriptor contained in the section, or %NULL if an error
-happened. Release with #g_array_unref when done.</doc>
+        <return-value transfer-ownership="container" nullable="1">
+          <doc xml:space="preserve">
+The array of #GstMpegtsDescriptor contained in the section, or %NULL if an
+error happened. Release with #g_array_unref when done.</doc>
           <array name="GLib.PtrArray" c:type="GPtrArray*">
             <type name="Descriptor"/>
           </array>
@@ -4079,9 +4100,10 @@ data field is allocated and populated.</doc>
           </parameter>
         </parameters>
       </method>
-      <function name="from_atsc_mgt" c:identifier="gst_mpegts_section_from_atsc_mgt" version="1.18">
-        <return-value transfer-ownership="full">
-          <doc xml:space="preserve">the #GstMpegtsSection</doc>
+      <function name="from_atsc_mgt" c:identifier="gst_mpegts_section_from_atsc_mgt">
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">the #GstMpegtsSection, or %NULL if @mgt
+is invalid Since: 1.18</doc>
           <type name="Section" c:type="GstMpegtsSection*"/>
         </return-value>
         <parameters>
@@ -4113,8 +4135,9 @@ data field is allocated and populated.</doc>
       </function>
       <function name="from_nit" c:identifier="gst_mpegts_section_from_nit">
         <doc xml:space="preserve">Ownership of @nit is taken. The data in @nit is managed by the #GstMpegtsSection</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:space="preserve">the #GstMpegtsSection</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">the #GstMpegtsSection, or %NULL if @nit
+is invalid</doc>
           <type name="Section" c:type="GstMpegtsSection*"/>
         </return-value>
         <parameters>
@@ -4145,8 +4168,9 @@ data field is allocated and populated.</doc>
       </function>
       <function name="from_pmt" c:identifier="gst_mpegts_section_from_pmt">
         <doc xml:space="preserve">Creates a #GstMpegtsSection from @pmt that is bound to @pid</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:space="preserve">#GstMpegtsSection</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">#GstMpegtsSection, or %NULL if @pmt is
+invalid</doc>
           <type name="Section" c:type="GstMpegtsSection*"/>
         </return-value>
         <parameters>
@@ -4162,8 +4186,9 @@ data field is allocated and populated.</doc>
       </function>
       <function name="from_scte_sit" c:identifier="gst_mpegts_section_from_scte_sit">
         <doc xml:space="preserve">Ownership of @sit is taken. The data in @sit is managed by the #GstMpegtsSection</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:space="preserve">the #GstMpegtsSection</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">the #GstMpegtsSection, or %NULL if @sit
+is invalid</doc>
           <type name="Section" c:type="GstMpegtsSection*"/>
         </return-value>
         <parameters>
@@ -4178,8 +4203,9 @@ data field is allocated and populated.</doc>
       </function>
       <function name="from_sdt" c:identifier="gst_mpegts_section_from_sdt">
         <doc xml:space="preserve">Ownership of @sdt is taken. The data in @sdt is managed by the #GstMpegtsSection</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:space="preserve">the #GstMpegtsSection</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">the #GstMpegtsSection or %NULL if @sdt
+is invalid</doc>
           <type name="Section" c:type="GstMpegtsSection*"/>
         </return-value>
         <parameters>
@@ -4885,8 +4911,9 @@ profiles defined in Annex A for service-compatible stereoscopic 3D services</doc
     </function>
     <function name="descriptor_from_custom" c:identifier="gst_mpegts_descriptor_from_custom" moved-to="Descriptor.from_custom">
       <doc xml:space="preserve">Creates a #GstMpegtsDescriptor with custom @tag and @data</doc>
-      <return-value transfer-ownership="full">
-        <doc xml:space="preserve">#GstMpegtsDescriptor</doc>
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">#GstMpegtsDescriptor, or %NULL if input
+is invalid</doc>
         <type name="Descriptor" c:type="GstMpegtsDescriptor*"/>
       </return-value>
       <parameters>
@@ -4937,8 +4964,9 @@ profiles defined in Annex A for service-compatible stereoscopic 3D services</doc
       <doc xml:space="preserve">Creates a #GstMpegtsDescriptor to be a %GST_MTS_DESC_DVB_NETWORK_NAME,
 with the network name @name. The data field of the #GstMpegtsDescriptor
 will be allocated, and transferred to the caller.</doc>
-      <return-value transfer-ownership="full">
-        <doc xml:space="preserve">the #GstMpegtsDescriptor or %NULL on fail</doc>
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">the #GstMpegtsDescriptor or %NULL on
+failure.</doc>
         <type name="Descriptor" c:type="GstMpegtsDescriptor*"/>
       </return-value>
       <parameters>
@@ -4952,8 +4980,9 @@ will be allocated, and transferred to the caller.</doc>
       <doc xml:space="preserve">Fills a #GstMpegtsDescriptor to be a %GST_MTS_DESC_DVB_SERVICE.
 The data field of the #GstMpegtsDescriptor will be allocated,
 and transferred to the caller.</doc>
-      <return-value transfer-ownership="full">
-        <doc xml:space="preserve">the #GstMpegtsDescriptor or %NULL on fail</doc>
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">the #GstMpegtsDescriptor or %NULL on
+failure</doc>
         <type name="Descriptor" c:type="GstMpegtsDescriptor*"/>
       </return-value>
       <parameters>
@@ -5111,9 +5140,9 @@ a single language</doc>
     </function>
     <function name="event_parse_mpegts_section" c:identifier="gst_event_parse_mpegts_section">
       <doc xml:space="preserve">Extracts the #GstMpegtsSection contained in the @event #GstEvent</doc>
-      <return-value transfer-ownership="full">
-        <doc xml:space="preserve">The extracted #GstMpegtsSection , or %NULL if the
-event did not contain a valid #GstMpegtsSection.</doc>
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">The extracted #GstMpegtsSection , or
+%NULL if the event did not contain a valid #GstMpegtsSection.</doc>
         <type name="Section" c:type="GstMpegtsSection*"/>
       </return-value>
       <parameters>
@@ -5128,8 +5157,9 @@ event did not contain a valid #GstMpegtsSection.</doc>
 
 Note: To look for descriptors that can be present more than once in an
 array of descriptors, iterate the #GArray manually.</doc>
-      <return-value transfer-ownership="none">
-        <doc xml:space="preserve">the first descriptor matching @tag, else %NULL.</doc>
+      <return-value transfer-ownership="none" nullable="1">
+        <doc xml:space="preserve">the first descriptor matching @tag, else
+%NULL.</doc>
         <type name="Descriptor" c:type="const GstMpegtsDescriptor*"/>
       </return-value>
       <parameters>
@@ -5151,8 +5181,9 @@ of #GstMpegtsDescriptor</doc>
 
 Note: To look for descriptors that can be present more than once in an
 array of descriptors, iterate the #GArray manually.</doc>
-      <return-value transfer-ownership="none">
-        <doc xml:space="preserve">the first descriptor matchin @tag with @tag_extension, else %NULL.</doc>
+      <return-value transfer-ownership="none" nullable="1">
+        <doc xml:space="preserve">the first descriptor matchin @tag with
+@tag_extension, else %NULL.</doc>
         <type name="Descriptor" c:type="const GstMpegtsDescriptor*"/>
       </return-value>
       <parameters>
@@ -5289,9 +5320,9 @@ usage.</doc>
     </function>
     <function name="message_new_mpegts_section" c:identifier="gst_message_new_mpegts_section">
       <doc xml:space="preserve">Creates a new #GstMessage for a @GstMpegtsSection.</doc>
-      <return-value transfer-ownership="full">
-        <doc xml:space="preserve">The new #GstMessage to be posted, or %NULL if the
-section is not valid.</doc>
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">The new #GstMessage to be posted, or
+%NULL if the section is not valid.</doc>
         <type name="Gst.Message" c:type="GstMessage*"/>
       </return-value>
       <parameters>
@@ -5307,7 +5338,7 @@ section is not valid.</doc>
     </function>
     <function name="message_parse_mpegts_section" c:identifier="gst_message_parse_mpegts_section">
       <doc xml:space="preserve">Returns the #GstMpegtsSection contained in a message.</doc>
-      <return-value transfer-ownership="full">
+      <return-value transfer-ownership="full" nullable="1">
         <doc xml:space="preserve">the contained #GstMpegtsSection, or %NULL.</doc>
         <type name="Section" c:type="GstMpegtsSection*"/>
       </return-value>
@@ -5323,10 +5354,10 @@ section is not valid.</doc>
 array.
 
 Note: The data provided in @buffer will not be copied.</doc>
-      <return-value transfer-ownership="full">
+      <return-value transfer-ownership="full" nullable="1">
         <doc xml:space="preserve">an
-array of the parsed descriptors or %NULL if there was an error.
-Release with #g_array_unref when done with it.</doc>
+array of the parsed descriptors or %NULL if there was an error.  Release with
+#g_array_unref when done with it.</doc>
         <array name="GLib.PtrArray" c:type="GPtrArray*">
           <type name="Descriptor"/>
         </array>
@@ -5436,9 +5467,10 @@ If the @duration is 0 it won't be specified in the event.</doc>
         </parameter>
       </parameters>
     </function>
-    <function name="section_from_atsc_mgt" c:identifier="gst_mpegts_section_from_atsc_mgt" moved-to="Section.from_atsc_mgt" version="1.18">
-      <return-value transfer-ownership="full">
-        <doc xml:space="preserve">the #GstMpegtsSection</doc>
+    <function name="section_from_atsc_mgt" c:identifier="gst_mpegts_section_from_atsc_mgt" moved-to="Section.from_atsc_mgt">
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">the #GstMpegtsSection, or %NULL if @mgt
+is invalid Since: 1.18</doc>
         <type name="Section" c:type="GstMpegtsSection*"/>
       </return-value>
       <parameters>
@@ -5470,8 +5502,9 @@ If the @duration is 0 it won't be specified in the event.</doc>
     </function>
     <function name="section_from_nit" c:identifier="gst_mpegts_section_from_nit" moved-to="Section.from_nit">
       <doc xml:space="preserve">Ownership of @nit is taken. The data in @nit is managed by the #GstMpegtsSection</doc>
-      <return-value transfer-ownership="full">
-        <doc xml:space="preserve">the #GstMpegtsSection</doc>
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">the #GstMpegtsSection, or %NULL if @nit
+is invalid</doc>
         <type name="Section" c:type="GstMpegtsSection*"/>
       </return-value>
       <parameters>
@@ -5502,8 +5535,9 @@ If the @duration is 0 it won't be specified in the event.</doc>
     </function>
     <function name="section_from_pmt" c:identifier="gst_mpegts_section_from_pmt" moved-to="Section.from_pmt">
       <doc xml:space="preserve">Creates a #GstMpegtsSection from @pmt that is bound to @pid</doc>
-      <return-value transfer-ownership="full">
-        <doc xml:space="preserve">#GstMpegtsSection</doc>
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">#GstMpegtsSection, or %NULL if @pmt is
+invalid</doc>
         <type name="Section" c:type="GstMpegtsSection*"/>
       </return-value>
       <parameters>
@@ -5519,8 +5553,9 @@ If the @duration is 0 it won't be specified in the event.</doc>
     </function>
     <function name="section_from_scte_sit" c:identifier="gst_mpegts_section_from_scte_sit" moved-to="Section.from_scte_sit">
       <doc xml:space="preserve">Ownership of @sit is taken. The data in @sit is managed by the #GstMpegtsSection</doc>
-      <return-value transfer-ownership="full">
-        <doc xml:space="preserve">the #GstMpegtsSection</doc>
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">the #GstMpegtsSection, or %NULL if @sit
+is invalid</doc>
         <type name="Section" c:type="GstMpegtsSection*"/>
       </return-value>
       <parameters>
@@ -5535,8 +5570,9 @@ If the @duration is 0 it won't be specified in the event.</doc>
     </function>
     <function name="section_from_sdt" c:identifier="gst_mpegts_section_from_sdt" moved-to="Section.from_sdt">
       <doc xml:space="preserve">Ownership of @sdt is taken. The data in @sdt is managed by the #GstMpegtsSection</doc>
-      <return-value transfer-ownership="full">
-        <doc xml:space="preserve">the #GstMpegtsSection</doc>
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">the #GstMpegtsSection or %NULL if @sdt
+is invalid</doc>
         <type name="Section" c:type="GstMpegtsSection*"/>
       </return-value>
       <parameters>

@@ -2,13 +2,14 @@
 <!-- This file was automatically generated from C sources - DO NOT EDIT!
 To affect the contents of this file, edit the original C definitions,
 and/or use gtk-doc annotations.  -->
-<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
+<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:doc="http://www.gtk.org/introspection/doc/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
   <include name="Gst" version="1.0"/>
   <include name="GstAudio" version="1.0"/>
   <include name="GstBase" version="1.0"/>
   <include name="GstVideo" version="1.0"/>
   <package name="gstreamer-pbutils-1.0"/>
   <c:include name="gst/pbutils/pbutils.h"/>
+  <doc:format name="unknown"/>
   <namespace name="GstPbutils" version="1.0" shared-library="libgstpbutils-1.0.so.0" c:identifier-prefixes="Gst" c:symbol-prefixes="gst">
     <alias name="DiscovererAudioInfoClass" c:type="GstDiscovererAudioInfoClass">
       <type name="GObject.ObjectClass" c:type="GObjectClass"/>
@@ -2750,11 +2751,11 @@ in debugging.</doc>
       <doc xml:space="preserve">The major version of GStreamer's gst-plugins-base libraries at compile time.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="PLUGINS_BASE_VERSION_MICRO" value="50" c:type="GST_PLUGINS_BASE_VERSION_MICRO">
+    <constant name="PLUGINS_BASE_VERSION_MICRO" value="0" c:type="GST_PLUGINS_BASE_VERSION_MICRO">
       <doc xml:space="preserve">The micro version of GStreamer's gst-plugins-base libraries at compile time.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="PLUGINS_BASE_VERSION_MINOR" value="25" c:type="GST_PLUGINS_BASE_VERSION_MINOR">
+    <constant name="PLUGINS_BASE_VERSION_MINOR" value="26" c:type="GST_PLUGINS_BASE_VERSION_MINOR">
       <doc xml:space="preserve">The minor version of GStreamer's gst-plugins-base libraries at compile time.</doc>
       <type name="gint" c:type="gint"/>
     </constant>

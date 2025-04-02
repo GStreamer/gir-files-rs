@@ -2,12 +2,13 @@
 <!-- This file was automatically generated from C sources - DO NOT EDIT!
 To affect the contents of this file, edit the original C definitions,
 and/or use gtk-doc annotations.  -->
-<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
+<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:doc="http://www.gtk.org/introspection/doc/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
   <include name="GLib" version="2.0"/>
   <include name="GModule" version="2.0"/>
   <include name="GObject" version="2.0"/>
   <package name="gstreamer-1.0"/>
   <c:include name="gst/gst.h"/>
+  <doc:format name="unknown"/>
   <namespace name="Gst" version="1.0" shared-library="libgstreamer-1.0.so.0" c:identifier-prefixes="Gst" c:symbol-prefixes="gst">
     <alias name="BufferMapInfo" c:type="GstBufferMapInfo" introspectable="0">
       <doc xml:space="preserve">Alias for #GstMapInfo to be used with g_auto():
@@ -2357,7 +2358,7 @@ to #GST_CLOCK_TIME_NONE and #GST_BUFFER_OFFSET_NONE.</doc>
               <type name="guint8"/>
             </array>
           </parameter>
-          <parameter name="size" direction="out" caller-allocates="0" transfer-ownership="full">
+          <parameter name="size" transfer-ownership="none">
             <doc xml:space="preserve">the size to extract</doc>
             <type name="gsize" c:type="gsize"/>
           </parameter>
@@ -13943,8 +13944,8 @@ As an example, you may define the element named "stream-filter"
 with the namespace `my` as following:
 
 ```
-#define _pre_register_init \
-  my_stream_filter_pre_register (plugin);
+#define _pre_register_init  *   my_stream_filter_pre_register (plugin);
+;
 GST_ELEMENT_REGISTER_DEFINE_WITH_CODE (stream_filter, "stream-filter", GST_RANK_PRIMARY, MY_TYPE_STREAM_FILTER, _pre_register_init)
 ```</doc>
       <parameters>
@@ -21362,11 +21363,11 @@ MT safe.</doc>
             <doc xml:space="preserve">The #GstIterator to filter</doc>
             <type name="Iterator" c:type="GstIterator*"/>
           </instance-parameter>
-          <parameter name="func" transfer-ownership="none" scope="call" closure="1">
+          <parameter name="func" transfer-ownership="none" scope="call">
             <doc xml:space="preserve">the compare function to select elements</doc>
             <type name="GLib.CompareFunc" c:type="GCompareFunc"/>
           </parameter>
-          <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1">
+          <parameter name="user_data" transfer-ownership="none">
             <doc xml:space="preserve">user data passed to the compare function</doc>
             <type name="GObject.Value" c:type="const GValue*"/>
           </parameter>
@@ -25903,7 +25904,7 @@ write the result back into @aggregated_params.</doc>
           </parameter>
         </parameters>
       </function>
-      <function name="api_type_set_params_aggregator" c:identifier="gst_meta_api_type_set_params_aggregator" version="1.26" introspectable="0">
+      <function name="api_type_set_params_aggregator" c:identifier="gst_meta_api_type_set_params_aggregator" version="1.26">
         <doc xml:space="preserve">This function sets the aggregator function for a specific API type.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
@@ -25913,7 +25914,7 @@ write the result back into @aggregated_params.</doc>
             <doc xml:space="preserve">the #GType of the API for which the aggregator function is being set.</doc>
             <type name="GType" c:type="GType"/>
           </parameter>
-          <parameter name="aggregator" transfer-ownership="none">
+          <parameter name="aggregator" transfer-ownership="none" scope="forever">
             <doc xml:space="preserve">the aggregator function to be associated with the given API
              type.</doc>
             <type name="AllocationMetaParamsAggregator" c:type="GstAllocationMetaParamsAggregator"/>
@@ -38319,8 +38320,8 @@ This can be used in pad templates.</doc>
 structure.
 Example:
 |[&lt;!-- language="C" --&gt;
-static GstStaticPadTemplate my_src_template = \
-  GST_STATIC_PAD_TEMPLATE("src", GST_PAD_SRC, GST_PAD_ALWAYS,
+static GstStaticPadTemplate my_src_template =  *   GST_STATIC_PAD_TEMPLATE("src", GST_PAD_SRC, GST_PAD_ALWAYS,
+,
                           GST_STATIC_CAPS_ANY);
 ]|</doc>
       <parameters>
@@ -40527,6 +40528,9 @@ Some types have special delimiters:
   `a-structure, a-int64-range=(gint64) [1, 5]`
 - [GstValueList](GST_TYPE_LIST) are inside curly brackets (`{` and `}`).
   For example `a-structure, list={1, 2, 3}`
+- [GStrv](G_TYPE_STRV) are inside "less and greater than" (`&lt;` and
+  `&gt;`) and each string is double-quoted.
+  For example `a-structure, strv=(GStrv)&lt;"foo", "bar"&gt;`. Since 1.26.0.
 
 Structures are delimited either by a null character `\0` or a semicolon `;`
 the latter allowing to store multiple structures in the same string (see
@@ -47028,6 +47032,7 @@ indicate its parameter handling preference.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="tracer_class" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstTracerFactoryClass to mark as using structure parameters</doc>
             <type name="TracerClass" c:type="GstTracerClass*"/>
           </instance-parameter>
           <parameter name="use_structure_params" transfer-ownership="none">
@@ -47046,6 +47051,7 @@ fields as properties to instanciate the tracer.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="tracer_class" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstTracerClass to to check</doc>
             <type name="TracerClass" c:type="GstTracerClass*"/>
           </instance-parameter>
         </parameters>
@@ -48999,11 +49005,11 @@ determine a order for the two provided values.</doc>
       <doc xml:space="preserve">The major version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MICRO" value="50" c:type="GST_VERSION_MICRO">
+    <constant name="VERSION_MICRO" value="0" c:type="GST_VERSION_MICRO">
       <doc xml:space="preserve">The micro version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MINOR" value="25" c:type="GST_VERSION_MINOR">
+    <constant name="VERSION_MINOR" value="26" c:type="GST_VERSION_MINOR">
       <doc xml:space="preserve">The minor version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
@@ -52436,6 +52442,23 @@ write the result back into @aggregated_params.</doc>
         </parameter>
       </parameters>
     </function>
+    <function name="meta_api_type_set_params_aggregator" c:identifier="gst_meta_api_type_set_params_aggregator" moved-to="Meta.api_type_set_params_aggregator" version="1.26">
+      <doc xml:space="preserve">This function sets the aggregator function for a specific API type.</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="api" transfer-ownership="none">
+          <doc xml:space="preserve">the #GType of the API for which the aggregator function is being set.</doc>
+          <type name="GType" c:type="GType"/>
+        </parameter>
+        <parameter name="aggregator" transfer-ownership="none" scope="forever">
+          <doc xml:space="preserve">the aggregator function to be associated with the given API
+             type.</doc>
+          <type name="AllocationMetaParamsAggregator" c:type="GstAllocationMetaParamsAggregator"/>
+        </parameter>
+      </parameters>
+    </function>
     <function name="meta_deserialize" c:identifier="gst_meta_deserialize" moved-to="Meta.deserialize" version="1.24">
       <doc xml:space="preserve">Recreate a #GstMeta from serialized data returned by
 gst_meta_serialize() and add it to @buffer.
@@ -54463,7 +54486,8 @@ the result.</doc>
         <type name="guint" c:type="guint"/>
       </return-value>
       <parameters>
-        <parameter name="x" transfer-ownership="none">
+        <parameter name="v" transfer-ownership="none">
+          <doc xml:space="preserve">a #guint32 value.</doc>
           <type name="guint32" c:type="guint32"/>
         </parameter>
       </parameters>

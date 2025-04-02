@@ -2,7 +2,7 @@
 <!-- This file was automatically generated from C sources - DO NOT EDIT!
 To affect the contents of this file, edit the original C definitions,
 and/or use gtk-doc annotations.  -->
-<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
+<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:doc="http://www.gtk.org/introspection/doc/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
   <include name="Gst" version="1.0"/>
   <include name="GstAudio" version="1.0"/>
   <include name="GstBase" version="1.0"/>
@@ -11,6 +11,7 @@ and/or use gtk-doc annotations.  -->
   <include name="GstVideo" version="1.0"/>
   <package name="gstreamer-play-1.0"/>
   <c:include name="gst/play/play.h"/>
+  <doc:format name="unknown"/>
   <namespace name="GstPlay" version="1.0" shared-library="libgstplay-1.0.so.0" c:identifier-prefixes="Gst" c:symbol-prefixes="gst">
     <function-macro name="IS_PLAY" c:identifier="GST_IS_PLAY" introspectable="0">
       <parameters>
@@ -1893,11 +1894,15 @@ gst_install_plugins_async().</doc>
           </parameter>
           <parameter name="descriptions" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
             <doc xml:space="preserve">a %NULL-terminated array of descriptions</doc>
-            <type name="utf8" c:type="gchar***"/>
+            <array c:type="gchar***">
+              <type name="utf8" c:type="gchar**"/>
+            </array>
           </parameter>
-          <parameter name="installer_details" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1" optional="1" allow-none="1">
+          <parameter name="installer_details" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
             <doc xml:space="preserve">a %NULL-terminated array of installer details</doc>
-            <type name="utf8" c:type="gchar***"/>
+            <array c:type="gchar***">
+              <type name="utf8" c:type="gchar**"/>
+            </array>
           </parameter>
         </parameters>
       </function>
@@ -2093,11 +2098,15 @@ gst_install_plugins_async().</doc>
           </parameter>
           <parameter name="descriptions" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
             <doc xml:space="preserve">a %NULL-terminated array of descriptions</doc>
-            <type name="utf8" c:type="gchar***"/>
+            <array c:type="gchar***">
+              <type name="utf8" c:type="gchar**"/>
+            </array>
           </parameter>
-          <parameter name="installer_details" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1" optional="1" allow-none="1">
+          <parameter name="installer_details" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
             <doc xml:space="preserve">a %NULL-terminated array of installer details</doc>
-            <type name="utf8" c:type="gchar***"/>
+            <array c:type="gchar***">
+              <type name="utf8" c:type="gchar**"/>
+            </array>
           </parameter>
         </parameters>
       </function>
@@ -2945,11 +2954,15 @@ gst_install_plugins_async().</doc>
         </parameter>
         <parameter name="descriptions" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
           <doc xml:space="preserve">a %NULL-terminated array of descriptions</doc>
-          <type name="utf8" c:type="gchar***"/>
+          <array c:type="gchar***">
+            <type name="utf8" c:type="gchar**"/>
+          </array>
         </parameter>
-        <parameter name="installer_details" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1" optional="1" allow-none="1">
+        <parameter name="installer_details" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
           <doc xml:space="preserve">a %NULL-terminated array of installer details</doc>
-          <type name="utf8" c:type="gchar***"/>
+          <array c:type="gchar***">
+            <type name="utf8" c:type="gchar**"/>
+          </array>
         </parameter>
       </parameters>
     </function>
@@ -3145,11 +3158,15 @@ gst_install_plugins_async().</doc>
         </parameter>
         <parameter name="descriptions" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
           <doc xml:space="preserve">a %NULL-terminated array of descriptions</doc>
-          <type name="utf8" c:type="gchar***"/>
+          <array c:type="gchar***">
+            <type name="utf8" c:type="gchar**"/>
+          </array>
         </parameter>
-        <parameter name="installer_details" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1" optional="1" allow-none="1">
+        <parameter name="installer_details" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
           <doc xml:space="preserve">a %NULL-terminated array of installer details</doc>
-          <type name="utf8" c:type="gchar***"/>
+          <array c:type="gchar***">
+            <type name="utf8" c:type="gchar**"/>
+          </array>
         </parameter>
       </parameters>
     </function>
