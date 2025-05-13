@@ -13944,8 +13944,8 @@ As an example, you may define the element named "stream-filter"
 with the namespace `my` as following:
 
 ```
-#define _pre_register_init  *   my_stream_filter_pre_register (plugin);
-;
+#define _pre_register_init \
+  my_stream_filter_pre_register (plugin);
 GST_ELEMENT_REGISTER_DEFINE_WITH_CODE (stream_filter, "stream-filter", GST_RANK_PRIMARY, MY_TYPE_STREAM_FILTER, _pre_register_init)
 ```</doc>
       <parameters>
@@ -23260,7 +23260,7 @@ MT safe.</doc>
             <doc xml:space="preserve">The GError for this message.</doc>
             <type name="GLib.Error" c:type="GError*"/>
           </parameter>
-          <parameter name="debug" transfer-ownership="none">
+          <parameter name="debug" transfer-ownership="none" nullable="1" allow-none="1">
             <doc xml:space="preserve">A debugging string.</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
@@ -23284,7 +23284,7 @@ receiving this message should stop the pipeline.</doc>
             <doc xml:space="preserve">The GError for this message.</doc>
             <type name="GLib.Error" c:type="GError*"/>
           </parameter>
-          <parameter name="debug" transfer-ownership="none">
+          <parameter name="debug" transfer-ownership="none" nullable="1" allow-none="1">
             <doc xml:space="preserve">A debugging string.</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
@@ -23331,7 +23331,7 @@ MT safe.</doc>
             <doc xml:space="preserve">The GError for this message.</doc>
             <type name="GLib.Error" c:type="GError*"/>
           </parameter>
-          <parameter name="debug" transfer-ownership="none">
+          <parameter name="debug" transfer-ownership="none" nullable="1" allow-none="1">
             <doc xml:space="preserve">A debugging string.</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
@@ -23353,7 +23353,7 @@ MT safe.</doc>
             <doc xml:space="preserve">The GError for this message.</doc>
             <type name="GLib.Error" c:type="GError*"/>
           </parameter>
-          <parameter name="debug" transfer-ownership="none">
+          <parameter name="debug" transfer-ownership="none" nullable="1" allow-none="1">
             <doc xml:space="preserve">A debugging string.</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
@@ -23996,7 +23996,7 @@ MT safe.</doc>
             <doc xml:space="preserve">The GError for this message.</doc>
             <type name="GLib.Error" c:type="GError*"/>
           </parameter>
-          <parameter name="debug" transfer-ownership="none">
+          <parameter name="debug" transfer-ownership="none" nullable="1" allow-none="1">
             <doc xml:space="preserve">A debugging string.</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
@@ -24018,7 +24018,7 @@ MT safe.</doc>
             <doc xml:space="preserve">The GError for this message.</doc>
             <type name="GLib.Error" c:type="GError*"/>
           </parameter>
-          <parameter name="debug" transfer-ownership="none">
+          <parameter name="debug" transfer-ownership="none" nullable="1" allow-none="1">
             <doc xml:space="preserve">A debugging string.</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
@@ -38320,8 +38320,8 @@ This can be used in pad templates.</doc>
 structure.
 Example:
 |[&lt;!-- language="C" --&gt;
-static GstStaticPadTemplate my_src_template =  *   GST_STATIC_PAD_TEMPLATE("src", GST_PAD_SRC, GST_PAD_ALWAYS,
-,
+static GstStaticPadTemplate my_src_template = \
+  GST_STATIC_PAD_TEMPLATE("src", GST_PAD_SRC, GST_PAD_ALWAYS,
                           GST_STATIC_CAPS_ANY);
 ]|</doc>
       <parameters>
@@ -49005,11 +49005,11 @@ determine a order for the two provided values.</doc>
       <doc xml:space="preserve">The major version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MICRO" value="1" c:type="GST_VERSION_MICRO">
+    <constant name="VERSION_MICRO" value="0" c:type="GST_VERSION_MICRO">
       <doc xml:space="preserve">The micro version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MINOR" value="26" c:type="GST_VERSION_MINOR">
+    <constant name="VERSION_MINOR" value="27" c:type="GST_VERSION_MINOR">
       <doc xml:space="preserve">The minor version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
@@ -49170,6 +49170,23 @@ or GST_VALUE_UNORDERED</doc>
         <parameter name="pspec" transfer-ownership="none">
           <doc xml:space="preserve">a #GParamSpec describing the expected value</doc>
           <type name="GObject.ParamSpec" c:type="GParamSpec*"/>
+        </parameter>
+      </parameters>
+    </callback>
+    <callback name="ValueHashFunc" c:type="GstValueHashFunc" version="1.28">
+      <doc xml:space="preserve">Used by gst_value_hash() to calculate a hash of @value.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE, or %FALSE if @value cannot be hashed.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="value" transfer-ownership="none">
+          <doc xml:space="preserve">a #GValue</doc>
+          <type name="GObject.Value" c:type="const GValue*"/>
+        </parameter>
+        <parameter name="res" direction="out" caller-allocates="0" transfer-ownership="full">
+          <doc xml:space="preserve">a location to store the hash value</doc>
+          <type name="guint" c:type="guint*"/>
         </parameter>
       </parameters>
     </callback>
@@ -49356,8 +49373,12 @@ Free-function: g_free</doc>
         <doc xml:space="preserve">a #GstValueDeserializeWithPSpecFunc</doc>
         <type name="ValueDeserializeWithPSpecFunc" c:type="GstValueDeserializeWithPSpecFunc"/>
       </field>
+      <field name="hash" version="1.28" writable="1">
+        <doc xml:space="preserve">a #GstValueHashFunc</doc>
+        <type name="ValueHashFunc" c:type="GstValueHashFunc"/>
+      </field>
       <field name="_gst_reserved" readable="0" private="1">
-        <array zero-terminated="0" fixed-size="3">
+        <array zero-terminated="0" fixed-size="2">
           <type name="gpointer" c:type="gpointer"/>
         </array>
       </field>
@@ -55508,6 +55529,24 @@ a reference to @v.</doc>
         <parameter name="value" transfer-ownership="none">
           <doc xml:space="preserve">a GValue initialized to GST_TYPE_STRUCTURE</doc>
           <type name="GObject.Value" c:type="const GValue*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="value_hash" c:identifier="gst_value_hash" version="1.28">
+      <doc xml:space="preserve">Compute a hash value of @value.
+#GValue considered as equals by gst_value_compare() will have the same hash value.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE, or %FALSE if @value cannot be hashed.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="value" transfer-ownership="none">
+          <doc xml:space="preserve">a #GValue to hash</doc>
+          <type name="GObject.Value" c:type="const GValue*"/>
+        </parameter>
+        <parameter name="res" direction="out" caller-allocates="0" transfer-ownership="full">
+          <doc xml:space="preserve">a location to store the hash value</doc>
+          <type name="guint" c:type="guint*"/>
         </parameter>
       </parameters>
     </function>
