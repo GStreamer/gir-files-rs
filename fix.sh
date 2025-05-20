@@ -103,3 +103,76 @@ xmlstarlet ed --inplace \
     --delete '//_:enumeration[@name="Edge"]/_:member[starts-with(@name, "edge_")]' \
     GES-1.0.gir
 
+# replace native D3D12 types
+xmlstarlet ed -L \
+    -i '///_:type[not(@name) and @c:type="ID3D12Resource*"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="ID3D12Resource*"]/@c:type' -v "gpointer" \
+    -i '///_:type[not(@name) and @c:type="ID3D12CommandAllocator*"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="ID3D12CommandAllocator*"]/@c:type' -v "gpointer" \
+    -i '///_:type[not(@name) and @c:type="ID3D12Device*"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="ID3D12Device*"]/@c:type' -v "gpointer" \
+    -i '///_:type[not(@name) and @c:type="ID3D12CommandList*"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="ID3D12CommandList*"]/@c:type' -v "gpointer" \
+    -i '///_:type[not(@name) and @c:type="ID3D12CommandList**"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="ID3D12CommandList**"]/@c:type' -v "gpointer*" \
+    -i '///_:type[not(@name) and @c:type="ID3D12Fence*"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="ID3D12Fence*"]/@c:type' -v "gpointer" \
+    -i '///_:type[not(@name) and @c:type="ID3D12Fence**"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="ID3D12Fence**"]/@c:type' -v "gpointer*" \
+    -i '///_:type[not(@name) and @c:type="ID3D12CommandQueue*"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="ID3D12CommandQueue*"]/@c:type' -v "gpointer" \
+    -i '///_:type[not(@name) and @c:type="ID3D12GraphicsCommandList*"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="ID3D12GraphicsCommandList*"]/@c:type' -v "gpointer" \
+    -i '///_:type[not(@name) and @c:type="ID3D12DescriptorHeap*"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="ID3D12DescriptorHeap*"]/@c:type' -v "gpointer" \
+    -i '///_:type[not(@name) and @c:type="ID3D11Texture2D*"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="ID3D11Texture2D*"]/@c:type' -v "gpointer" \
+    -i '///_:type[not(@name) and @c:type="ID3D11Device*"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="ID3D11Device*"]/@c:type' -v "gpointer" \
+    -i '///_:type[not(@name) and @c:type="IDXGIAdapter1*"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="IDXGIAdapter1*"]/@c:type' -v "gpointer" \
+    -i '///_:type[not(@name) and @c:type="IDXGIFactory2*"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="IDXGIFactory2*"]/@c:type' -v "gpointer" \
+    -i '///_:type[not(@name) and @c:type="HANDLE*"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="HANDLE*"]/@c:type' -v "gpointer*" \
+    -i '///_:type[not(@name) and @c:type="D3D12_RECT*"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="D3D12_RECT*"]/@c:type' -v "gpointer" \
+    -i '///_:type[not(@name) and @c:type="D3D12_PLACED_SUBRESOURCE_FOOTPRINT*"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="D3D12_PLACED_SUBRESOURCE_FOOTPRINT*"]/@c:type' -v "gpointer" \
+    -i '///_:type[not(@name) and @c:type="const LUID*"]' -t 'attr' -n 'name' -v "gconstpointer" \
+    -u '//_:type[@c:type="const LUID*"]/@c:type' -v "gconstpointer" \
+    -i '///_:type[not(@name) and @c:type="D3D12_RESOURCE_FLAGS"]' -t 'attr' -n 'name' -v "gint" \
+    -u '//_:type[@c:type="D3D12_RESOURCE_FLAGS"]/@c:type' -v "gint" \
+    -i '///_:type[not(@name) and @c:type="D3D12_HEAP_FLAGS"]' -t 'attr' -n 'name' -v "gint" \
+    -u '//_:type[@c:type="D3D12_HEAP_FLAGS"]/@c:type' -v "gint" \
+    -i '///_:type[not(@name) and @c:type="D3D12_FENCE_FLAGS"]' -t 'attr' -n 'name' -v "gint" \
+    -u '//_:type[@c:type="D3D12_FENCE_FLAGS"]/@c:type' -v "gint" \
+    -i '///_:type[not(@name) and @c:type="D3D12_RESOURCE_STATES"]' -t 'attr' -n 'name' -v "gint" \
+    -u '//_:type[@c:type="D3D12_RESOURCE_STATES"]/@c:type' -v "gint" \
+    -i '///_:type[not(@name) and @c:type="D3D12_COMMAND_LIST_TYPE"]' -t 'attr' -n 'name' -v "gint" \
+    -u '//_:type[@c:type="D3D12_COMMAND_LIST_TYPE"]/@c:type' -v "gint" \
+    -i '///_:type[not(@name) and @c:type="D3D12_RESOURCE_DIMENSION"]' -t 'attr' -n 'name' -v "gint" \
+    -u '//_:type[@c:type="D3D12_RESOURCE_DIMENSION"]/@c:type' -v "gint" \
+    -i '///_:type[not(@name) and @c:type="DXGI_FORMAT"]' -t 'attr' -n 'name' -v "gint" \
+    -u '//_:type[@c:type="DXGI_FORMAT"]/@c:type' -v "gint" \
+    -i '///_:type[not(@name) and @c:type="D3D12_FORMAT_SUPPORT1"]' -t 'attr' -n 'name' -v "gint" \
+    -u '//_:type[@c:type="D3D12_FORMAT_SUPPORT1"]/@c:type' -v "gint" \
+    -i '///_:type[not(@name) and @c:type="D3D12_FORMAT_SUPPORT2"]' -t 'attr' -n 'name' -v "gint" \
+    -u '//_:type[@c:type="D3D12_FORMAT_SUPPORT2"]/@c:type' -v "gint" \
+    -i '///_:type[not(@name) and @c:type="const D3D12_RESOURCE_DESC*"]' -t 'attr' -n 'name' -v "gconstpointer" \
+    -u '//_:type[@c:type="const D3D12_RESOURCE_DESC*"]/@c:type' -v "gconstpointer" \
+    -i '///_:type[not(@name) and @c:type="const D3D12_DESCRIPTOR_HEAP_DESC*"]' -t 'attr' -n 'name' -v "gconstpointer" \
+    -u '//_:type[@c:type="const D3D12_DESCRIPTOR_HEAP_DESC*"]/@c:type' -v "gconstpointer" \
+    -i '///_:type[not(@name) and @c:type="const D3D12_CLEAR_VALUE*"]' -t 'attr' -n 'name' -v "gconstpointer" \
+    -u '//_:type[@c:type="const D3D12_CLEAR_VALUE*"]/@c:type' -v "gconstpointer" \
+    -i '///_:type[not(@name) and @c:type="const D3D12_HEAP_PROPERTIES*"]' -t 'attr' -n 'name' -v "gconstpointer" \
+    -u '//_:type[@c:type="const D3D12_HEAP_PROPERTIES*"]/@c:type' -v "gconstpointer" \
+    -i '///_:type[not(@name) and @c:type="const D3D12_COMMAND_QUEUE_DESC*"]' -t 'attr' -n 'name' -v "gconstpointer" \
+    -u '//_:type[@c:type="const D3D12_COMMAND_QUEUE_DESC*"]/@c:type' -v "gconstpointer" \
+    -i '///_:type[not(@name) and @c:type="const D3D12_BLEND_DESC*"]' -t 'attr' -n 'name' -v "gconstpointer" \
+    -u '//_:type[@c:type="const D3D12_BLEND_DESC*"]/@c:type' -v "gconstpointer" \
+    -i '///_:type[not(@name) and @c:type="HRESULT"]' -t 'attr' -n 'name' -v "gint" \
+    -u '//_:type[@c:type="HRESULT"]/@c:type' -v "gint" \
+    -d '//_:record[@name="D3D12Frame"]' \
+    -d '//_:function[starts-with(@name, "d3d12_frame")]' \
+    GstD3D12-1.0.gir
