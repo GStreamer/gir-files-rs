@@ -3557,6 +3557,10 @@ into the frame data that the picture starts.</doc>
           </parameter>
         </parameters>
       </method>
+      <property name="disable-clip" version="1.28" writable="1" transfer-ownership="none" default-value="TRUE">
+        <doc xml:space="preserve">Disable dropping buffers that are out of segment</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </property>
       <property name="disable-passthrough" writable="1" transfer-ownership="none" default-value="FALSE">
         <doc xml:space="preserve">If set to %TRUE, baseparse will unconditionally force parsing of the
 incoming data. This can be required in the rare cases where the incoming

@@ -752,7 +752,7 @@ the tags after the life-time of @info, you will need to copy them.</doc>
       <function name="from_variant" c:identifier="gst_discoverer_info_from_variant" version="1.6">
         <doc xml:space="preserve">Parses a #GVariant as produced by gst_discoverer_info_to_variant()
 back to a #GstDiscovererInfo.</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">A newly-allocated #GstDiscovererInfo.</doc>
           <type name="DiscovererInfo" c:type="GstDiscovererInfo*"/>
         </return-value>
