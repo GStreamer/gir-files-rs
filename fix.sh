@@ -9,6 +9,7 @@ for file in *.gir; do
         -d '//_:doc/@filename' \
         -d '///_:source-position' \
         -d '//_:doc-version' \
+        -d '//_:method-inline' \
         "$file"
 done
 
@@ -25,6 +26,18 @@ xmlstarlet ed --inplace \
     --update '//*[@c:type="wl_shell*"]/@c:type' \
     --value gpointer \
     GstGLWayland-1.0.gir
+xmlstarlet ed --inplace \
+    --update '//*[@c:type="wl_display*"]/@c:type' \
+    --value gpointer \
+    --update '//*[@c:type="wl_registry*"]/@c:type' \
+    --value gpointer \
+    --update '//*[@c:type="wl_compositor*"]/@c:type' \
+    --value gpointer \
+    --update '//*[@c:type="wl_subcompositor*"]/@c:type' \
+    --value gpointer \
+    --update '//*[@c:type="wl_shell*"]/@c:type' \
+    --value gpointer \
+    GstVulkanWayland-1.0.gir
 
 # Change X11's Display* and xcb_connection_t* pointers to gpointer
 xmlstarlet ed --inplace \
@@ -37,6 +50,12 @@ xmlstarlet ed --inplace \
     --update '//*[@c:type="xcb_connection_t*"]/@c:type' \
     --value gpointer \
     GstGLX11-1.0.gir
+xmlstarlet ed --inplace \
+    --insert '//_:type[@c:type="xcb_connection_t*"]' \
+    --type attr --name 'name' --value 'gpointer' \
+    --update '//*[@c:type="xcb_connection_t*"]/@c:type' \
+    --value gpointer \
+    GstVulkanXCB-1.0.gir
 
 # Remove GstMemoryEGL and EGLImage
 xmlstarlet ed --inplace \
@@ -176,3 +195,4 @@ xmlstarlet ed -L \
     -d '//_:record[@name="D3D12Frame"]' \
     -d '//_:function[starts-with(@name, "d3d12_frame")]' \
     GstD3D12-1.0.gir
+
