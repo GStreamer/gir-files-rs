@@ -49972,7 +49972,7 @@ determine a order for the two provided values.</doc>
       <doc xml:space="preserve">The major version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MICRO" value="0" c:type="GST_VERSION_MICRO">
+    <constant name="VERSION_MICRO" value="1" c:type="GST_VERSION_MICRO">
       <doc xml:space="preserve">The micro version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
@@ -56859,9 +56859,11 @@ ranges) value.</doc>
       </parameters>
     </function>
     <function name="value_is_subset" c:identifier="gst_value_is_subset">
-      <doc xml:space="preserve">Check that @value1 is a subset of @value2.</doc>
+      <doc xml:space="preserve">Check that @value1 is a subset of @value2. If @value1 and @value2 is are
+fixed value, value1 must be a subset of value2 and not equal to @value2 to
+be a subset of @value2.</doc>
       <return-value transfer-ownership="none">
-        <doc xml:space="preserve">%TRUE is @value1 is a subset of @value2</doc>
+        <doc xml:space="preserve">%TRUE is @value1 is a subset, strict subset if both values are  of @value2</doc>
         <type name="gboolean" c:type="gboolean"/>
       </return-value>
       <parameters>
