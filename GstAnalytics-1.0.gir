@@ -2,109 +2,16 @@
 <!-- This file was automatically generated from C sources - DO NOT EDIT!
 To affect the contents of this file, edit the original C definitions,
 and/or use gtk-doc annotations.  -->
-<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:doc="http://www.gtk.org/introspection/doc/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
+<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
   <include name="Gst" version="1.0"/>
   <include name="GstBase" version="1.0"/>
   <include name="GstVideo" version="1.0"/>
   <package name="gstreamer-analytics-1.0"/>
-  <doc:format name="unknown"/>
   <namespace name="GstAnalytics" version="1.0" shared-library="libgstanalytics-1.0.so.0" c:identifier-prefixes="GstAnalytics,Gst" c:symbol-prefixes="gst_analytics,gst">
     <alias name="MtdType" c:type="GstAnalyticsMtdType">
       <doc xml:space="preserve">Type of analytics meta data</doc>
       <type name="guintptr" c:type="guintptr"/>
     </alias>
-    <record name="BatchBuffer" c:type="GstAnalyticsBatchBuffer" version="1.28">
-      <doc xml:space="preserve">The intended use of this struct is that analytics elements read the buffer or
-buffer list and potentially attach new #GstMeta with additional information.
-Only one of @buffer or @buffer_list is going to be set, or both are %NULL.
-
-Elements that need to modify @buffer (e.g. to attach a new meta) must first
-call gst_buffer_make_writable() and store the writable buffer in this struct.
-Similarly, a writable @buffer_list must be ensured with
-gst_buffer_list_make_writable().
-
-Modifying any other fields must be done with special care to ensure that the
-data flow of the stream is not broken.
-
-It is possible for @buffer and @buffer_list to be %NULL, e.g. if there was no
-buffer for this batch but there were serialized events like a gap event.
-
-Note that @serialized_events always contains all currently active serialized
-events and not only the changed events compared to the previous buffer.</doc>
-      <field name="sticky_events" writable="1">
-        <doc xml:space="preserve">All sticky #GstEvent that relate to this buffer</doc>
-        <array length="1" zero-terminated="0" c:type="GstEvent**">
-          <type name="Gst.Event" c:type="GstEvent*"/>
-        </array>
-      </field>
-      <field name="n_sticky_events" writable="1">
-        <doc xml:space="preserve">Number of sticky events.</doc>
-        <type name="gsize" c:type="gsize"/>
-      </field>
-      <field name="serialized_events" writable="1">
-        <doc xml:space="preserve">All non-sticky, serialized #GstEvent that arrived
-                    after the previous and before this buffer</doc>
-        <array length="3" zero-terminated="0" c:type="GstEvent**">
-          <type name="Gst.Event" c:type="GstEvent*"/>
-        </array>
-      </field>
-      <field name="n_serialized_events" writable="1">
-        <doc xml:space="preserve">Number of serialized events.</doc>
-        <type name="gsize" c:type="gsize"/>
-      </field>
-      <field name="buffer" writable="1">
-        <doc xml:space="preserve">The buffer, if any.</doc>
-        <type name="Gst.Buffer" c:type="GstBuffer*"/>
-      </field>
-      <field name="buffer_list" writable="1">
-        <doc xml:space="preserve">The buffer list, if any.</doc>
-        <type name="Gst.BufferList" c:type="GstBufferList*"/>
-      </field>
-      <field name="padding" readable="0" private="1">
-        <array zero-terminated="0" fixed-size="4">
-          <type name="gpointer" c:type="gpointer"/>
-        </array>
-      </field>
-      <method name="get_caps" c:identifier="gst_analytics_batch_buffer_get_caps" version="1.28">
-        <doc xml:space="preserve">Gets the #GstCaps from a buffer</doc>
-        <return-value transfer-ownership="none" nullable="1">
-          <doc xml:space="preserve">The #GstCaps if there are any</doc>
-          <type name="Gst.Caps" c:type="GstCaps*"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="buffer" transfer-ownership="none">
-            <doc xml:space="preserve">A #GstAnalyticsBatchBuffer</doc>
-            <type name="BatchBuffer" c:type="GstAnalyticsBatchBuffer*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="get_segment" c:identifier="gst_analytics_batch_buffer_get_segment" version="1.28">
-        <doc xml:space="preserve">Gets the #GstSegment from a buffer</doc>
-        <return-value transfer-ownership="none" nullable="1">
-          <doc xml:space="preserve">The #GstSegment if there is one</doc>
-          <type name="Gst.Segment" c:type="const GstSegment*"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="buffer" transfer-ownership="none">
-            <doc xml:space="preserve">A #GstAnalyticsBatchBuffer</doc>
-            <type name="BatchBuffer" c:type="GstAnalyticsBatchBuffer*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="get_stream_id" c:identifier="gst_analytics_batch_buffer_get_stream_id" version="1.28">
-        <doc xml:space="preserve">Gets the current stream id from a buffer</doc>
-        <return-value transfer-ownership="none" nullable="1">
-          <doc xml:space="preserve">The stream id if there is any</doc>
-          <type name="utf8" c:type="const gchar*"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="buffer" transfer-ownership="none">
-            <doc xml:space="preserve">A #GstAnalyticsBatchBuffer</doc>
-            <type name="BatchBuffer" c:type="GstAnalyticsBatchBuffer*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-    </record>
     <record name="BatchMeta" c:type="GstAnalyticsBatchMeta" version="1.28">
       <doc xml:space="preserve">This meta represents a batch of buffers from one or more streams together
 with the relevant events to be able to interpret the buffers and to be able
@@ -151,14 +58,24 @@ from the parent buffer of this meta.</doc>
         <doc xml:space="preserve">Index of the stream in the meta's stream array</doc>
         <type name="guint" c:type="guint"/>
       </field>
-      <field name="buffers" writable="1">
-        <doc xml:space="preserve">#GstAnalyticsBatchBuffer in this batch for this stream</doc>
-        <array length="2" zero-terminated="0" c:type="GstAnalyticsBatchBuffer*">
-          <type name="BatchBuffer" c:type="GstAnalyticsBatchBuffer"/>
+      <field name="sticky_events" writable="1">
+        <doc xml:space="preserve">The sticky events store before any of the mini objects in the @objects fields are processed</doc>
+        <array length="2" zero-terminated="0" c:type="GstEvent**">
+          <type name="Gst.Event" c:type="GstEvent*"/>
         </array>
       </field>
-      <field name="n_buffers" writable="1">
-        <doc xml:space="preserve">Number of buffers</doc>
+      <field name="n_sticky_events" writable="1">
+        <doc xml:space="preserve">Number of sticky events</doc>
+        <type name="gsize" c:type="gsize"/>
+      </field>
+      <field name="objects" writable="1">
+        <doc xml:space="preserve">#GstMiniObject in this batch for this stream. Those are serialized mini objects: buffers, bufferlists and serialized events</doc>
+        <array length="4" zero-terminated="0" c:type="GstMiniObject**">
+          <type name="Gst.MiniObject" c:type="GstMiniObject*"/>
+        </array>
+      </field>
+      <field name="n_objects" writable="1">
+        <doc xml:space="preserve">Number of objects</doc>
         <type name="gsize" c:type="gsize"/>
       </field>
       <field name="padding" readable="0" private="1">
@@ -166,6 +83,45 @@ from the parent buffer of this meta.</doc>
           <type name="gpointer" c:type="gpointer"/>
         </array>
       </field>
+      <method name="get_caps" c:identifier="gst_analytics_batch_stream_get_caps" version="1.28">
+        <doc xml:space="preserve">Gets the #GstCaps from a stream</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The #GstCaps if there are any</doc>
+          <type name="Gst.Caps" c:type="GstCaps*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="stream" transfer-ownership="none">
+            <doc xml:space="preserve">A #GstAnalyticsBatchStream</doc>
+            <type name="BatchStream" c:type="GstAnalyticsBatchStream*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_segment" c:identifier="gst_analytics_batch_stream_get_segment" version="1.28">
+        <doc xml:space="preserve">Gets the #GstSegment from a stream</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The #GstSegment if there is one</doc>
+          <type name="Gst.Segment" c:type="const GstSegment*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="stream" transfer-ownership="none">
+            <doc xml:space="preserve">A #GstAnalyticsBatchStream</doc>
+            <type name="BatchStream" c:type="GstAnalyticsBatchStream*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_stream_id" c:identifier="gst_analytics_batch_stream_get_stream_id" version="1.28">
+        <doc xml:space="preserve">Gets the current stream id from a stream</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The stream id if there is any</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="stream" transfer-ownership="none">
+            <doc xml:space="preserve">A #GstAnalyticsBatchStream</doc>
+            <type name="BatchStream" c:type="GstAnalyticsBatchStream*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
     </record>
     <constant name="CAPS_FEATURE_META_GST_ANALYTICS_BATCH_META" value="meta:GstAnalyticsBatchMeta" c:type="GST_CAPS_FEATURE_META_GST_ANALYTICS_BATCH_META" version="1.28">
       <doc xml:space="preserve">The caps feature to be used on streams that make use of this meta.</doc>
@@ -180,7 +136,7 @@ is generally expected to be allocated on the stack.</doc>
       </field>
       <field name="meta" writable="1">
         <doc xml:space="preserve">Instance of #GstAnalyticsRelationMeta where the analytics-metadata
-identified by @id is stored.</doc>
+identified by @id is stored</doc>
         <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
       </field>
       <method name="get_index_by_quark" c:identifier="gst_analytics_cls_mtd_get_index_by_quark" version="1.24">
@@ -280,7 +236,7 @@ is generally expected to be allocated on the stack.</doc>
       </field>
       <field name="meta" writable="1">
         <doc xml:space="preserve">Instance of #GstAnalyticsRelationMeta where the analytics-metadata
-identified by @id is stored.</doc>
+identified by @id is stored</doc>
         <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
       </field>
       <method name="get_id" c:identifier="gst_analytics_mtd_get_id" version="1.24">
@@ -403,7 +359,7 @@ is generally expected to be allocated on the stack.</doc>
       </field>
       <field name="meta" writable="1">
         <doc xml:space="preserve">Instance of #GstAnalyticsRelationMeta where the analytics-metadata
-identified by @id is stored.</doc>
+identified by @id is stored</doc>
         <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
       </field>
       <method name="get_confidence_lvl" c:identifier="gst_analytics_od_mtd_get_confidence_lvl" version="1.24">
@@ -776,6 +732,74 @@ must have a #GstVideoMeta attached</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="add_tensor_mtd" c:identifier="gst_analytics_relation_meta_add_tensor_mtd" version="1.28">
+        <doc xml:space="preserve">Add a new #GstAnalyticsTensorMtd holding a #GstTensor to @instance. The
+#GstTensor needs to be filled.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">Added successfully</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="instance" transfer-ownership="none">
+            <doc xml:space="preserve">Instance</doc>
+            <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
+          </instance-parameter>
+          <parameter name="num_dims" transfer-ownership="none">
+            <doc xml:space="preserve">The number of dimensions in the tensor</doc>
+            <type name="gsize" c:type="gsize"/>
+          </parameter>
+          <parameter name="tensor_mtd" direction="out" caller-allocates="1" transfer-ownership="none" nullable="1">
+            <doc xml:space="preserve">Handle update with newly added tensor mtd.
+ Add tensor mtd to @instance.</doc>
+            <type name="TensorMtd" c:type="GstAnalyticsTensorMtd*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="add_tensor_mtd_simple" c:identifier="gst_analytics_relation_meta_add_tensor_mtd_simple" version="1.28">
+        <doc xml:space="preserve">Add a new #GstAnalyticsTensorMtd holding a #GstTensor to @instance.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">Added successfully</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="instance" transfer-ownership="none">
+            <doc xml:space="preserve">Instance</doc>
+            <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
+          </instance-parameter>
+          <parameter name="id" transfer-ownership="none">
+            <doc xml:space="preserve">semantically identify the contents of the tensor</doc>
+            <type name="GLib.Quark" c:type="GQuark"/>
+          </parameter>
+          <parameter name="data_type" transfer-ownership="none">
+            <doc xml:space="preserve">#GstTensorDataType of tensor data</doc>
+            <type name="TensorDataType" c:type="GstTensorDataType"/>
+          </parameter>
+          <parameter name="data" transfer-ownership="full">
+            <doc xml:space="preserve">#GstBuffer holding tensor data</doc>
+            <type name="Gst.Buffer" c:type="GstBuffer*"/>
+          </parameter>
+          <parameter name="dims_order" transfer-ownership="none">
+            <doc xml:space="preserve">Indicate tensor dimension indexing order</doc>
+            <type name="TensorDimOrder" c:type="GstTensorDimOrder"/>
+          </parameter>
+          <parameter name="num_dims" transfer-ownership="none">
+            <doc xml:space="preserve">number of tensor dimensions</doc>
+            <type name="gsize" c:type="gsize"/>
+          </parameter>
+          <parameter name="dims" transfer-ownership="none">
+            <doc xml:space="preserve">size of tensor in each dimension.
+    A value of 0 means the dimension is dynamic.</doc>
+            <array length="4" zero-terminated="0" c:type="gsize*">
+              <type name="gsize" c:type="gsize"/>
+            </array>
+          </parameter>
+          <parameter name="tensor_mtd" direction="out" caller-allocates="1" transfer-ownership="none" nullable="1">
+            <doc xml:space="preserve">Handle update with newly added tensor mtd.
+ Add tensor mtd to @instance.</doc>
+            <type name="TensorMtd" c:type="GstAnalyticsTensorMtd*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="add_tracking_mtd" c:identifier="gst_analytics_relation_meta_add_tracking_mtd" version="1.24">
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">Added successfully</doc>
@@ -1020,6 +1044,29 @@ otherwise this method return FALSE and @rlt is invalid.</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="get_tensor_mtd" c:identifier="gst_analytics_relation_meta_get_tensor_mtd" version="1.28">
+        <doc xml:space="preserve">Fill @rlt if a analytics-meta with id == @an_meta_id exist in @meta instance,
+otherwise this method return FALSE and @rlt is invalid.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">TRUE if successful.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="meta" transfer-ownership="none">
+            <doc xml:space="preserve">Instance of #GstAnalyticsRelationMeta</doc>
+            <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
+          </instance-parameter>
+          <parameter name="an_meta_id" transfer-ownership="none">
+            <doc xml:space="preserve">Id of #GstAnalyticsTensorMtd instance to retrieve</doc>
+            <type name="guint" c:type="guint"/>
+          </parameter>
+          <parameter name="rlt" direction="out" caller-allocates="1" transfer-ownership="none">
+            <doc xml:space="preserve">Will be filled with relatable
+   meta</doc>
+            <type name="TensorMtd" c:type="GstAnalyticsTensorMtd*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="get_tracking_mtd" c:identifier="gst_analytics_relation_meta_get_tracking_mtd" version="1.24">
         <doc xml:space="preserve">Fill @rlt if a analytics-meta with id == @an_meta_id exist in @meta instance,
 otherwise this method return FALSE and @rlt is invalid.</doc>
@@ -1251,7 +1298,7 @@ Ids must have been obtained a call to
       </field>
       <field name="meta" writable="1">
         <doc xml:space="preserve">Instance of #GstAnalyticsRelationMeta where the analytics-metadata
-identified by @id is stored.</doc>
+identified by @id is stored</doc>
         <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
       </field>
       <method name="get_mask" c:identifier="gst_analytics_segmentation_mtd_get_mask" version="1.26">
@@ -1523,6 +1570,50 @@ Otherwise FALSE will be returned.</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="set_simple" c:identifier="gst_tensor_set_simple" version="1.28">
+        <doc xml:space="preserve">Sets the content of a #GstTensor of @dims_order ROW_MAJOR or COLUMN_MAJOR and
+with an interleaved layout. The #GstTensor must have exactly num_dims.
+
+For example, a two-dimensional tensor with 32 rows and 4 columns, @dims would
+be the two element array `[32, 4]`.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">TRUE if it coudl be set correctly</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="tensor" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstTensor</doc>
+            <type name="Tensor" c:type="GstTensor*"/>
+          </instance-parameter>
+          <parameter name="id" transfer-ownership="none">
+            <doc xml:space="preserve">semantically identify the contents of the tensor</doc>
+            <type name="GLib.Quark" c:type="GQuark"/>
+          </parameter>
+          <parameter name="data_type" transfer-ownership="none">
+            <doc xml:space="preserve">#GstTensorDataType of tensor data</doc>
+            <type name="TensorDataType" c:type="GstTensorDataType"/>
+          </parameter>
+          <parameter name="data" transfer-ownership="full">
+            <doc xml:space="preserve">#GstBuffer holding tensor data</doc>
+            <type name="Gst.Buffer" c:type="GstBuffer*"/>
+          </parameter>
+          <parameter name="dims_order" transfer-ownership="none">
+            <doc xml:space="preserve">Indicate tensor dimension indexing order</doc>
+            <type name="TensorDimOrder" c:type="GstTensorDimOrder"/>
+          </parameter>
+          <parameter name="num_dims" transfer-ownership="none">
+            <doc xml:space="preserve">number of tensor dimensions</doc>
+            <type name="gsize" c:type="gsize"/>
+          </parameter>
+          <parameter name="dims" transfer-ownership="none">
+            <doc xml:space="preserve">size of tensor in each dimension.
+    A value of 0 means the dimension is dynamic.</doc>
+            <array length="4" zero-terminated="0" c:type="gsize*">
+              <type name="gsize" c:type="gsize"/>
+            </array>
+          </parameter>
+        </parameters>
+      </method>
       <function name="data_type_get_name" c:identifier="gst_tensor_data_type_get_name" version="1.28">
         <doc xml:space="preserve">Get a string version of the data type</doc>
         <return-value transfer-ownership="none">
@@ -1758,6 +1849,49 @@ otherwise NULL</doc>
         </return-value>
       </function>
     </record>
+    <record name="TensorMtd" c:type="GstAnalyticsTensorMtd" version="1.28">
+      <doc xml:space="preserve">This type of metadata holds a tensor. It can be used to store tensor as
+analytics-meta for their ability to relate to each others. For example
+in a multi-model analytics pipeline, we sometime have one model input match
+the output of the other model. In this context it can be useful to keep the
+ancestry relation between first tensor, output of first inference, and the
+second tensor, output from second inference. Another use-case for
+#GstAnalyticsTensorMtd is to transport tensors from inference element to a
+post-processing element using a computing graph framework, like ONNX.
+Essentially #GstAnalyticsTensorMtd is a GstBuffer encapsulated by a
+analytics-meta with additional parameters describing the tensor.
+
+Since 1.28</doc>
+      <field name="id" writable="1">
+        <doc xml:space="preserve">Instance identifier</doc>
+        <type name="guint" c:type="guint"/>
+      </field>
+      <field name="meta" writable="1">
+        <doc xml:space="preserve">Instance of #GstAnalyticsRelationMeta where the analytics-metadata
+identified by @id is stored</doc>
+        <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
+      </field>
+      <method name="get_tensor" c:identifier="gst_analytics_tensor_mtd_get_tensor" version="1.28">
+        <doc xml:space="preserve">Get tensor</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">a #GstTensor</doc>
+          <type name="Tensor" c:type="GstTensor*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="instance" transfer-ownership="none">
+            <doc xml:space="preserve">Instance of #GstAnalyticsTensorMtd</doc>
+            <type name="TensorMtd" c:type="const GstAnalyticsTensorMtd*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <function name="get_mtd_type" c:identifier="gst_analytics_tensor_mtd_get_mtd_type" version="1.28">
+        <doc xml:space="preserve">Get an id that represent tensor metadata type</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">Opaque id of the #GstAnalyticsMtd type</doc>
+          <type name="MtdType" c:type="GstAnalyticsMtdType"/>
+        </return-value>
+      </function>
+    </record>
     <record name="TrackingMtd" c:type="GstAnalyticsTrackingMtd" version="1.24">
       <doc xml:space="preserve">Store information on results of object tracking</doc>
       <field name="id" writable="1">
@@ -1766,7 +1900,7 @@ otherwise NULL</doc>
       </field>
       <field name="meta" writable="1">
         <doc xml:space="preserve">Instance of #GstAnalyticsRelationMeta where the analytics-metadata
-identified by @id is stored.</doc>
+identified by @id is stored</doc>
         <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
       </field>
       <method name="get_info" c:identifier="gst_analytics_tracking_mtd_get_info" version="1.24">
@@ -2138,6 +2272,13 @@ metadata type.</doc>
     <function name="tensor_meta_get_info" c:identifier="gst_tensor_meta_get_info" moved-to="TensorMeta.get_info" version="1.26" introspectable="0">
       <return-value transfer-ownership="none">
         <type name="Gst.MetaInfo" c:type="const GstMetaInfo*"/>
+      </return-value>
+    </function>
+    <function name="tensor_mtd_get_mtd_type" c:identifier="gst_analytics_tensor_mtd_get_mtd_type" moved-to="TensorMtd.get_mtd_type" version="1.28">
+      <doc xml:space="preserve">Get an id that represent tensor metadata type</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">Opaque id of the #GstAnalyticsMtd type</doc>
+        <type name="MtdType" c:type="GstAnalyticsMtdType"/>
       </return-value>
     </function>
     <function name="tracking_mtd_get_mtd_type" c:identifier="gst_analytics_tracking_mtd_get_mtd_type" moved-to="TrackingMtd.get_mtd_type" version="1.24">
