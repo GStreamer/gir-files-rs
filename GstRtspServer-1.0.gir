@@ -10293,7 +10293,7 @@ It remains valid for as long as @trans is valid.</doc>
           </instance-parameter>
         </parameters>
       </method>
-      <method name="is_timed_out" c:identifier="gst_rtsp_stream_transport_is_timed_out">
+      <method name="is_timed_out" c:identifier="gst_rtsp_stream_transport_is_timed_out" glib:get-property="timed-out">
         <doc xml:space="preserve">Check if @trans is timed out.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">%TRUE if @trans timed out.</doc>
@@ -10617,6 +10617,10 @@ passed @tr.</doc>
           </parameter>
         </parameters>
       </method>
+      <property name="timed-out" version="1.28" transfer-ownership="none" getter="is_timed_out" default-value="FALSE">
+        <doc xml:space="preserve">Whether this transport is timed out</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </property>
       <field name="parent">
         <doc xml:space="preserve">parent instance</doc>
         <type name="GObject.Object" c:type="GObject"/>
