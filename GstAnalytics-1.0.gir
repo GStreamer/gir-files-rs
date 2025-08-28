@@ -1896,7 +1896,7 @@ analysis meta.</doc>
       </parameters>
     </function>
     <function name="buffer_add_tensor_meta" c:identifier="gst_buffer_add_tensor_meta" version="1.26">
-      <doc xml:space="preserve">Adds a #GstTensorMeta to a buffer or returns the existing one</doc>
+      <doc xml:space="preserve">Adds a #GstTensorMeta to a buffer</doc>
       <return-value transfer-ownership="none">
         <doc xml:space="preserve">The new #GstTensorMeta</doc>
         <type name="TensorMeta" c:type="GstTensorMeta*"/>
