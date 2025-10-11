@@ -763,13 +763,13 @@ For use in control source implementations.</doc>
         </parameters>
       </method>
       <method name="get_all" c:identifier="gst_timed_value_control_source_get_all">
-        <doc xml:space="preserve">Returns a read-only copy of the list of #GstTimedValue for the given property.
+        <doc xml:space="preserve">Returns a read-only copy of the list of #GstControlPoint for the given property.
 Free the list after done with it.</doc>
         <return-value transfer-ownership="container">
           <doc xml:space="preserve">a copy
 of the list, or %NULL if the property isn't handled by the controller</doc>
           <type name="GLib.List" c:type="GList*">
-            <type name="Gst.TimedValue"/>
+            <type name="ControlPoint"/>
           </type>
         </return-value>
         <parameters>
