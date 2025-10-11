@@ -2,14 +2,13 @@
 <!-- This file was automatically generated from C sources - DO NOT EDIT!
 To affect the contents of this file, edit the original C definitions,
 and/or use gtk-doc annotations.  -->
-<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:doc="http://www.gtk.org/introspection/doc/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
+<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
   <include name="GLib" version="2.0"/>
   <include name="GModule" version="2.0"/>
   <include name="GObject" version="2.0"/>
   <include name="Gst" version="1.0"/>
   <package name="gstreamer-controller-1.0"/>
   <c:include name="gst/controller/controller.h"/>
-  <doc:format name="unknown"/>
   <namespace name="GstController" version="1.0" shared-library="libgstcontroller-1.0.so.0" c:identifier-prefixes="Gst" c:symbol-prefixes="gst">
     <class name="ARGBControlBinding" c:symbol-prefix="argb_control_binding" c:type="GstARGBControlBinding" parent="Gst.ControlBinding" glib:type-name="GstARGBControlBinding" glib:get-type="gst_argb_control_binding_get_type" glib:type-struct="ARGBControlBindingClass">
       <doc xml:space="preserve">A value mapping object that attaches multiple control sources to a guint
@@ -115,6 +114,18 @@ color component off and a value of 1.0 will be the color level.</doc>
     <function-macro name="ARGB_CONTROL_BINDING_GET_CLASS" c:identifier="GST_ARGB_CONTROL_BINDING_GET_CLASS" introspectable="0">
       <parameters>
         <parameter name="obj">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="CONTROLLER_DEPRECATED_FOR" c:identifier="GST_CONTROLLER_DEPRECATED_FOR" version="1.28" introspectable="0">
+      <parameters>
+        <parameter name="f">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="CONTROLLER_DEPRECATED_TYPE_FOR" c:identifier="GST_CONTROLLER_DEPRECATED_TYPE_FOR" version="1.28" introspectable="0">
+      <parameters>
+        <parameter name="f">
         </parameter>
       </parameters>
     </function-macro>
@@ -762,9 +773,10 @@ For use in control source implementations.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="get_all" c:identifier="gst_timed_value_control_source_get_all">
+      <method name="get_all" c:identifier="gst_timed_value_control_source_get_all" deprecated="1" deprecated-version="1.28">
         <doc xml:space="preserve">Returns a read-only copy of the list of #GstControlPoint for the given property.
 Free the list after done with it.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_timed_value_control_source_list_control_points() instead.</doc-deprecated>
         <return-value transfer-ownership="container">
           <doc xml:space="preserve">a copy
 of the list, or %NULL if the property isn't handled by the controller</doc>
@@ -790,6 +802,28 @@ of the list, or %NULL if the property isn't handled by the controller</doc>
             <doc xml:space="preserve">the #GstTimedValueControlSource to get the number of values from</doc>
             <type name="TimedValueControlSource" c:type="GstTimedValueControlSource*"/>
           </instance-parameter>
+        </parameters>
+      </method>
+      <method name="list_control_points" c:identifier="gst_timed_value_control_source_list_control_points" version="1.28">
+        <doc xml:space="preserve">Returns an array of #GstTimedValue representing the control points
+that have been set on this control source. To modify the value of a
+control point, use #gst_timed_value_control_source_set.</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">an array of
+control points, or %NULL if no control points are set.</doc>
+          <array length="0" zero-terminated="0" c:type="GstTimedValue*">
+            <type name="Gst.TimedValue" c:type="GstTimedValue"/>
+          </array>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstTimedValueControlSource to get the list from</doc>
+            <type name="TimedValueControlSource" c:type="GstTimedValueControlSource*"/>
+          </instance-parameter>
+          <parameter name="n_control_points" direction="out" caller-allocates="0" transfer-ownership="full">
+            <doc xml:space="preserve">location to store the number of control points</doc>
+            <type name="gsize" c:type="gsize*"/>
+          </parameter>
         </parameters>
       </method>
       <method name="set" c:identifier="gst_timed_value_control_source_set">
