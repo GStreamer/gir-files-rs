@@ -10,7 +10,7 @@ and/or use gtk-doc annotations.  -->
   <c:include name="gst/gst.h"/>
   <doc:format name="unknown"/>
   <namespace name="Gst" version="1.0" shared-library="libgstreamer-1.0.so.0" c:identifier-prefixes="Gst" c:symbol-prefixes="gst">
-    <alias name="BufferMapInfo" c:type="GstBufferMapInfo" introspectable="0">
+    <alias name="BufferMapInfo" c:type="GstBufferMapInfo" introspectable="0" deprecated="1" deprecated-version="1.28">
       <doc xml:space="preserve">Alias for #GstMapInfo to be used with g_auto():
 ```c
 void my_func(GstBuffer *buf)
@@ -23,10 +23,8 @@ void my_func(GstBuffer *buf)
 }
 ```
 
-#GstMapInfo cannot be used with g_auto() because it is ambiguous whether it
-needs to be unmapped using gst_buffer_unmap() or gst_memory_unmap().
-
 See also #GstMemoryMapInfo.</doc>
+      <doc-deprecated xml:space="preserve">Use #GstMapInfo instead.</doc-deprecated>
       <type name="MapInfo" c:type="GstMapInfo"/>
     </alias>
     <alias name="ClockID" c:type="GstClockID">
@@ -45,7 +43,7 @@ See also #GstMemoryMapInfo.</doc>
       <doc xml:space="preserve">A type defining the type of an element factory.</doc>
       <type name="guint64" c:type="guint64"/>
     </alias>
-    <alias name="MemoryMapInfo" c:type="GstMemoryMapInfo" introspectable="0">
+    <alias name="MemoryMapInfo" c:type="GstMemoryMapInfo" introspectable="0" deprecated="1" deprecated-version="1.28">
       <doc xml:space="preserve">Alias for #GstMapInfo to be used with g_auto():
 ```c
 void my_func(GstMemory *mem)
@@ -58,10 +56,8 @@ void my_func(GstMemory *mem)
 }
 ```
 
-#GstMapInfo cannot be used with g_auto() because it is ambiguous whether it
-needs to be unmapped using gst_buffer_unmap() or gst_memory_unmap().
-
 See also #GstBufferMapInfo.</doc>
+      <doc-deprecated xml:space="preserve">Use #GstMapInfo instead.</doc-deprecated>
       <type name="MapInfo" c:type="GstMapInfo"/>
     </alias>
     <function-macro name="ALLOCATOR" c:identifier="GST_ALLOCATOR" introspectable="0">
@@ -3543,7 +3539,7 @@ When @meta is set to %NULL, the item will be removed from the buffer.</doc>
           <doc xml:space="preserve">a #GstBuffer</doc>
           <type name="Buffer" c:type="GstBuffer*"/>
         </parameter>
-        <parameter name="meta" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1">
+        <parameter name="meta" direction="inout" caller-allocates="0" transfer-ownership="full" nullable="1" allow-none="1">
           <doc xml:space="preserve">a pointer to a #GstMeta</doc>
           <type name="Meta" c:type="GstMeta**"/>
         </parameter>
@@ -3897,7 +3893,7 @@ removing or modifying.</doc>
         <type name="gboolean" c:type="gboolean"/>
       </return-value>
       <parameters>
-        <parameter name="buffer" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1">
+        <parameter name="buffer" direction="inout" caller-allocates="0" transfer-ownership="full" nullable="1" allow-none="1">
           <doc xml:space="preserve">pointer to the buffer</doc>
           <type name="Buffer" c:type="GstBuffer**"/>
         </parameter>
@@ -5812,7 +5808,7 @@ evaluates to @def_return.</doc>
       </parameters>
     </function-macro>
     <function-macro name="CAT_DEBUG" c:identifier="GST_CAT_DEBUG" introspectable="0">
-      <doc xml:space="preserve">Output an debugging message in the given category.
+      <doc xml:space="preserve">Output a debugging message in the given category.
 
 There is no need to finish the end of the message string with a newline
 character, a newline character will be added automatically.</doc>
@@ -5826,7 +5822,39 @@ character, a newline character will be added automatically.</doc>
       </parameters>
     </function-macro>
     <function-macro name="CAT_DEBUG_OBJECT" c:identifier="GST_CAT_DEBUG_OBJECT" introspectable="0">
-      <doc xml:space="preserve">Output an debugging message belonging to the given object in the given category.
+      <doc xml:space="preserve">Output a debugging message belonging to the given object in the given category.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="cat">
+          <doc xml:space="preserve">category to use</doc>
+        </parameter>
+        <parameter name="obj">
+          <doc xml:space="preserve">the #GObject the message belongs to</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="CAT_DEBUG_ONCE" c:identifier="GST_CAT_DEBUG_ONCE" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a debugging message in the given category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="cat">
+          <doc xml:space="preserve">category to use</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="CAT_DEBUG_ONCE_OBJECT" c:identifier="GST_CAT_DEBUG_ONCE_OBJECT" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a debugging message belonging to the given object in the given
+category exactly once per statement.
 
 There is no need to finish the end of the message string with a newline
 character, a newline character will be added automatically.</doc>
@@ -5873,6 +5901,38 @@ character, a newline character will be added automatically.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <function-macro name="CAT_ERROR_ONCE" c:identifier="GST_CAT_ERROR_ONCE" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output an error message in the given category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="cat">
+          <doc xml:space="preserve">category to use</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="CAT_ERROR_ONCE_OBJECT" c:identifier="GST_CAT_ERROR_ONCE_OBJECT" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output an error message belonging to the given object in the given category
+exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="cat">
+          <doc xml:space="preserve">category to use</doc>
+        </parameter>
+        <parameter name="obj">
+          <doc xml:space="preserve">the #GObject the message belongs to</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
     <function-macro name="CAT_FIXME" c:identifier="GST_CAT_FIXME" introspectable="0">
       <doc xml:space="preserve">Output an fixme message in the given category.
 
@@ -5889,6 +5949,38 @@ character, a newline character will be added automatically.</doc>
     </function-macro>
     <function-macro name="CAT_FIXME_OBJECT" c:identifier="GST_CAT_FIXME_OBJECT" introspectable="0">
       <doc xml:space="preserve">Output a fixme message belonging to the given object in the given category.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="cat">
+          <doc xml:space="preserve">category to use</doc>
+        </parameter>
+        <parameter name="obj">
+          <doc xml:space="preserve">the #GObject the message belongs to</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="CAT_FIXME_ONCE" c:identifier="GST_CAT_FIXME_ONCE" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a fixme message in the given category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="cat">
+          <doc xml:space="preserve">category to use</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="CAT_FIXME_ONCE_OBJECT" c:identifier="GST_CAT_FIXME_ONCE_OBJECT" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a fixme message belonging to the given object in the given category
+exactly once per statement.
 
 There is no need to finish the end of the message string with a newline
 character, a newline character will be added automatically.</doc>
@@ -5936,10 +6028,42 @@ character, a newline character will be added automatically.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <function-macro name="CAT_INFO_ONCE" c:identifier="GST_CAT_INFO_ONCE" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output an informational message in the given category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="cat">
+          <doc xml:space="preserve">category to use</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="CAT_INFO_ONCE_OBJECT" c:identifier="GST_CAT_INFO_ONCE_OBJECT" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output an informational message belonging to the given object in the given
+category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="cat">
+          <doc xml:space="preserve">category to use</doc>
+        </parameter>
+        <parameter name="obj">
+          <doc xml:space="preserve">the #GObject the message belongs to</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
     <function-macro name="CAT_LEVEL_LOG" c:identifier="GST_CAT_LEVEL_LOG" introspectable="0">
-      <doc xml:space="preserve">Outputs a debugging message. This is the most general macro for outputting
-debugging messages. You will probably want to use one of the ones described
-below.
+      <doc xml:space="preserve">Outputs a debugging message with a specific category and level. This is the
+most general macro for this purpose. You will probably want to use one of
+the simpler ones described below.
 
 There is no need to finish the end of the debug message with a newline
 character, a newline character will be added automatically.</doc>
@@ -5959,9 +6083,58 @@ character, a newline character will be added automatically.</doc>
       </parameters>
     </function-macro>
     <function-macro name="CAT_LEVEL_LOG_ID" c:identifier="GST_CAT_LEVEL_LOG_ID" version="1.22" introspectable="0">
-      <doc xml:space="preserve">Outputs a debugging message. This is the most general macro for outputting
-debugging messages. You will probably want to use one of the ones described
-below.
+      <doc xml:space="preserve">Outputs a debugging message with an identifier. This is the most general
+macro for this purpose. You will probably want to use one of the simpler
+ones described below.
+
+There is no need to finish the end of the debug message with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="cat">
+          <doc xml:space="preserve">category to use</doc>
+        </parameter>
+        <parameter name="level">
+          <doc xml:space="preserve">the severity of the message</doc>
+        </parameter>
+        <parameter name="id">
+          <doc xml:space="preserve">the identifier of the object this message
+    relates to, or %NULL if none</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">A printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="CAT_LEVEL_LOG_ONCE" c:identifier="GST_CAT_LEVEL_LOG_ONCE" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Outputs a debugging message with a specific category and level exactly once
+per statement.
+
+This is the most general macro for this purpose. You will probably
+want to use one of the simpler ones described below.
+
+There is no need to finish the end of the debug message with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="cat">
+          <doc xml:space="preserve">category to use</doc>
+        </parameter>
+        <parameter name="level">
+          <doc xml:space="preserve">the severity of the message</doc>
+        </parameter>
+        <parameter name="object">
+          <doc xml:space="preserve">the #GObject the message belongs to or %NULL if none</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">A printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="CAT_LEVEL_LOG_ONCE_ID" c:identifier="GST_CAT_LEVEL_LOG_ONCE_ID" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Outputs a debugging message with a specific category, level, and identifier
+exactly once per statement.
+
+This is the most general macro for this purpose. You will probably want to
+use one of the simpler ones described below.
 
 There is no need to finish the end of the debug message with a newline
 character, a newline character will be added automatically.</doc>
@@ -5982,7 +6155,7 @@ character, a newline character will be added automatically.</doc>
       </parameters>
     </function-macro>
     <function-macro name="CAT_LOG" c:identifier="GST_CAT_LOG" introspectable="0">
-      <doc xml:space="preserve">Output an logging message in the given category.
+      <doc xml:space="preserve">Output a logging message in the given category.
 
 There is no need to finish the end of the message string with a newline
 character, a newline character will be added automatically.</doc>
@@ -5996,7 +6169,40 @@ character, a newline character will be added automatically.</doc>
       </parameters>
     </function-macro>
     <function-macro name="CAT_LOG_OBJECT" c:identifier="GST_CAT_LOG_OBJECT" introspectable="0">
-      <doc xml:space="preserve">Output an logging message belonging to the given object in the given category.
+      <doc xml:space="preserve">Output a logging message belonging to the given object in the given
+category.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="cat">
+          <doc xml:space="preserve">category to use</doc>
+        </parameter>
+        <parameter name="obj">
+          <doc xml:space="preserve">the #GObject the message belongs to</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="CAT_LOG_ONCE" c:identifier="GST_CAT_LOG_ONCE" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a logging message in the given category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="cat">
+          <doc xml:space="preserve">category to use</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="CAT_LOG_ONCE_OBJECT" c:identifier="GST_CAT_LOG_ONCE_OBJECT" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a logging message belonging to the given object in the given
+category exactly once per statement.
 
 There is no need to finish the end of the message string with a newline
 character, a newline character will be added automatically.</doc>
@@ -6111,6 +6317,38 @@ character, a newline character will be added automatically.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <function-macro name="CAT_TRACE_ONCE" c:identifier="GST_CAT_TRACE_ONCE" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a tracing message in the given category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="cat">
+          <doc xml:space="preserve">category to use</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="CAT_TRACE_ONCE_OBJECT" c:identifier="GST_CAT_TRACE_ONCE_OBJECT" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a tracing message belonging to the given object in the given
+category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="cat">
+          <doc xml:space="preserve">category to use</doc>
+        </parameter>
+        <parameter name="obj">
+          <doc xml:space="preserve">the #GObject the message belongs to</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
     <function-macro name="CAT_WARNING" c:identifier="GST_CAT_WARNING" introspectable="0">
       <doc xml:space="preserve">Output an warning message in the given category.
 
@@ -6127,6 +6365,38 @@ character, a newline character will be added automatically.</doc>
     </function-macro>
     <function-macro name="CAT_WARNING_OBJECT" c:identifier="GST_CAT_WARNING_OBJECT" introspectable="0">
       <doc xml:space="preserve">Output a warning message belonging to the given object in the given category.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="cat">
+          <doc xml:space="preserve">category to use</doc>
+        </parameter>
+        <parameter name="obj">
+          <doc xml:space="preserve">the #GObject the message belongs to</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="CAT_WARNING_ONCE" c:identifier="GST_CAT_WARNING_ONCE" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a warning message in the given category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="cat">
+          <doc xml:space="preserve">category to use</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="CAT_WARNING_ONCE_OBJECT" c:identifier="GST_CAT_WARNING_ONCE_OBJECT" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a warning message belonging to the given object in the given
+category exactly once per statement.
 
 There is no need to finish the end of the message string with a newline
 character, a newline character will be added automatically.</doc>
@@ -6342,9 +6612,12 @@ The difference is calculated as @e - @s.</doc>
       </parameters>
     </function-macro>
     <function-macro name="CTX_DEBUG" c:identifier="GST_CTX_DEBUG" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a debug message in the specified context.
+      <doc xml:space="preserve">Output a debug message in the specified context.
 If this exact message was already logged from the same location with this
 context, it will not be logged again unless the context has been reset.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.
 
 Example:
 ``` c
@@ -6367,7 +6640,10 @@ for (i = 0; i &lt; 1000; i++) {
       </parameters>
     </function-macro>
     <function-macro name="CTX_DEBUG_ID" c:identifier="GST_CTX_DEBUG_ID" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a debug message in the specified context.</doc>
+      <doc xml:space="preserve">Output a debug message for the given identifier in the specified context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
@@ -6376,12 +6652,16 @@ for (i = 0; i &lt; 1000; i++) {
           <doc xml:space="preserve">an object ID or %NULL</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_DEBUG_OBJECT" c:identifier="GST_CTX_DEBUG_OBJECT" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs an info message in the specified context.</doc>
+      <doc xml:space="preserve">Output a debugging message belonging to the given object in the specified
+context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
@@ -6390,23 +6670,29 @@ for (i = 0; i &lt; 1000; i++) {
           <doc xml:space="preserve">a #GObject or %NULL</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_ERROR" c:identifier="GST_CTX_ERROR" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs an error message in the specified context.</doc>
+      <doc xml:space="preserve">Output an error message in the specified context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_ERROR_ID" c:identifier="GST_CTX_ERROR_ID" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs an error message in the specified context.</doc>
+      <doc xml:space="preserve">Output an error message for the given identifier in the specified context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
@@ -6415,12 +6701,16 @@ for (i = 0; i &lt; 1000; i++) {
           <doc xml:space="preserve">an object ID or %NULL</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_ERROR_OBJECT" c:identifier="GST_CTX_ERROR_OBJECT" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs an error message in the specified context.</doc>
+      <doc xml:space="preserve">Output an error message belonging to the given object in the specified
+context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
@@ -6429,23 +6719,29 @@ for (i = 0; i &lt; 1000; i++) {
           <doc xml:space="preserve">a #GObject or %NULL</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_FIXME" c:identifier="GST_CTX_FIXME" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a fixme message in the specified context.</doc>
+      <doc xml:space="preserve">Output a fixme message in the specified context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_FIXME_ID" c:identifier="GST_CTX_FIXME_ID" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a fixme message in the specified context.</doc>
+      <doc xml:space="preserve">Output a fixme message for the given identifier in the specified context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
@@ -6454,12 +6750,16 @@ for (i = 0; i &lt; 1000; i++) {
           <doc xml:space="preserve">an object ID or %NULL</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_FIXME_OBJECT" c:identifier="GST_CTX_FIXME_OBJECT" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a fixme message in the specified context.</doc>
+      <doc xml:space="preserve">Output a fixme message belonging to the given object in the specified
+context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
@@ -6468,23 +6768,29 @@ for (i = 0; i &lt; 1000; i++) {
           <doc xml:space="preserve">a #GObject or %NULL</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_INFO" c:identifier="GST_CTX_INFO" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs an info message in the specified context.</doc>
+      <doc xml:space="preserve">Output an info message in the specified context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_INFO_ID" c:identifier="GST_CTX_INFO_ID" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs an info message in the specified context.</doc>
+      <doc xml:space="preserve">Output an info message for the given identifier in the specified context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
@@ -6493,12 +6799,16 @@ for (i = 0; i &lt; 1000; i++) {
           <doc xml:space="preserve">an object ID or %NULL</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_INFO_OBJECT" c:identifier="GST_CTX_INFO_OBJECT" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs an info message in the specified context.</doc>
+      <doc xml:space="preserve">Output an informational message belonging to the given object in the
+specified context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
@@ -6507,12 +6817,17 @@ for (i = 0; i &lt; 1000; i++) {
           <doc xml:space="preserve">a #GObject or %NULL</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_LEVEL_LOG" c:identifier="GST_CTX_LEVEL_LOG" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a memory dump message in the specified context.</doc>
+      <doc xml:space="preserve">Outputs a debugging message in the specified context with the specified
+level. This is the most general macro for this purpose. You will probably
+want to use one of the simpler ones described below.
+
+There is no need to finish the end of the debug message with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
@@ -6524,12 +6839,14 @@ for (i = 0; i &lt; 1000; i++) {
           <doc xml:space="preserve">an object or %NULL</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_LEVEL_LOG_ID" c:identifier="GST_CTX_LEVEL_LOG_ID" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a memory dump message in the specified context.</doc>
+      <doc xml:space="preserve">Outputs a debugging message with an identifier in the specified context
+with the specified level. This is the most general macro for this purpose.
+You will probably want to use one of the simpler ones described below.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
@@ -6541,23 +6858,29 @@ for (i = 0; i &lt; 1000; i++) {
           <doc xml:space="preserve">an object or %NULL</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_LOG" c:identifier="GST_CTX_LOG" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a log message in the specified context.</doc>
+      <doc xml:space="preserve">Output a log message in the specified context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_LOG_ID" c:identifier="GST_CTX_LOG_ID" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a log message in the specified context.</doc>
+      <doc xml:space="preserve">Output a log message for the given identifier in the specified context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
@@ -6566,12 +6889,16 @@ for (i = 0; i &lt; 1000; i++) {
           <doc xml:space="preserve">an object ID or %NULL</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_LOG_OBJECT" c:identifier="GST_CTX_LOG_OBJECT" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a log message in the specified context.</doc>
+      <doc xml:space="preserve">Output a logging message belonging to the given object in the specified
+context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
@@ -6580,62 +6907,29 @@ for (i = 0; i &lt; 1000; i++) {
           <doc xml:space="preserve">a #GObject or %NULL</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
-        </parameter>
-      </parameters>
-    </function-macro>
-    <function-macro name="CTX_MEMDUMP" c:identifier="GST_CTX_MEMDUMP" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a memory dump message in the specified context.</doc>
-      <parameters>
-        <parameter name="ctx">
-          <doc xml:space="preserve">#GstLogContext to use</doc>
-        </parameter>
-        <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
-        </parameter>
-      </parameters>
-    </function-macro>
-    <function-macro name="CTX_MEMDUMP_ID" c:identifier="GST_CTX_MEMDUMP_ID" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a memory dump message in the specified context.</doc>
-      <parameters>
-        <parameter name="ctx">
-          <doc xml:space="preserve">#GstLogContext to use</doc>
-        </parameter>
-        <parameter name="id">
-          <doc xml:space="preserve">an object ID or %NULL</doc>
-        </parameter>
-        <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
-        </parameter>
-      </parameters>
-    </function-macro>
-    <function-macro name="CTX_MEMDUMP_OBJECT" c:identifier="GST_CTX_MEMDUMP_OBJECT" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a memory dump message in the specified context.</doc>
-      <parameters>
-        <parameter name="ctx">
-          <doc xml:space="preserve">#GstLogContext to use</doc>
-        </parameter>
-        <parameter name="object">
-          <doc xml:space="preserve">a #GObject or %NULL</doc>
-        </parameter>
-        <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_TRACE" c:identifier="GST_CTX_TRACE" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a trace message in the specified context.</doc>
+      <doc xml:space="preserve">Output a trace message in the specified context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_TRACE_ID" c:identifier="GST_CTX_TRACE_ID" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a trace message in the specified context.</doc>
+      <doc xml:space="preserve">Output a trace message for the given identifier in the specified context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
@@ -6644,12 +6938,16 @@ for (i = 0; i &lt; 1000; i++) {
           <doc xml:space="preserve">an object ID or %NULL</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_TRACE_OBJECT" c:identifier="GST_CTX_TRACE_OBJECT" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a trace message in the specified context.</doc>
+      <doc xml:space="preserve">Output a tracing message belonging to the given object in the specified
+context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
@@ -6658,23 +6956,29 @@ for (i = 0; i &lt; 1000; i++) {
           <doc xml:space="preserve">a #GObject or %NULL</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_WARNING" c:identifier="GST_CTX_WARNING" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a warning message in the specified context.</doc>
+      <doc xml:space="preserve">Output a warning message in the specified context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_WARNING_ID" c:identifier="GST_CTX_WARNING_ID" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a warning message in the specified context.</doc>
+      <doc xml:space="preserve">Output a warning message for the given identifier in the specified context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
@@ -6683,12 +6987,15 @@ for (i = 0; i &lt; 1000; i++) {
           <doc xml:space="preserve">an object ID or %NULL</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
     <function-macro name="CTX_WARNING_OBJECT" c:identifier="GST_CTX_WARNING_OBJECT" version="1.28" introspectable="0">
-      <doc xml:space="preserve">Logs a warning message in the specified context.</doc>
+      <doc xml:space="preserve">Output a warning message belonging to the given object in the specified context.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
       <parameters>
         <parameter name="ctx">
           <doc xml:space="preserve">#GstLogContext to use</doc>
@@ -6697,10 +7004,22 @@ for (i = 0; i &lt; 1000; i++) {
           <doc xml:space="preserve">a #GObject or %NULL</doc>
         </parameter>
         <parameter name="...">
-          <doc xml:space="preserve">format string and optional arguments, followed by optional context</doc>
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <callback name="CallAsyncFunc" c:type="GstCallAsyncFunc" version="1.28">
+      <doc xml:space="preserve">Callback prototype used in #gst_call_async</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1" closure="0">
+          <doc xml:space="preserve">Data passed in the function where that callback has been passed</doc>
+          <type name="gpointer" c:type="gpointer"/>
+        </parameter>
+      </parameters>
+    </callback>
     <record name="Caps" c:type="GstCaps" glib:type-name="GstCaps" glib:get-type="gst_caps_get_type" c:symbol-prefix="caps">
       <doc xml:space="preserve">Caps (capabilities) are lightweight refcounted objects describing media types.
 They are composed of an array of #GstStructure.
@@ -6781,7 +7100,7 @@ are not copied; the returned #GstCaps owns the structures.</doc>
           <type name="Caps" c:type="GstCaps*"/>
         </return-value>
         <parameters>
-          <parameter name="struct1" transfer-ownership="none">
+          <parameter name="struct1" transfer-ownership="full">
             <doc xml:space="preserve">the first structure to add</doc>
             <type name="Structure" c:type="GstStructure*"/>
           </parameter>
@@ -6800,7 +7119,7 @@ are not copied; the returned #GstCaps owns the structures.</doc>
           <type name="Caps" c:type="GstCaps*"/>
         </return-value>
         <parameters>
-          <parameter name="structure" transfer-ownership="none">
+          <parameter name="structure" transfer-ownership="full">
             <doc xml:space="preserve">the first structure to add</doc>
             <type name="Structure" c:type="GstStructure*"/>
           </parameter>
@@ -8508,7 +8827,7 @@ have a parent when this function is called.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="set_parent_refcount" c:identifier="gst_caps_features_set_parent_refcount" version="1.2">
+      <method name="set_parent_refcount" c:identifier="gst_caps_features_set_parent_refcount" version="1.2" introspectable="0">
         <doc xml:space="preserve">Sets the parent_refcount field of #GstCapsFeatures. This field is used to
 determine whether a caps features is mutable or not. This function should only be
 called by code implementing parent objects of #GstCapsFeatures, as described in
@@ -8522,9 +8841,9 @@ called by code implementing parent objects of #GstCapsFeatures, as described in
             <doc xml:space="preserve">a #GstCapsFeatures</doc>
             <type name="CapsFeatures" c:type="GstCapsFeatures*"/>
           </instance-parameter>
-          <parameter name="refcount" transfer-ownership="none">
+          <parameter name="refcount" transfer-ownership="none" nullable="1" allow-none="1">
             <doc xml:space="preserve">a pointer to the parent's refcount</doc>
-            <type name="gint" c:type="gint*"/>
+            <type name="gpointer" c:type="gint*"/>
           </parameter>
         </parameters>
       </method>
@@ -9805,6 +10124,21 @@ given invalid input.</doc>
           </instance-parameter>
         </parameters>
       </method>
+      <method name="is_system_monotonic" c:identifier="gst_clock_is_system_monotonic" version="1.28">
+        <doc xml:space="preserve">Checks that @clock is the default system clock, as returned by
+gst_system_clock_obtain(), and is of type %GST_CLOCK_TYPE_MONOTONIC.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if @clock is the default system monotonic clock,
+  %FALSE otherwise.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="clock" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstClock</doc>
+            <type name="Clock" c:type="GstClock*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
       <method name="new_periodic_id" c:identifier="gst_clock_new_periodic_id">
         <doc xml:space="preserve">Gets an ID from @clock to trigger a periodic notification.
 The periodic notifications will start at time @start_time and
@@ -10522,6 +10856,23 @@ free it and that the pointer becomes invalid when you free the context.</doc>
           </instance-parameter>
         </parameters>
       </method>
+      <method name="get_task_pool" c:identifier="gst_context_get_task_pool" version="1.28">
+        <doc xml:space="preserve">Gets the task pool from @context.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if a task pool was set on @context</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="context" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstContext</doc>
+            <type name="Context" c:type="GstContext*"/>
+          </instance-parameter>
+          <parameter name="pool" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1">
+            <doc xml:space="preserve">a #GstTaskPool</doc>
+            <type name="TaskPool" c:type="GstTaskPool**"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="has_context_type" c:identifier="gst_context_has_context_type" version="1.2">
         <doc xml:space="preserve">Checks if @context has @context_type.</doc>
         <return-value transfer-ownership="none">
@@ -10600,6 +10951,24 @@ also: gst_context_ref().</doc>
             <doc xml:space="preserve">the context to ref</doc>
             <type name="Context" c:type="GstContext*"/>
           </instance-parameter>
+        </parameters>
+      </method>
+      <method name="set_task_pool" c:identifier="gst_context_set_task_pool" version="1.28">
+        <doc xml:space="preserve">Sets @pool on @context as the task pool to be shared between elements.
+If @pool is %NULL, any previously set task pool will be removed from
+the context.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="context" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstContext</doc>
+            <type name="Context" c:type="GstContext*"/>
+          </instance-parameter>
+          <parameter name="pool" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">a #GstTaskPool or %NULL to unset</doc>
+            <type name="TaskPool" c:type="GstTaskPool*"/>
+          </parameter>
         </parameters>
       </method>
       <method name="unref" c:identifier="gst_context_unref" version="1.2">
@@ -11612,6 +11981,55 @@ character, a newline character will be added automatically.</doc>
         </parameter>
         <parameter name="...">
           <doc xml:space="preserve">printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="DEBUG_ONCE" c:identifier="GST_DEBUG_ONCE" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a debugging message in the default category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.
+
+Example:
+``` c
+// Use in code - this message will only be logged once
+for (i = 0; i &lt; 1000; i++) {
+  GST_DEBUG_ONCE ("Processing iteration %d", i);
+}
+```</doc>
+      <parameters>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="DEBUG_ONCE_ID" c:identifier="GST_DEBUG_ONCE_ID" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a debugging message for the given identifier in the default category
+exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="id">
+          <doc xml:space="preserve">an object ID or %NULL</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="DEBUG_ONCE_OBJECT" c:identifier="GST_DEBUG_ONCE_OBJECT" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a debugging message belonging to the given object in the default
+category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="object">
+          <doc xml:space="preserve">a #GObject or %NULL</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
@@ -13196,9 +13614,18 @@ providers. Setting @show_all to true might show some devices multiple times.</do
         </parameters>
       </method>
       <method name="start" c:identifier="gst_device_monitor_start" version="1.4">
-        <doc xml:space="preserve">Starts monitoring the devices, one this has succeeded, the
+        <doc xml:space="preserve">Starts monitoring the devices, once this has succeeded, the
 %GST_MESSAGE_DEVICE_ADDED and %GST_MESSAGE_DEVICE_REMOVED messages
-will be emitted on the bus when the list of devices changes.</doc>
+will be emitted on the bus when the list of devices changes.
+
+Since 1.28, device providers are started asynchronously and
+%GST_MESSAGE_DEVICE_MONITOR_STARTED will be emitted once the initial list
+of devices has been populated, signalling that monitor startup has
+completed.
+
+The monitor will hold a strong reference to itself while it is populating
+devices asynchronously, so you must call gst_device_monitor_stop() before
+unreffing if you want monitoring to stop immediately.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">%TRUE if the device monitoring could be started, i.e. at least a
     single device provider was started successfully.</doc>
@@ -13434,8 +13861,8 @@ This is for use by subclasses.</doc>
         <doc xml:space="preserve">Gets a list of devices that this provider understands. This may actually
 probe the hardware if the provider is not currently started.
 
-If the provider has been started, this will returned the same #GstDevice
-objedcts that have been returned by the #GST_MESSAGE_DEVICE_ADDED messages.</doc>
+If the provider has been started, this will return the same #GstDevice
+objects that have been returned by the #GST_MESSAGE_DEVICE_ADDED messages.</doc>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">a #GList of
   #GstDevice</doc>
@@ -14840,7 +15267,8 @@ character, a newline character will be added automatically.</doc>
       </parameters>
     </function-macro>
     <function-macro name="ERROR_OBJECT" c:identifier="GST_ERROR_OBJECT" introspectable="0">
-      <doc xml:space="preserve">Output an error message belonging to the given object in the default category.
+      <doc xml:space="preserve">Output an error message belonging to the given object in the default
+category.
 
 There is no need to finish the end of the message string with a newline
 character, a newline character will be added automatically.</doc>
@@ -14850,6 +15278,47 @@ character, a newline character will be added automatically.</doc>
         </parameter>
         <parameter name="...">
           <doc xml:space="preserve">printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="ERROR_ONCE" c:identifier="GST_ERROR_ONCE" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output an error message in the default category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="ERROR_ONCE_ID" c:identifier="GST_ERROR_ONCE_ID" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output an error message for the given identifier in the default category
+exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="id">
+          <doc xml:space="preserve">an object ID or %NULL</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="ERROR_ONCE_OBJECT" c:identifier="GST_ERROR_ONCE_OBJECT" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output an error message belonging to the given object in the default
+category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="object">
+          <doc xml:space="preserve">a #GObject or %NULL</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
@@ -14989,7 +15458,7 @@ each element by name.
 Each element has a state (see #GstState).  You can get and set the state
 of an element with gst_element_get_state() and gst_element_set_state().
 Setting a state triggers a #GstStateChange. To get a string representation
-of a #GstState, use gst_element_state_get_name().
+of a #GstState, use gst_state_get_name().
 
 You can get and set a #GstClock on an element using gst_element_get_clock()
 and gst_element_set_clock().
@@ -15053,8 +15522,9 @@ could be created</doc>
           </parameter>
         </parameters>
       </function>
-      <function name="state_change_return_get_name" c:identifier="gst_element_state_change_return_get_name">
+      <function name="state_change_return_get_name" c:identifier="gst_element_state_change_return_get_name" deprecated="1" deprecated-version="1.28">
         <doc xml:space="preserve">Gets a string representing the given state change result.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_state_change_return_get_name() instead.</doc-deprecated>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">a string with the name of the state
    result.</doc>
@@ -15067,8 +15537,9 @@ could be created</doc>
           </parameter>
         </parameters>
       </function>
-      <function name="state_get_name" c:identifier="gst_element_state_get_name">
+      <function name="state_get_name" c:identifier="gst_element_state_get_name" deprecated="1" deprecated-version="1.28">
         <doc xml:space="preserve">Gets a string representing the given state.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_state_get_name() instead.</doc-deprecated>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">a string with the name of the state.</doc>
           <type name="utf8" c:type="const gchar*"/>
@@ -15564,7 +16035,7 @@ MT safe.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="call_async" c:identifier="gst_element_call_async" version="1.10">
+      <method name="call_async" c:identifier="gst_element_call_async" version="1.10" deprecated="1" deprecated-version="1.28">
         <doc xml:space="preserve">Calls @func from another thread and passes @user_data to it. This is to be
 used for cases when a state change has to be performed from a streaming
 thread, directly via gst_element_set_state() or indirectly e.g. via SEEK
@@ -15575,6 +16046,7 @@ deadlocks in many situations, as they might involve waiting for the
 streaming thread to shut down from this very streaming thread.
 
 MT safe.</doc>
+        <doc-deprecated xml:space="preserve">Use gst_object_call_async() or gst_call_async() instead.</doc-deprecated>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -17399,8 +17871,10 @@ gst_element_set_state() or gst_element_sync_state_with_parent().</doc>
         </parameters>
       </glib:signal>
     </class>
-    <callback name="ElementCallAsyncFunc" c:type="GstElementCallAsyncFunc">
+    <callback name="ElementCallAsyncFunc" c:type="GstElementCallAsyncFunc" deprecated="1" deprecated-version="1.28">
       <doc xml:space="preserve">Callback prototype used in #gst_element_call_async</doc>
+      <doc-deprecated xml:space="preserve">Use #GstObjectCallAsyncFunc with gst_object_call_async()
+or #GstCallAsyncFunc with gst_call_async() instead.</doc-deprecated>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -20556,6 +21030,47 @@ character, a newline character will be added automatically.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <function-macro name="FIXME_ONCE" c:identifier="GST_FIXME_ONCE" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a fixme message in the default category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="FIXME_ONCE_ID" c:identifier="GST_FIXME_ONCE_ID" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a fixme message for the given identifier in the default category
+exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="id">
+          <doc xml:space="preserve">an object ID or %NULL</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="FIXME_ONCE_OBJECT" c:identifier="GST_FIXME_ONCE_OBJECT" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a fixme message belonging to the given object in the default
+category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="object">
+          <doc xml:space="preserve">a #GObject or %NULL</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
     <constant name="FLAG_SET_MASK_EXACT" value="4294967295" c:type="GST_FLAG_SET_MASK_EXACT" version="1.6">
       <doc xml:space="preserve">A mask value with all bits set, for use as a
 GstFlagSet mask where all flag bits must match
@@ -21099,6 +21614,43 @@ character, a newline character will be added automatically.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <function-macro name="INFO_ONCE" c:identifier="GST_INFO_ONCE" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output an informational message in the default category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="INFO_ONCE_ID" c:identifier="GST_INFO_ONCE_ID" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output an informational message for the given identifier the default
+category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="id">
+          <doc xml:space="preserve">an object ID or %NULL</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="INFO_ONCE_OBJECT" c:identifier="GST_INFO_ONCE_OBJECT" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Logs an info message in the specified context.</doc>
+      <parameters>
+        <parameter name="object">
+          <doc xml:space="preserve">a #GObject or %NULL</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
     <function-macro name="IS_ALLOCATOR" c:identifier="GST_IS_ALLOCATOR" introspectable="0">
       <parameters>
         <parameter name="obj">
@@ -21322,6 +21874,12 @@ character, a newline character will be added automatically.</doc>
       </parameters>
     </function-macro>
     <function-macro name="IS_MESSAGE" c:identifier="GST_IS_MESSAGE" introspectable="0">
+      <parameters>
+        <parameter name="obj">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="IS_META_FACTORY" c:identifier="GST_IS_META_FACTORY" introspectable="0">
       <parameters>
         <parameter name="obj">
         </parameter>
@@ -22057,10 +22615,10 @@ MT safe.</doc>
             <doc xml:space="preserve">pointer to a #GMutex.</doc>
             <type name="GLib.Mutex" c:type="GMutex*"/>
           </parameter>
-          <parameter name="master_cookie" transfer-ownership="none">
+          <parameter name="master_cookie" transfer-ownership="none" nullable="1" allow-none="1">
             <doc xml:space="preserve">pointer to a guint32 that is changed when the items in the
    iterator changed.</doc>
-            <type name="guint32" c:type="guint32*"/>
+            <type name="gpointer" c:type="guint32*"/>
           </parameter>
           <parameter name="copy" transfer-ownership="none">
             <doc xml:space="preserve">copy function</doc>
@@ -22112,10 +22670,10 @@ MT safe.</doc>
             <doc xml:space="preserve">pointer to a #GMutex protecting the list.</doc>
             <type name="GLib.Mutex" c:type="GMutex*"/>
           </parameter>
-          <parameter name="master_cookie" transfer-ownership="none">
+          <parameter name="master_cookie" transfer-ownership="none" nullable="1" allow-none="1">
             <doc xml:space="preserve">pointer to a guint32 that is incremented when the list
     is changed.</doc>
-            <type name="guint32" c:type="guint32*"/>
+            <type name="gpointer" c:type="guint32*"/>
           </parameter>
           <parameter name="list" transfer-ownership="none">
             <doc xml:space="preserve">pointer to the list</doc>
@@ -22727,6 +23285,43 @@ character, a newline character will be added automatically.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <function-macro name="LOG_ONCE" c:identifier="GST_LOG_ONCE" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a logging message in the default category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="LOG_ONCE_ID" c:identifier="GST_LOG_ONCE_ID" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a logging message for the given identifier in the default category
+exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="id">
+          <doc xml:space="preserve">an object ID or %NULL</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="LOG_ONCE_OBJECT" c:identifier="GST_LOG_ONCE_OBJECT" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Logs a log message in the specified context.</doc>
+      <parameters>
+        <parameter name="object">
+          <doc xml:space="preserve">a #GObject or %NULL</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
     <enumeration name="LibraryError" glib:type-name="GstLibraryError" glib:get-type="gst_library_error_get_type" c:type="GstLibraryError" glib:error-domain="gst-library-error-quark">
       <doc xml:space="preserve">Library errors are for errors from the library being used by elements
 (initializing, finalizing, settings, ...)</doc>
@@ -23309,6 +23904,12 @@ was created.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <function-macro name="META_FACTORY" c:identifier="GST_META_FACTORY" introspectable="0">
+      <parameters>
+        <parameter name="obj">
+        </parameter>
+      </parameters>
+    </function-macro>
     <function-macro name="META_FLAGS" c:identifier="GST_META_FLAGS" introspectable="0">
       <doc xml:space="preserve">A flags word containing #GstMetaFlags flags set on @meta</doc>
       <parameters>
@@ -23471,6 +24072,11 @@ gst_mini_object_lock() and gst_mini_object_unlock().</doc>
       <member name="write" value="2" c:identifier="GST_MAP_WRITE" glib:nick="write" glib:name="GST_MAP_WRITE">
         <doc xml:space="preserve">map for write access</doc>
       </member>
+      <member name="ref_memory" value="256" c:identifier="GST_MAP_REF_MEMORY" version="1.28" glib:nick="ref-memory" glib:name="GST_MAP_REF_MEMORY">
+        <doc xml:space="preserve">Take another reference of the memory and store it in the GstMapInfo. This
+makes sure that the memory stays valid  while it is mapped and
+automatically unrefs it on unmap.</doc>
+      </member>
       <member name="flag_last" value="65536" c:identifier="GST_MAP_FLAG_LAST" glib:nick="flag-last" glib:name="GST_MAP_FLAG_LAST">
         <doc xml:space="preserve">first flag that can be used for custom purposes</doc>
       </member>
@@ -23516,6 +24122,48 @@ needs to be unmapped using gst_buffer_unmap() or gst_memory_unmap(). Instead,
           <type name="gpointer" c:type="gpointer"/>
         </array>
       </field>
+      <method name="clear" c:identifier="gst_map_info_clear" version="1.28">
+        <doc xml:space="preserve">Release the memory obtained with gst_memory_map()</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="info" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstMapInfo</doc>
+            <type name="MapInfo" c:type="GstMapInfo*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_data" c:identifier="gst_map_info_get_data" version="1.28">
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">Data of @info.</doc>
+          <array length="0" zero-terminated="0" c:type="guint8*">
+            <type name="guint8" c:type="guint8"/>
+          </array>
+        </return-value>
+        <parameters>
+          <instance-parameter name="info" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstMapInfo</doc>
+            <type name="MapInfo" c:type="GstMapInfo*"/>
+          </instance-parameter>
+          <parameter name="size" direction="out" caller-allocates="0" transfer-ownership="full">
+            <doc xml:space="preserve">Return location of the size of the data.</doc>
+            <type name="gsize" c:type="gsize*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="init" c:identifier="gst_map_info_init" version="1.28">
+        <doc xml:space="preserve">Initializes @info.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="info" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstMapInfo</doc>
+            <type name="MapInfo" c:type="GstMapInfo*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
     </record>
     <record name="Memory" c:type="GstMemory" glib:type-name="GstMemory" glib:get-type="gst_memory_get_type" c:symbol-prefix="memory">
       <doc xml:space="preserve">GstMemory is a lightweight refcounted object that wraps a region of memory.
@@ -24426,6 +25074,27 @@ properties has changed and @device represent the new modified version of @change
           </parameter>
         </parameters>
       </constructor>
+      <constructor name="new_device_monitor_started" c:identifier="gst_message_new_device_monitor_started" version="1.28">
+        <doc xml:space="preserve">Creates a new device-monitor-started message. The device-monitor-started
+message is produced by a #GstDeviceMonitor once it has started probing
+devices. It does not indicate whether any #GstDeviceProvider instances
+support monitoring at all, only whether at least one was able to start
+probing.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a newly allocated #GstMessage</doc>
+          <type name="Message" c:type="GstMessage*"/>
+        </return-value>
+        <parameters>
+          <parameter name="src" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">The #GstObject that created the message</doc>
+            <type name="Object" c:type="GstObject*"/>
+          </parameter>
+          <parameter name="success" transfer-ownership="none">
+            <doc xml:space="preserve">Whether the monitor was started successfully</doc>
+            <type name="gboolean" c:type="gboolean"/>
+          </parameter>
+        </parameters>
+      </constructor>
       <constructor name="new_device_removed" c:identifier="gst_message_new_device_removed" version="1.4">
         <doc xml:space="preserve">Creates a new device-removed message. The device-removed message is produced
 by #GstDeviceProvider or a #GstDeviceMonitor. They announce the
@@ -24844,7 +25513,7 @@ list and structure are transferred to the message.</doc>
           </parameter>
           <parameter name="entry_struct" transfer-ownership="full" nullable="1" allow-none="1">
             <doc xml:space="preserve">structure for the new entry</doc>
-            <type name="Structure" c:type="const GstStructure*"/>
+            <type name="Structure" c:type="GstStructure*"/>
           </parameter>
         </parameters>
       </constructor>
@@ -25314,7 +25983,7 @@ list and structure are transferred to the message.</doc>
           </parameter>
           <parameter name="entry_struct" transfer-ownership="full" nullable="1" allow-none="1">
             <doc xml:space="preserve">structure for the new entry</doc>
-            <type name="Structure" c:type="const GstStructure*"/>
+            <type name="Structure" c:type="GstStructure*"/>
           </parameter>
         </parameters>
       </method>
@@ -25641,6 +26310,25 @@ changed and @device represents the new modified version of @changed_device.</doc
             <doc xml:space="preserve">A location where to store a
  pointer to the old version of the #GstDevice, or %NULL</doc>
             <type name="Device" c:type="GstDevice**"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="parse_device_monitor_started" c:identifier="gst_message_parse_device_monitor_started" version="1.28">
+        <doc xml:space="preserve">Parses a device-monitor-started message. The device-monitor-started message
+is produced by a #GstDeviceMonitor once at least one #GstDeviceProvider
+successfully starts probing.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="message" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstMessage of type %GST_MESSAGE_DEVICE_MONITOR_STARTED</doc>
+            <type name="Message" c:type="GstMessage*"/>
+          </instance-parameter>
+          <parameter name="success" direction="out" caller-allocates="0" transfer-ownership="full">
+            <doc xml:space="preserve">Result location for whether the #GstDeviceMonitor was
+ successfully started</doc>
+            <type name="gboolean" c:type="gboolean*"/>
           </parameter>
         </parameters>
       </method>
@@ -26164,8 +26852,8 @@ Typical usage of this function might be:
       gst_message_parse_state_changed (msg, &amp;old_state, &amp;new_state, NULL);
       g_print ("Element %s changed state from %s to %s.\n",
           GST_OBJECT_NAME (msg-&gt;src),
-          gst_element_state_get_name (old_state),
-          gst_element_state_get_name (new_state));
+          gst_state_get_name (old_state),
+          gst_state_get_name (new_state));
       break;
     }
     ...
@@ -26999,6 +27687,9 @@ was updated.</doc>
     running time from the pipeline when an instant rate change should
     be applied (which may be in the past when the answer arrives). (Since: 1.18)</doc>
       </member>
+      <member name="device_monitor_started" value="2147483657" c:identifier="GST_MESSAGE_DEVICE_MONITOR_STARTED" version="1.28" glib:nick="device-monitor-started" glib:name="GST_MESSAGE_DEVICE_MONITOR_STARTED">
+        <doc xml:space="preserve">Message indicating the #GstDeviceMonitor has completed async startup.</doc>
+      </member>
       <member name="any" value="4294967295" c:identifier="GST_MESSAGE_ANY" glib:nick="any" glib:name="GST_MESSAGE_ANY">
         <doc xml:space="preserve">mask for all of the above messages.</doc>
       </member>
@@ -27274,7 +27965,9 @@ not allow to determine that size, @consumed is set to 0.</doc>
           </parameter>
           <parameter name="data" transfer-ownership="none">
             <doc xml:space="preserve">serialization data obtained from gst_meta_serialize()</doc>
-            <type name="guint8" c:type="const guint8*"/>
+            <array length="2" zero-terminated="0" c:type="const guint8*">
+              <type name="guint8" c:type="guint8"/>
+            </array>
           </parameter>
           <parameter name="size" transfer-ownership="none">
             <doc xml:space="preserve">size of @data</doc>
@@ -27443,6 +28136,56 @@ when a pooled buffer is returned.</doc>
         </parameter>
       </parameters>
     </callback>
+    <class name="MetaFactory" c:symbol-prefix="meta_factory" c:type="GstMetaFactory" version="1.28" parent="PluginFeature" glib:type-name="GstMetaFactory" glib:get-type="gst_meta_factory_get_type" glib:type-struct="MetaFactoryClass">
+      <doc xml:space="preserve">Register a #GstMetaInfo that can be automatically loaded the first time it is
+used.
+
+In general, applications and plugins don't need to use the factory
+beyond registering the meta in a plugin init function. Once that is
+done, the meta is stored in the registry, and ready as soon as the
+registry is loaded.
+
+## Registering a meta for dynamic loading
+
+|[&lt;!-- language="C" --&gt;
+
+static gboolean
+plugin_init (GstPlugin * plugin)
+{
+  return gst_meta_factory_register (plugin, my_meta_get_info());
+}
+]|</doc>
+      <function name="load" c:identifier="gst_meta_factory_load" version="1.28">
+        <doc xml:space="preserve">Loads a previously registered #GstMetaInfo from the registry.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">A #GstMetaInfo or NULL if not found</doc>
+          <type name="MetaInfo" c:type="const GstMetaInfo*"/>
+        </return-value>
+        <parameters>
+          <parameter name="factoryname" transfer-ownership="none">
+            <doc xml:space="preserve">The name of the #GstMetaInfo to load</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </function>
+      <function name="register" c:identifier="gst_meta_factory_register" version="1.28">
+        <doc xml:space="preserve">Registers a new #GstMetaInfo in the registry</doc>
+        <return-value transfer-ownership="none">
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <parameter name="plugin" transfer-ownership="none">
+            <doc xml:space="preserve">The #GstPlugin to register @meta_info for</doc>
+            <type name="Plugin" c:type="GstPlugin*"/>
+          </parameter>
+          <parameter name="meta_info" transfer-ownership="none">
+            <doc xml:space="preserve">The #GstMetaInfo to register</doc>
+            <type name="MetaInfo" c:type="const GstMetaInfo*"/>
+          </parameter>
+        </parameters>
+      </function>
+    </class>
+    <record name="MetaFactoryClass" c:type="GstMetaFactoryClass" disguised="1" opaque="1" glib:is-gtype-struct-for="MetaFactory"/>
     <bitfield name="MetaFlags" glib:type-name="GstMetaFlags" glib:get-type="gst_meta_flags_get_type" c:type="GstMetaFlags">
       <doc xml:space="preserve">Extra metadata flags.</doc>
       <member name="none" value="0" c:identifier="GST_META_FLAG_NONE" glib:nick="none" glib:name="GST_META_FLAG_NONE">
@@ -28580,6 +29323,27 @@ has been setup for a non suitable property, %TRUE otherwise.</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="call_async" c:identifier="gst_object_call_async" version="1.28">
+        <doc xml:space="preserve">Equivalent to gst_element_call_async() but this API allows @func to be called
+with #GstObject. See also gst_element_call_async()</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="object" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstObject</doc>
+            <type name="Object" c:type="GstObject*"/>
+          </instance-parameter>
+          <parameter name="func" transfer-ownership="none" scope="async" closure="1">
+            <doc xml:space="preserve">function to call asynchronously from another thread</doc>
+            <type name="ObjectCallAsyncFunc" c:type="GstObjectCallAsyncFunc"/>
+          </parameter>
+          <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">data to pass to @func</doc>
+            <type name="gpointer" c:type="gpointer"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="default_error" c:identifier="gst_object_default_error">
         <doc xml:space="preserve">A default error function that uses g_printerr() to display the error message
 and the optional debug string..
@@ -28734,6 +29498,23 @@ Free-function: g_free</doc>
 MT safe. Grabs and releases the #GstObject's LOCK for all objects
          in the hierarchy.</doc>
           <type name="utf8" c:type="gchar*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="object" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstObject</doc>
+            <type name="Object" c:type="GstObject*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_toplevel" c:identifier="gst_object_get_toplevel" version="1.28">
+        <doc xml:space="preserve">Returns the toplevel parent of @object. This function increases the refcount
+of the toplevel object so you should gst_object_unref() it after usage.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">toplevel of @object, or @object itself if it has no
+  parent. unref after usage.
+
+MT safe. Grabs and releases @object's LOCK.</doc>
+          <type name="Object" c:type="GstObject*"/>
         </return-value>
         <parameters>
           <instance-parameter name="object" transfer-ownership="none">
@@ -29160,6 +29941,22 @@ the elements contained in that bin.</doc>
         </parameters>
       </glib:signal>
     </class>
+    <callback name="ObjectCallAsyncFunc" c:type="GstObjectCallAsyncFunc" version="1.28">
+      <doc xml:space="preserve">Callback prototype used in #gst_object_call_async</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="object" transfer-ownership="none">
+          <doc xml:space="preserve">A #GstObject this function has been called against</doc>
+          <type name="Object" c:type="GstObject*"/>
+        </parameter>
+        <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1" closure="1">
+          <doc xml:space="preserve">Data passed in the function where that callback has been passed</doc>
+          <type name="gpointer" c:type="gpointer"/>
+        </parameter>
+      </parameters>
+    </callback>
     <record name="ObjectClass" c:type="GstObjectClass" glib:is-gtype-struct-for="Object">
       <doc xml:space="preserve">GStreamer base object class.</doc>
       <field name="parent_class">
@@ -33047,6 +33844,42 @@ The callback is allowed to modify the data pointer in @info.</doc>
           </instance-parameter>
         </parameters>
       </method>
+      <method name="get_flow_return" c:identifier="gst_pad_probe_info_get_flow_return" version="1.28">
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">The #GstFlowReturn from the probe</doc>
+          <type name="FlowReturn" c:type="GstFlowReturn"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="info" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPadProbeInfo</doc>
+            <type name="PadProbeInfo" c:type="GstPadProbeInfo*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_id" c:identifier="gst_pad_probe_info_get_id" version="1.28">
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">The probe ID from the probe</doc>
+          <type name="gulong" c:type="gulong"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="info" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPadProbeInfo</doc>
+            <type name="PadProbeInfo" c:type="GstPadProbeInfo*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_offset" c:identifier="gst_pad_probe_info_get_offset" version="1.28">
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">The offset from the probe</doc>
+          <type name="guint64" c:type="guint64"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="info" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPadProbeInfo</doc>
+            <type name="PadProbeInfo" c:type="GstPadProbeInfo*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
       <method name="get_query" c:identifier="gst_pad_probe_info_get_query">
         <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">The #GstQuery from the probe</doc>
@@ -33057,6 +33890,94 @@ The callback is allowed to modify the data pointer in @info.</doc>
             <doc xml:space="preserve">a #GstPadProbeInfo</doc>
             <type name="PadProbeInfo" c:type="GstPadProbeInfo*"/>
           </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_size" c:identifier="gst_pad_probe_info_get_size" version="1.28">
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">The size from the probe</doc>
+          <type name="gsize" c:type="gsize"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="info" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPadProbeInfo</doc>
+            <type name="PadProbeInfo" c:type="GstPadProbeInfo*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_type" c:identifier="gst_pad_probe_info_get_type" version="1.28">
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">The #GstPadProbeType from the probe</doc>
+          <type name="PadProbeType" c:type="GstPadProbeType"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="info" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPadProbeInfo</doc>
+            <type name="PadProbeInfo" c:type="GstPadProbeInfo*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="set_buffer" c:identifier="gst_pad_probe_info_set_buffer" version="1.28">
+        <doc xml:space="preserve">Updates @info with @buffer or %NULL.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="info" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPadProbeInfo</doc>
+            <type name="PadProbeInfo" c:type="GstPadProbeInfo*"/>
+          </instance-parameter>
+          <parameter name="buffer" transfer-ownership="full" nullable="1" allow-none="1">
+            <doc xml:space="preserve">a #GstBuffer</doc>
+            <type name="Buffer" c:type="GstBuffer*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_buffer_list" c:identifier="gst_pad_probe_info_set_buffer_list" version="1.28">
+        <doc xml:space="preserve">Updates @info with @list or %NULL.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="info" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPadProbeInfo</doc>
+            <type name="PadProbeInfo" c:type="GstPadProbeInfo*"/>
+          </instance-parameter>
+          <parameter name="list" transfer-ownership="full" nullable="1" allow-none="1">
+            <doc xml:space="preserve">a #GstBufferList</doc>
+            <type name="BufferList" c:type="GstBufferList*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_event" c:identifier="gst_pad_probe_info_set_event" version="1.28">
+        <doc xml:space="preserve">Updates @info with @event or %NULL.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="info" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPadProbeInfo</doc>
+            <type name="PadProbeInfo" c:type="GstPadProbeInfo*"/>
+          </instance-parameter>
+          <parameter name="event" transfer-ownership="full" nullable="1" allow-none="1">
+            <doc xml:space="preserve">a #GstEvent</doc>
+            <type name="Event" c:type="GstEvent*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_flow_return" c:identifier="gst_pad_probe_info_set_flow_return" version="1.28">
+        <doc xml:space="preserve">Updates @info with @flow_ret.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="info" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstPadProbeInfo</doc>
+            <type name="PadProbeInfo" c:type="GstPadProbeInfo*"/>
+          </instance-parameter>
+          <parameter name="flow_ret" transfer-ownership="none">
+            <doc xml:space="preserve">A #GstFlowReturn</doc>
+            <type name="FlowReturn" c:type="GstFlowReturn"/>
+          </parameter>
         </parameters>
       </method>
     </record>
@@ -33213,7 +34134,7 @@ removing or modifying.</doc>
           <doc xml:space="preserve">the #GstPad.</doc>
           <type name="Pad" c:type="GstPad*"/>
         </parameter>
-        <parameter name="event" transfer-ownership="none" nullable="1" allow-none="1">
+        <parameter name="event" direction="inout" caller-allocates="0" transfer-ownership="full" nullable="1" allow-none="1">
           <doc xml:space="preserve">a sticky #GstEvent.</doc>
           <type name="Event" c:type="GstEvent**"/>
         </parameter>
@@ -41135,6 +42056,19 @@ gst_element_set_state() and checked using gst_element_get_state().</doc>
         <doc xml:space="preserve">the element is PLAYING, the #GstClock is running and
                          the data is flowing.</doc>
       </member>
+      <function name="get_name" c:identifier="gst_state_get_name" version="1.28">
+        <doc xml:space="preserve">Gets a string representing the given state.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">a string with the name of the state.</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </return-value>
+        <parameters>
+          <parameter name="state" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstState to get the name of.</doc>
+            <type name="State" c:type="GstState"/>
+          </parameter>
+        </parameters>
+      </function>
     </enumeration>
     <enumeration name="StateChange" glib:type-name="GstStateChange" glib:get-type="gst_state_change_get_type" c:type="GstStateChange">
       <doc xml:space="preserve">These are the different state changes an element goes through.
@@ -41254,6 +42188,20 @@ gst_element_set_state(). Only @GST_STATE_CHANGE_FAILURE is a real failure.</doc>
                               cannot produce data in %GST_STATE_PAUSED.
                               This typically happens with live sources.</doc>
       </member>
+      <function name="get_name" c:identifier="gst_state_change_return_get_name" version="1.28">
+        <doc xml:space="preserve">Gets a string representing the given state change result.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">a string with the name of the state
+   result.</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </return-value>
+        <parameters>
+          <parameter name="state_ret" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstStateChangeReturn to get the name of.</doc>
+            <type name="StateChangeReturn" c:type="GstStateChangeReturn"/>
+          </parameter>
+        </parameters>
+      </function>
     </enumeration>
     <record name="StaticCaps" c:type="GstStaticCaps" glib:type-name="GstStaticCaps" glib:get-type="gst_static_caps_get_type" c:symbol-prefix="static_caps">
       <doc xml:space="preserve">Data structure to initialize #GstCaps from a string description usually
@@ -41874,6 +42822,9 @@ whether a stream is of a certain type.</doc>
       </member>
       <member name="text" value="16" c:identifier="GST_STREAM_TYPE_TEXT" glib:nick="text" glib:name="GST_STREAM_TYPE_TEXT">
         <doc xml:space="preserve">The stream contains subtitle / subpicture data.</doc>
+      </member>
+      <member name="metadata" value="32" c:identifier="GST_STREAM_TYPE_METADATA" version="1.28" glib:nick="metadata" glib:name="GST_STREAM_TYPE_METADATA">
+        <doc xml:space="preserve">The stream contains metadata.</doc>
       </member>
       <function name="get_name" c:identifier="gst_stream_type_get_name" version="1.10">
         <doc xml:space="preserve">Get a descriptive string for a given #GstStreamType</doc>
@@ -42703,7 +43654,7 @@ for making sure the field exists and has the correct type.</doc>
             <doc xml:space="preserve">the name of the field</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
-          <parameter name="caps" direction="out" caller-allocates="0" transfer-ownership="full">
+          <parameter name="caps" direction="out" caller-allocates="0" transfer-ownership="none">
             <doc xml:space="preserve">a pointer to a pointer on caps</doc>
             <type name="Caps" c:type="const GstCaps**"/>
           </parameter>
@@ -44134,7 +45085,7 @@ to be a static string.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="set_parent_refcount" c:identifier="gst_structure_set_parent_refcount">
+      <method name="set_parent_refcount" c:identifier="gst_structure_set_parent_refcount" introspectable="0">
         <doc xml:space="preserve">Sets the parent_refcount field of #GstStructure. This field is used to
 determine whether a structure is mutable or not. This function should only be
 called by code implementing parent objects of #GstStructure, as described in
@@ -44148,9 +45099,9 @@ the MT Refcounting section of the design documents.</doc>
             <doc xml:space="preserve">a #GstStructure</doc>
             <type name="Structure" c:type="GstStructure*"/>
           </instance-parameter>
-          <parameter name="refcount" transfer-ownership="none">
+          <parameter name="refcount" transfer-ownership="none" nullable="1" allow-none="1">
             <doc xml:space="preserve">a pointer to the parent's refcount</doc>
-            <type name="gint" c:type="gint*"/>
+            <type name="gpointer" c:type="gint*"/>
           </parameter>
         </parameters>
       </method>
@@ -44598,7 +45549,11 @@ The album name as it should be displayed, e.g. 'The Jazz Guitar'</doc>
       <type name="utf8" c:type="gchar*"/>
     </constant>
     <constant name="TAG_ALBUM_GAIN" value="replaygain-album-gain" c:type="GST_TAG_ALBUM_GAIN">
-      <doc xml:space="preserve">album gain in db (double)</doc>
+      <doc xml:space="preserve">album gain in dB (double)</doc>
+      <type name="utf8" c:type="gchar*"/>
+    </constant>
+    <constant name="TAG_ALBUM_GAIN_R128" value="r128-album-gain" c:type="GST_TAG_ALBUM_GAIN_R128" version="1.28">
+      <doc xml:space="preserve">track gain in dB (double)</doc>
       <type name="utf8" c:type="gchar*"/>
     </constant>
     <constant name="TAG_ALBUM_PEAK" value="replaygain-album-peak" c:type="GST_TAG_ALBUM_PEAK">
@@ -45032,7 +45987,11 @@ The title as it should be sorted, e.g. 'Doll House, The'</doc>
       <type name="utf8" c:type="gchar*"/>
     </constant>
     <constant name="TAG_TRACK_GAIN" value="replaygain-track-gain" c:type="GST_TAG_TRACK_GAIN">
-      <doc xml:space="preserve">track gain in db (double)</doc>
+      <doc xml:space="preserve">track gain in dB (double)</doc>
+      <type name="utf8" c:type="gchar*"/>
+    </constant>
+    <constant name="TAG_TRACK_GAIN_R128" value="r128-track-gain" c:type="GST_TAG_TRACK_GAIN_R128" version="1.28">
+      <doc xml:space="preserve">track gain in dB (double)</doc>
       <type name="utf8" c:type="gchar*"/>
     </constant>
     <constant name="TAG_TRACK_NUMBER" value="track-number" c:type="GST_TAG_TRACK_NUMBER">
@@ -45123,6 +46082,17 @@ The higher the value, the more the user likes this media
         </parameter>
       </parameters>
     </function-macro>
+    <constant name="TASK_POOL_CONTEXT_TYPE" value="gst.task.pool" c:type="GST_TASK_POOL_CONTEXT_TYPE" version="1.28">
+      <doc xml:space="preserve">The well-known context type for sharing a #GstTaskPool between elements
+in a pipeline.
+
+Elements that support this context will post a %GST_MESSAGE_NEED_CONTEXT
+message on the bus when they need a task pool. Applications can respond
+by setting the context on the element or the pipeline. Elements will not
+query neighbors for this context type as the task pool is optional and
+elements will fall back to their default behavior if no pool is provided.</doc>
+      <type name="utf8" c:type="gchar*"/>
+    </constant>
     <function-macro name="TASK_POOL_GET_CLASS" c:identifier="GST_TASK_POOL_GET_CLASS" introspectable="0">
       <parameters>
         <parameter name="pool">
@@ -45374,7 +46344,7 @@ character, a newline character will be added automatically.</doc>
       </parameters>
     </function-macro>
     <function-macro name="TRACE_ID" c:identifier="GST_TRACE_ID" version="1.22" introspectable="0">
-      <doc xml:space="preserve">Output a tracing message for the given identifier  in the default category.
+      <doc xml:space="preserve">Output a tracing message for the given identifier in the default category.
 
 There is no need to finish the end of the message string with a newline
 character, a newline character will be added automatically.</doc>
@@ -45398,6 +46368,47 @@ character, a newline character will be added automatically.</doc>
         </parameter>
         <parameter name="...">
           <doc xml:space="preserve">printf-style message to output</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="TRACE_ONCE" c:identifier="GST_TRACE_ONCE" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a tracing message in the default category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="TRACE_ONCE_ID" c:identifier="GST_TRACE_ONCE_ID" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a tracing message for the given identifier in the default category
+exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="id">
+          <doc xml:space="preserve">an object ID or %NULL</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="TRACE_ONCE_OBJECT" c:identifier="GST_TRACE_ONCE_OBJECT" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a tracing message belonging to the given object in the default
+category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="object">
+          <doc xml:space="preserve">a #GObject or %NULL</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
         </parameter>
       </parameters>
     </function-macro>
@@ -48790,7 +49801,9 @@ returns and must not be freed.</doc>
         <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">the
     requested data, or %NULL if that data is not available.</doc>
-          <type name="guint8" c:type="const guint8*"/>
+          <array length="1" zero-terminated="0" c:type="const guint8*">
+            <type name="guint8" c:type="guint8"/>
+          </array>
         </return-value>
         <parameters>
           <instance-parameter name="find" transfer-ownership="none">
@@ -48801,7 +49814,7 @@ returns and must not be freed.</doc>
             <doc xml:space="preserve">The offset</doc>
             <type name="gint64" c:type="gint64"/>
           </parameter>
-          <parameter name="size" transfer-ownership="none">
+          <parameter name="size" direction="out" caller-allocates="0" transfer-ownership="full">
             <doc xml:space="preserve">The number of bytes to return</doc>
             <type name="guint" c:type="guint"/>
           </parameter>
@@ -50502,6 +51515,14 @@ start with a alphabetic character. See RFC 3986 Section 3.1.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <function-macro name="VALUE_HOLDS_UNIQUE_LIST" c:identifier="GST_VALUE_HOLDS_UNIQUE_LIST" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Checks if the given #GValue contains a #GstValueUniqueList value.</doc>
+      <parameters>
+        <parameter name="x">
+          <doc xml:space="preserve">the #GValue to check</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
     <constant name="VALUE_LESS_THAN" value="-1" c:type="GST_VALUE_LESS_THAN">
       <doc xml:space="preserve">Indicates that the first value provided to a comparison function
 (gst_value_compare()) is lesser than the second one.</doc>
@@ -50516,7 +51537,7 @@ determine a order for the two provided values.</doc>
       <doc xml:space="preserve">The major version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MICRO" value="1" c:type="GST_VERSION_MICRO">
+    <constant name="VERSION_MICRO" value="50" c:type="GST_VERSION_MICRO">
       <doc xml:space="preserve">The micro version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
@@ -50894,6 +51915,110 @@ Free-function: g_free</doc>
         </array>
       </field>
     </record>
+    <class name="ValueUniqueList" c:symbol-prefix="value_unique_list" version="1.28" glib:type-name="GstValueUniqueList" glib:get-type="gst_value_unique_list_get_type" glib:fundamental="1">
+      <doc xml:space="preserve">A fundamental type that describes a set of #GValue</doc>
+      <function name="append_and_take_value" c:identifier="gst_value_unique_list_append_and_take_value" version="1.28">
+        <doc xml:space="preserve">Appends @append_value to the GstValueUniqueList in @value.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="value" transfer-ownership="none">
+            <doc xml:space="preserve">a #GValue of type #GST_TYPE_UNIQUE_LIST</doc>
+            <type name="GObject.Value" c:type="GValue*"/>
+          </parameter>
+          <parameter name="append_value" transfer-ownership="full">
+            <doc xml:space="preserve">the value to append</doc>
+            <type name="GObject.Value" c:type="GValue*"/>
+          </parameter>
+        </parameters>
+      </function>
+      <function name="append_value" c:identifier="gst_value_unique_list_append_value" version="1.28">
+        <doc xml:space="preserve">Appends @append_value to the GstValueUniqueList in @value.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="value" transfer-ownership="none">
+            <doc xml:space="preserve">a #GValue of type #GST_TYPE_UNIQUE_LIST</doc>
+            <type name="GObject.Value" c:type="GValue*"/>
+          </parameter>
+          <parameter name="append_value" transfer-ownership="none">
+            <doc xml:space="preserve">the value to append</doc>
+            <type name="GObject.Value" c:type="const GValue*"/>
+          </parameter>
+        </parameters>
+      </function>
+      <function name="concat" c:identifier="gst_value_unique_list_concat" version="1.28">
+        <doc xml:space="preserve">Concatenates copies of @value1 and @value2 into a set.  Values that are not
+of type #GST_TYPE_UNIQUE_LIST are treated as if they were sets of length 1.
+@dest will be initialized to the type #GST_TYPE_UNIQUE_LIST.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="dest" direction="out" caller-allocates="1" transfer-ownership="none">
+            <doc xml:space="preserve">an uninitialized #GValue to take the result</doc>
+            <type name="GObject.Value" c:type="GValue*"/>
+          </parameter>
+          <parameter name="value1" transfer-ownership="none">
+            <doc xml:space="preserve">a #GValue</doc>
+            <type name="GObject.Value" c:type="const GValue*"/>
+          </parameter>
+          <parameter name="value2" transfer-ownership="none">
+            <doc xml:space="preserve">a #GValue</doc>
+            <type name="GObject.Value" c:type="const GValue*"/>
+          </parameter>
+        </parameters>
+      </function>
+      <function name="get_size" c:identifier="gst_value_unique_list_get_size" version="1.28">
+        <doc xml:space="preserve">Gets the number of values contained in @value.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the number of values</doc>
+          <type name="guint" c:type="guint"/>
+        </return-value>
+        <parameters>
+          <parameter name="value" transfer-ownership="none">
+            <doc xml:space="preserve">a #GValue of type #GST_TYPE_UNIQUE_LIST</doc>
+            <type name="GObject.Value" c:type="const GValue*"/>
+          </parameter>
+        </parameters>
+      </function>
+      <function name="get_value" c:identifier="gst_value_unique_list_get_value" version="1.28">
+        <doc xml:space="preserve">Gets the value that is a member of the set contained in @value and
+has the index @index.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the value at the given index</doc>
+          <type name="GObject.Value" c:type="const GValue*"/>
+        </return-value>
+        <parameters>
+          <parameter name="value" transfer-ownership="none">
+            <doc xml:space="preserve">a #GValue of type #GST_TYPE_UNIQUE_LIST</doc>
+            <type name="GObject.Value" c:type="const GValue*"/>
+          </parameter>
+          <parameter name="index" transfer-ownership="none">
+            <doc xml:space="preserve">index of value to get from the set</doc>
+            <type name="guint" c:type="guint"/>
+          </parameter>
+        </parameters>
+      </function>
+      <function name="prepend_value" c:identifier="gst_value_unique_list_prepend_value" version="1.28">
+        <doc xml:space="preserve">Prepends @prepend_value to the GstValueUniqueList in @value.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="value" transfer-ownership="none">
+            <doc xml:space="preserve">a #GValue of type #GST_TYPE_UNIQUE_LIST</doc>
+            <type name="GObject.Value" c:type="GValue*"/>
+          </parameter>
+          <parameter name="prepend_value" transfer-ownership="none">
+            <doc xml:space="preserve">the value to prepend</doc>
+            <type name="GObject.Value" c:type="const GValue*"/>
+          </parameter>
+        </parameters>
+      </function>
+    </class>
     <record name="VecDeque" c:type="GstVecDeque" disguised="1" opaque="1" version="1.26" introspectable="0">
       <doc xml:space="preserve">#GstVecDeque is an object that provides standard double-ended queue (deque)
 functionality based on an array instead of linked lists. This reduces the
@@ -51369,6 +52494,47 @@ character, a newline character will be added automatically.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <function-macro name="WARNING_ONCE" c:identifier="GST_WARNING_ONCE" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a warning message in the default category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="WARNING_ONCE_ID" c:identifier="GST_WARNING_ONCE_ID" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a warning message for the given identifier in the default category
+exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="id">
+          <doc xml:space="preserve">an object ID or %NULL</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="WARNING_ONCE_OBJECT" c:identifier="GST_WARNING_ONCE_OBJECT" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Output a warning message belonging to the given object in the default
+category exactly once per statement.
+
+There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</doc>
+      <parameters>
+        <parameter name="object">
+          <doc xml:space="preserve">a #GObject or %NULL</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
     <function-macro name="WRITE_UINT16_BE" c:identifier="GST_WRITE_UINT16_BE" introspectable="0">
       <doc xml:space="preserve">Store a 16 bit unsigned integer value in big endian format into the memory buffer.</doc>
       <parameters>
@@ -51655,11 +52821,15 @@ amount of memory allocated as @xy, i.e. 2*n*sizeof(GstClockTime).
       <parameters>
         <parameter name="xy" transfer-ownership="none">
           <doc xml:space="preserve">Pairs of (x,y) values</doc>
-          <type name="ClockTime" c:type="const GstClockTime*"/>
+          <array zero-terminated="0" c:type="const GstClockTime*">
+            <type name="ClockTime" c:type="GstClockTime"/>
+          </array>
         </parameter>
-        <parameter name="temp" transfer-ownership="none">
+        <parameter name="temp" transfer-ownership="none" nullable="1" allow-none="1">
           <doc xml:space="preserve">Temporary scratch space used by the function</doc>
-          <type name="ClockTime" c:type="GstClockTime*"/>
+          <array zero-terminated="0" c:type="GstClockTime*">
+            <type name="ClockTime" c:type="GstClockTime"/>
+          </array>
         </parameter>
         <parameter name="n" transfer-ownership="none">
           <doc xml:space="preserve">number of (x,y) pairs</doc>
@@ -51684,6 +52854,22 @@ amount of memory allocated as @xy, i.e. 2*n*sizeof(GstClockTime).
         <parameter name="r_squared" direction="out" caller-allocates="0" transfer-ownership="full">
           <doc xml:space="preserve">R-squared</doc>
           <type name="gdouble" c:type="gdouble*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="call_async" c:identifier="gst_call_async" version="1.28">
+      <doc xml:space="preserve">Calls @func from another thread and passes @user_data to it.</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="func" transfer-ownership="none" scope="async" closure="1">
+          <doc xml:space="preserve">function to call asynchronously from another thread</doc>
+          <type name="CallAsyncFunc" c:type="GstCallAsyncFunc"/>
+        </parameter>
+        <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1">
+          <doc xml:space="preserve">data to pass to @func</doc>
+          <type name="gpointer" c:type="gpointer"/>
         </parameter>
       </parameters>
     </function>
@@ -51773,6 +52959,31 @@ of @new_caps.</doc>
           <doc xml:space="preserve">pointer to a #GstCaps that will
     replace the caps pointed to by @old_caps.</doc>
           <type name="Caps" c:type="GstCaps*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="check_version" c:identifier="gst_check_version" version="1.28">
+      <doc xml:space="preserve">Applications might want to check if the runtime GStreamer version is greater
+or equal to the version specified using @major, @minor and @micro.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if the GStreamer version is greater or equal to
+@major\.@minor\.@micro, %FALSE otherwise. Also this function returns %FALSE
+when checking for a different @major version to the current one, as major
+version bumps are ABI breaks anyway.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="major" transfer-ownership="none">
+          <doc xml:space="preserve">Major version number</doc>
+          <type name="guint" c:type="guint"/>
+        </parameter>
+        <parameter name="minor" transfer-ownership="none">
+          <doc xml:space="preserve">Minor version number</doc>
+          <type name="guint" c:type="guint"/>
+        </parameter>
+        <parameter name="micro" transfer-ownership="none">
+          <doc xml:space="preserve">Micro version number</doc>
+          <type name="guint" c:type="guint"/>
         </parameter>
       </parameters>
     </function>
@@ -52054,6 +53265,78 @@ Either @new_context or the #GstContext pointed to by @old_context may be %NULL.<
       <attribute name="doc.skip" value="true"/>
       <return-value transfer-ownership="none">
         <type name="GLib.Quark" c:type="GQuark"/>
+      </return-value>
+    </function>
+    <function name="cpuid_supports_arm_neon" c:identifier="gst_cpuid_supports_arm_neon" version="1.28">
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if NEON (32-bit) is supported by the CPU, %FALSE otherwise.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+    </function>
+    <function name="cpuid_supports_arm_neon64" c:identifier="gst_cpuid_supports_arm_neon64" version="1.28">
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if NEON (64-bit) is supported by the CPU, %FALSE otherwise.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+    </function>
+    <function name="cpuid_supports_x86_3dnow" c:identifier="gst_cpuid_supports_x86_3dnow" version="1.28">
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if 3DNow! is supported by the CPU, %FALSE otherwise.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+    </function>
+    <function name="cpuid_supports_x86_avx" c:identifier="gst_cpuid_supports_x86_avx" version="1.28">
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if AVX is supported by the CPU, %FALSE otherwise.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+    </function>
+    <function name="cpuid_supports_x86_avx2" c:identifier="gst_cpuid_supports_x86_avx2" version="1.28">
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if avx2 is supported by the CPU, %FALSE otherwise.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+    </function>
+    <function name="cpuid_supports_x86_mmx" c:identifier="gst_cpuid_supports_x86_mmx" version="1.28">
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if MMX is supported by the CPU, %FALSE otherwise.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+    </function>
+    <function name="cpuid_supports_x86_mmxext" c:identifier="gst_cpuid_supports_x86_mmxext" version="1.28">
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if extended MMX is supported by the CPU, %FALSE otherwise.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+    </function>
+    <function name="cpuid_supports_x86_sse2" c:identifier="gst_cpuid_supports_x86_sse2" version="1.28">
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if SSE2 is supported by the CPU, %FALSE otherwise.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+    </function>
+    <function name="cpuid_supports_x86_sse3" c:identifier="gst_cpuid_supports_x86_sse3" version="1.28">
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if SSE3 is supported by the CPU, %FALSE otherwise.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+    </function>
+    <function name="cpuid_supports_x86_sse4_1" c:identifier="gst_cpuid_supports_x86_sse4_1" version="1.28">
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if SSE4.1 is supported by the CPU, %FALSE otherwise.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+    </function>
+    <function name="cpuid_supports_x86_sse4_2" c:identifier="gst_cpuid_supports_x86_sse4_2" version="1.28">
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if SSSE3 is supported by the CPU, %FALSE otherwise.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+    </function>
+    <function name="cpuid_supports_x86_ssse3" c:identifier="gst_cpuid_supports_x86_ssse3" version="1.28">
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if SSSE3 is supported by the CPU, %FALSE otherwise.</doc>
+        <type name="gboolean" c:type="gboolean"/>
       </return-value>
     </function>
     <function name="debug_add_log_function" c:identifier="gst_debug_add_log_function">
@@ -52478,7 +53761,9 @@ would write out.</doc>
     <function name="debug_log_id_literal_with_context" c:identifier="gst_debug_log_id_literal_with_context" version="1.28">
       <doc xml:space="preserve">Logs a message with the specified context and ID. If the context has already
 seen this message based on its flags configuration, the message will not be
-logged.</doc>
+logged.
+
+@level &gt;= %GST_LEVEL_MEMDUMP is not supported.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -52557,7 +53842,9 @@ logged.</doc>
     <function name="debug_log_id_with_context" c:identifier="gst_debug_log_id_with_context" version="1.28" introspectable="0">
       <doc xml:space="preserve">Logs a message with the specified context and ID. If the context has already
 seen this message based on its flags configuration, the message will not be
-logged.</doc>
+logged.
+
+@level &gt;= %GST_LEVEL_MEMDUMP is not supported.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -52599,7 +53886,9 @@ logged.</doc>
     <function name="debug_log_id_with_context_valist" c:identifier="gst_debug_log_id_with_context_valist" version="1.28" introspectable="0">
       <doc xml:space="preserve">Logs a message with the specified context and ID. If the context has already
 seen this message based on its flags configuration, the message will not be
-logged.</doc>
+logged.
+
+@level &gt;= %GST_LEVEL_MEMDUMP is not supported.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -52677,7 +53966,9 @@ logged.</doc>
     </function>
     <function name="debug_log_literal_with_context" c:identifier="gst_debug_log_literal_with_context" version="1.28">
       <doc xml:space="preserve">Logs a literal message with the specified context. Depending on the context
-state, the message may not be logged at all.</doc>
+state, the message may not be logged at all.
+
+@level &gt;= %GST_LEVEL_MEMDUMP is not supported.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -52756,7 +54047,9 @@ state, the message may not be logged at all.</doc>
     </function>
     <function name="debug_log_with_context" c:identifier="gst_debug_log_with_context" version="1.28" introspectable="0">
       <doc xml:space="preserve">Logs a message with the specified context. If the context has already seen this
-message based on its flags configuration, the message will not be logged.</doc>
+message based on its flags configuration, the message will not be logged.
+
+@level &gt;= %GST_LEVEL_MEMDUMP is not supported.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -52799,7 +54092,9 @@ message based on its flags configuration, the message will not be logged.</doc>
     <function name="debug_log_with_context_valist" c:identifier="gst_debug_log_with_context_valist" version="1.28" introspectable="0">
       <doc xml:space="preserve">Logs a message with the specified context using a va_list. If the context has
 already seen this message based on its flags configuration, the message will
-not be logged.</doc>
+not be logged.
+
+@level &gt;= %GST_LEVEL_MEMDUMP is not supported.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -53850,11 +55145,11 @@ use gst_init_check() instead.</doc>
         <type name="none" c:type="void"/>
       </return-value>
       <parameters>
-        <parameter name="argc" direction="inout" caller-allocates="0" transfer-ownership="full" nullable="1" allow-none="1">
+        <parameter name="argc" direction="inout" caller-allocates="0" transfer-ownership="full" optional="1">
           <doc xml:space="preserve">pointer to application's argc</doc>
           <type name="gint" c:type="int*"/>
         </parameter>
-        <parameter name="argv" direction="inout" caller-allocates="0" transfer-ownership="full" nullable="1" allow-none="1">
+        <parameter name="argv" direction="inout" caller-allocates="0" transfer-ownership="full" optional="1">
           <doc xml:space="preserve">pointer to application's argv</doc>
           <array length="0" zero-terminated="0" c:type="char***">
             <type name="utf8" c:type="char**"/>
@@ -53874,11 +55169,11 @@ use gst_init() instead.</doc>
         <type name="gboolean" c:type="gboolean"/>
       </return-value>
       <parameters>
-        <parameter name="argc" direction="inout" caller-allocates="0" transfer-ownership="full" nullable="1" allow-none="1">
+        <parameter name="argc" direction="inout" caller-allocates="0" transfer-ownership="full" optional="1">
           <doc xml:space="preserve">pointer to application's argc</doc>
           <type name="gint" c:type="int*"/>
         </parameter>
-        <parameter name="argv" direction="inout" caller-allocates="0" transfer-ownership="full" nullable="1" allow-none="1">
+        <parameter name="argv" direction="inout" caller-allocates="0" transfer-ownership="full" optional="1">
           <doc xml:space="preserve">pointer to application's argv</doc>
           <array length="0" zero-terminated="0" c:type="char***">
             <type name="utf8" c:type="char**"/>
@@ -54283,7 +55578,9 @@ not allow to determine that size, @consumed is set to 0.</doc>
         </parameter>
         <parameter name="data" transfer-ownership="none">
           <doc xml:space="preserve">serialization data obtained from gst_meta_serialize()</doc>
-          <type name="guint8" c:type="const guint8*"/>
+          <array length="2" zero-terminated="0" c:type="const guint8*">
+            <type name="guint8" c:type="guint8"/>
+          </array>
         </parameter>
         <parameter name="size" transfer-ownership="none">
           <doc xml:space="preserve">size of @data</doc>
@@ -55372,6 +56669,33 @@ the GStreamer core. See gst_segtrap_is_enabled() for more information.</doc>
         <parameter name="transition" transfer-ownership="none">
           <doc xml:space="preserve">a #GstStateChange to get the name of.</doc>
           <type name="StateChange" c:type="GstStateChange"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="state_change_return_get_name" c:identifier="gst_state_change_return_get_name" moved-to="StateChangeReturn.get_name" version="1.28">
+      <doc xml:space="preserve">Gets a string representing the given state change result.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">a string with the name of the state
+   result.</doc>
+        <type name="utf8" c:type="const gchar*"/>
+      </return-value>
+      <parameters>
+        <parameter name="state_ret" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstStateChangeReturn to get the name of.</doc>
+          <type name="StateChangeReturn" c:type="GstStateChangeReturn"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="state_get_name" c:identifier="gst_state_get_name" moved-to="State.get_name" version="1.28">
+      <doc xml:space="preserve">Gets a string representing the given state.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">a string with the name of the state.</doc>
+        <type name="utf8" c:type="const gchar*"/>
+      </return-value>
+      <parameters>
+        <parameter name="state" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstState to get the name of.</doc>
+          <type name="State" c:type="GstState"/>
         </parameter>
       </parameters>
     </function>
@@ -56601,11 +57925,11 @@ the simple continued fraction decomposition. Using 8 and 333 for
         <type name="none" c:type="void"/>
       </return-value>
       <parameters>
-        <parameter name="numerator" transfer-ownership="none">
+        <parameter name="numerator" direction="inout" caller-allocates="0" transfer-ownership="full">
           <doc xml:space="preserve">First value as #gint</doc>
           <type name="gint" c:type="gint*"/>
         </parameter>
-        <parameter name="denominator" transfer-ownership="none">
+        <parameter name="denominator" direction="inout" caller-allocates="0" transfer-ownership="full">
           <doc xml:space="preserve">Second value as #gint</doc>
           <type name="gint" c:type="gint*"/>
         </parameter>

@@ -798,6 +798,14 @@ flags such as the DISCONT flag are set on the returned buffer, or not.
 The caller needs to explicitly set or unset flags that should be set or
 unset.
 
+Likewise, no assumptions should be made about timestamps and offset of the
+returned buffer. The caller should use gst_adapter_prev_pts(),
+gst_adapter_prev_dts(), and gst_adapter_prev_offset() to obtain the relevant
+information.
+
+The returned buffer might not be writable, use gst_buffer_make_writable()
+if you need to change e.g. flags or timestamps.
+
 Since 1.6 this will also copy over all GstMeta of the input buffers except
 for meta with the %GST_META_FLAG_POOLED flag or with the "memory" tag.
 
@@ -10366,7 +10374,9 @@ the current data, which is returned.
 Free-function: g_free</doc>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">the current data. g_free() after usage.</doc>
-          <type name="guint8" c:type="guint8*"/>
+          <array zero-terminated="0" c:type="guint8*">
+            <type name="guint8" c:type="guint8"/>
+          </array>
         </return-value>
         <parameters>
           <instance-parameter name="writer" transfer-ownership="full">
@@ -10995,7 +11005,9 @@ Free-function: gst_byte_writer_free</doc>
         <parameters>
           <parameter name="data" transfer-ownership="none">
             <doc xml:space="preserve">Memory area for writing</doc>
-            <type name="guint8" c:type="guint8*"/>
+            <array length="1" zero-terminated="0" c:type="guint8*">
+              <type name="guint8" c:type="guint8"/>
+            </array>
           </parameter>
           <parameter name="size" transfer-ownership="none">
             <doc xml:space="preserve">Size of @data in bytes</doc>
@@ -13708,7 +13720,9 @@ Free-function: gst_byte_writer_free</doc>
       <parameters>
         <parameter name="data" transfer-ownership="none">
           <doc xml:space="preserve">Memory area for writing</doc>
-          <type name="guint8" c:type="guint8*"/>
+          <array length="1" zero-terminated="0" c:type="guint8*">
+            <type name="guint8" c:type="guint8"/>
+          </array>
         </parameter>
         <parameter name="size" transfer-ownership="none">
           <doc xml:space="preserve">Size of @data in bytes</doc>

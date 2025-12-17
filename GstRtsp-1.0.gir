@@ -298,9 +298,9 @@ is set to non-flushing mode again.</doc>
       </method>
       <method name="get_ip" c:identifier="gst_rtsp_connection_get_ip">
         <doc xml:space="preserve">Retrieve the IP address of the other end of @conn.</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">The IP address as a string. this value remains valid until the
-connection is closed.</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">The IP address as a string.
+This value remains valid until the connection is closed.</doc>
           <type name="utf8" c:type="const gchar*"/>
         </return-value>
         <parameters>
@@ -428,7 +428,7 @@ the only error flag set even if other problems exist with the certificate.</doc>
       </method>
       <method name="get_url" c:identifier="gst_rtsp_connection_get_url">
         <doc xml:space="preserve">Retrieve the URL of the other end of @conn.</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="none">
           <doc xml:space="preserve">The URL. This value remains valid until the
 connection is freed.</doc>
           <type name="RTSPUrl" c:type="GstRTSPUrl*"/>

@@ -710,7 +710,7 @@ usage.</doc>
       </method>
       <method name="get_tls_authentication_mode" c:identifier="gst_rtsp_auth_get_tls_authentication_mode">
         <doc xml:space="preserve">Get the #GTlsAuthenticationMode.</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="none">
           <doc xml:space="preserve">the #GTlsAuthenticationMode.</doc>
           <type name="Gio.TlsAuthenticationMode" c:type="GTlsAuthenticationMode"/>
         </return-value>
@@ -2100,6 +2100,13 @@ that created the client but can be overridden later.</doc>
             <type name="RTSPContext"/>
           </parameter>
         </parameters>
+      </glib:signal>
+      <glib:signal name="pre-closed" when="last" version="1.28">
+        <doc xml:space="preserve">Provide a way for an application to be notified when a connection is closed,
+before the client's sessions are cleaned up.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
       </glib:signal>
       <glib:signal name="pre-describe-request" when="last" version="1.12">
         <return-value transfer-ownership="none">
