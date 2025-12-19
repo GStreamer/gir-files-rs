@@ -618,7 +618,7 @@ when no longer needed.</doc>
         <parameters>
           <parameter name="model_filename" transfer-ownership="none">
             <doc xml:space="preserve">Path to the model file (e.g., "model.onnx", "model.tflite")</doc>
-            <type name="utf8" c:type="const gchar*"/>
+            <type name="filename" c:type="const gchar*"/>
           </parameter>
         </parameters>
       </function>
@@ -2624,7 +2624,7 @@ when no longer needed.</doc>
       <parameters>
         <parameter name="model_filename" transfer-ownership="none">
           <doc xml:space="preserve">Path to the model file (e.g., "model.onnx", "model.tflite")</doc>
-          <type name="utf8" c:type="const gchar*"/>
+          <type name="filename" c:type="const gchar*"/>
         </parameter>
       </parameters>
     </function>
