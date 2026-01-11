@@ -768,7 +768,7 @@ https://www.w3.org/TR/webrtc/#dom-rtcpeerconnection-close.</doc>
             <doc xml:space="preserve">The #GstWebRTCICE</doc>
             <type name="WebRTCICE" c:type="GstWebRTCICE*"/>
           </instance-parameter>
-          <parameter name="promise" transfer-ownership="full" nullable="1" allow-none="1">
+          <parameter name="promise" transfer-ownership="none" nullable="1" allow-none="1">
             <doc xml:space="preserve">a #GstPromise to be notified when the task is
 complete.</doc>
             <type name="Gst.Promise" c:type="GstPromise*"/>
@@ -1147,7 +1147,7 @@ https://www.w3.org/TR/webrtc/#dom-rtcpeerconnection-close.</doc>
             <doc xml:space="preserve">The #GstWebRTCICE</doc>
             <type name="WebRTCICE" c:type="GstWebRTCICE*"/>
           </instance-parameter>
-          <parameter name="promise" transfer-ownership="full" nullable="1" allow-none="1">
+          <parameter name="promise" transfer-ownership="none" nullable="1" allow-none="1">
             <doc xml:space="preserve">a #GstPromise to be notified when the task is
 complete.</doc>
             <type name="Gst.Promise" c:type="GstPromise*"/>
@@ -2130,7 +2130,7 @@ Get HTTP Proxy to be used when connecting to TURN server.</doc>
               <doc xml:space="preserve">The #GstWebRTCICE</doc>
               <type name="WebRTCICE" c:type="GstWebRTCICE*"/>
             </parameter>
-            <parameter name="promise" transfer-ownership="full" nullable="1" allow-none="1">
+            <parameter name="promise" transfer-ownership="none" nullable="1" allow-none="1">
               <doc xml:space="preserve">a #GstPromise to be notified when the task is
 complete.</doc>
               <type name="Gst.Promise" c:type="GstPromise*"/>

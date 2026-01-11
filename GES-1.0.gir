@@ -14800,7 +14800,7 @@ contains one frame)</doc>
     <constant name="VERSION_MAJOR" value="1" c:type="GES_VERSION_MAJOR">
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MICRO" value="50" c:type="GES_VERSION_MICRO">
+    <constant name="VERSION_MICRO" value="90" c:type="GES_VERSION_MICRO">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="VERSION_MINOR" value="27" c:type="GES_VERSION_MINOR">
