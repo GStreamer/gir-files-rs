@@ -1020,48 +1020,55 @@ This class used to live in gst-plugins-bad and was moved to core.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="clip">
-        <doc xml:space="preserve">Optional.
-                 Called when a buffer is received on a sink pad, the task of
-                 clipping it and translating it to the current segment falls
-                 on the subclass. The function should use the segment of data
-                 and the negotiated media type on the pad to perform
-                 clipping of input buffer. This function takes ownership of
-                 buf and should output a buffer or return NULL in
-                 if the buffer should be dropped.</doc>
-        <return-value transfer-ownership="full">
+        <doc xml:space="preserve">Called when a buffer is received on a sink pad, the task of
+clipping it and translating it to the current segment falls
+on the subclass. The function should use the segment of data
+and the negotiated media type on the pad to perform
+clipping of input buffer. This function takes ownership of
+buf and should output a buffer or return NULL in
+if the buffer should be dropped.</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">a #GstBuffer.</doc>
           <type name="Gst.Buffer" c:type="GstBuffer*"/>
         </return-value>
         <parameters>
           <instance-parameter name="aggregator" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstAggregator</doc>
             <type name="Aggregator" c:type="GstAggregator*"/>
           </instance-parameter>
           <parameter name="aggregator_pad" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstAggregatorPad</doc>
             <type name="AggregatorPad" c:type="GstAggregatorPad*"/>
           </parameter>
-          <parameter name="buf" transfer-ownership="none">
+          <parameter name="buf" transfer-ownership="full">
+            <doc xml:space="preserve">a #GstBuffer</doc>
             <type name="Gst.Buffer" c:type="GstBuffer*"/>
           </parameter>
         </parameters>
       </virtual-method>
-      <virtual-method name="create_new_pad" introspectable="0">
-        <doc xml:space="preserve">Optional.
-                 Called when a new pad needs to be created. Allows subclass that
-                 don't have a single sink pad template to provide a pad based
-                 on the provided information.</doc>
-        <return-value>
+      <virtual-method name="create_new_pad">
+        <doc xml:space="preserve">Called when a new pad needs to be created. Allows subclass that
+don't have a single sink pad template to provide a pad based
+on the provided information.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">a new #GstAggregatorPad.</doc>
           <type name="AggregatorPad" c:type="GstAggregatorPad*"/>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstAggregator</doc>
             <type name="Aggregator" c:type="GstAggregator*"/>
           </instance-parameter>
           <parameter name="templ" transfer-ownership="none">
+            <doc xml:space="preserve">the pad template to use</doc>
             <type name="Gst.PadTemplate" c:type="GstPadTemplate*"/>
           </parameter>
-          <parameter name="req_name" transfer-ownership="none">
+          <parameter name="req_name" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">requested pad name</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
-          <parameter name="caps" transfer-ownership="none">
+          <parameter name="caps" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">caps for the pad</doc>
             <type name="Gst.Caps" c:type="const GstCaps*"/>
           </parameter>
         </parameters>
@@ -1121,18 +1128,20 @@ sent before pushing the buffer.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="fixate_src_caps">
-        <doc xml:space="preserve">Optional.
-                  Fixate and return the src pad caps provided.  The function takes
-                  ownership of @caps and returns a fixated version of
-                  @caps. @caps is not guaranteed to be writable.</doc>
+        <doc xml:space="preserve">Fixate and return the src pad caps provided. The function takes
+ownership of @caps and returns a fixated version of
+@caps. @caps is not guaranteed to be writable.</doc>
         <return-value transfer-ownership="full">
+          <doc xml:space="preserve">the fixated caps #GstCaps.</doc>
           <type name="Gst.Caps" c:type="GstCaps*"/>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstAggregator</doc>
             <type name="Aggregator" c:type="GstAggregator*"/>
           </instance-parameter>
-          <parameter name="caps" transfer-ownership="none">
+          <parameter name="caps" transfer-ownership="full">
+            <doc xml:space="preserve">a #GstCaps to fixate</doc>
             <type name="Gst.Caps" c:type="GstCaps*"/>
           </parameter>
         </parameters>
@@ -1211,9 +1220,11 @@ control aggregating parameters for a given set of input samples.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="aggregator" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstAggregator</doc>
             <type name="Aggregator" c:type="GstAggregator*"/>
           </instance-parameter>
           <parameter name="aggregator_pad" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstAggregatorPad</doc>
             <type name="AggregatorPad" c:type="GstAggregatorPad*"/>
           </parameter>
         </parameters>
@@ -1240,39 +1251,43 @@ control aggregating parameters for a given set of input samples.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="sink_event">
-        <doc xml:space="preserve">Optional.
-                 Called when an event is received on a sink pad, the subclass
-                 should always chain up.</doc>
+        <doc xml:space="preserve">Called when an event is received on a sink pad, the subclass
+should always chain up.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
           <instance-parameter name="aggregator" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstAggregator</doc>
             <type name="Aggregator" c:type="GstAggregator*"/>
           </instance-parameter>
           <parameter name="aggregator_pad" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstAggregatorPad</doc>
             <type name="AggregatorPad" c:type="GstAggregatorPad*"/>
           </parameter>
-          <parameter name="event" transfer-ownership="none">
+          <parameter name="event" transfer-ownership="full">
+            <doc xml:space="preserve">a #GstEvent</doc>
             <type name="Gst.Event" c:type="GstEvent*"/>
           </parameter>
         </parameters>
       </virtual-method>
       <virtual-method name="sink_event_pre_queue">
-        <doc xml:space="preserve">Optional.
-                       Called when an event is received on a sink pad before queueing up
-                       serialized events. The subclass should always chain up (Since: 1.18).</doc>
+        <doc xml:space="preserve">Called when an event is received on a sink pad before queueing up
+serialized events. The subclass should always chain up (Since: 1.18).</doc>
         <return-value transfer-ownership="none">
           <type name="Gst.FlowReturn" c:type="GstFlowReturn"/>
         </return-value>
         <parameters>
           <instance-parameter name="aggregator" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstAggregator</doc>
             <type name="Aggregator" c:type="GstAggregator*"/>
           </instance-parameter>
           <parameter name="aggregator_pad" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstAggregatorPad</doc>
             <type name="AggregatorPad" c:type="GstAggregatorPad*"/>
           </parameter>
-          <parameter name="event" transfer-ownership="none">
+          <parameter name="event" transfer-ownership="full">
+            <doc xml:space="preserve">a #GstEvent</doc>
             <type name="Gst.Event" c:type="GstEvent*"/>
           </parameter>
         </parameters>
@@ -1335,17 +1350,18 @@ control aggregating parameters for a given set of input samples.</doc>
         </parameters>
       </virtual-method>
       <virtual-method name="src_event">
-        <doc xml:space="preserve">Optional.
-                 Called when an event is received on the src pad, the subclass
-                 should always chain up.</doc>
+        <doc xml:space="preserve">Called when an event is received on the src pad, the subclass
+should always chain up.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
           <instance-parameter name="aggregator" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstAggregator</doc>
             <type name="Aggregator" c:type="GstAggregator*"/>
           </instance-parameter>
-          <parameter name="event" transfer-ownership="none">
+          <parameter name="event" transfer-ownership="full">
+            <doc xml:space="preserve">a #GstEvent</doc>
             <type name="Gst.Event" c:type="GstEvent*"/>
           </parameter>
         </parameters>
@@ -1399,12 +1415,14 @@ control aggregating parameters for a given set of input samples.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstAggregator</doc>
             <type name="Aggregator" c:type="GstAggregator*"/>
           </instance-parameter>
           <parameter name="caps" transfer-ownership="none">
+            <doc xml:space="preserve">the new source pad #GstCaps</doc>
             <type name="Gst.Caps" c:type="GstCaps*"/>
           </parameter>
-          <parameter name="ret" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
+          <parameter name="ret" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1">
             <type name="Gst.Caps" c:type="GstCaps**"/>
           </parameter>
         </parameters>
@@ -1834,17 +1852,21 @@ _finish_buffer from inside that function.</doc>
                  buf and should output a buffer or return NULL in
                  if the buffer should be dropped.</doc>
         <callback name="clip">
-          <return-value transfer-ownership="full">
+          <return-value transfer-ownership="full" nullable="1">
+            <doc xml:space="preserve">a #GstBuffer.</doc>
             <type name="Gst.Buffer" c:type="GstBuffer*"/>
           </return-value>
           <parameters>
             <parameter name="aggregator" transfer-ownership="none">
+              <doc xml:space="preserve">the #GstAggregator</doc>
               <type name="Aggregator" c:type="GstAggregator*"/>
             </parameter>
             <parameter name="aggregator_pad" transfer-ownership="none">
+              <doc xml:space="preserve">a #GstAggregatorPad</doc>
               <type name="AggregatorPad" c:type="GstAggregatorPad*"/>
             </parameter>
-            <parameter name="buf" transfer-ownership="none">
+            <parameter name="buf" transfer-ownership="full">
+              <doc xml:space="preserve">a #GstBuffer</doc>
               <type name="Gst.Buffer" c:type="GstBuffer*"/>
             </parameter>
           </parameters>
@@ -1884,12 +1906,15 @@ _finish_buffer from inside that function.</doc>
           </return-value>
           <parameters>
             <parameter name="aggregator" transfer-ownership="none">
+              <doc xml:space="preserve">the #GstAggregator</doc>
               <type name="Aggregator" c:type="GstAggregator*"/>
             </parameter>
             <parameter name="aggregator_pad" transfer-ownership="none">
+              <doc xml:space="preserve">a #GstAggregatorPad</doc>
               <type name="AggregatorPad" c:type="GstAggregatorPad*"/>
             </parameter>
-            <parameter name="event" transfer-ownership="none">
+            <parameter name="event" transfer-ownership="full">
+              <doc xml:space="preserve">a #GstEvent</doc>
               <type name="Gst.Event" c:type="GstEvent*"/>
             </parameter>
           </parameters>
@@ -1926,9 +1951,11 @@ _finish_buffer from inside that function.</doc>
           </return-value>
           <parameters>
             <parameter name="aggregator" transfer-ownership="none">
+              <doc xml:space="preserve">the #GstAggregator</doc>
               <type name="Aggregator" c:type="GstAggregator*"/>
             </parameter>
-            <parameter name="event" transfer-ownership="none">
+            <parameter name="event" transfer-ownership="full">
+              <doc xml:space="preserve">a #GstEvent</doc>
               <type name="Gst.Event" c:type="GstEvent*"/>
             </parameter>
           </parameters>
@@ -2044,26 +2071,31 @@ _finish_buffer from inside that function.</doc>
           </parameters>
         </callback>
       </field>
-      <field name="create_new_pad" introspectable="0">
+      <field name="create_new_pad">
         <doc xml:space="preserve">Optional.
                  Called when a new pad needs to be created. Allows subclass that
                  don't have a single sink pad template to provide a pad based
                  on the provided information.</doc>
-        <callback name="create_new_pad" introspectable="0">
-          <return-value>
+        <callback name="create_new_pad">
+          <return-value transfer-ownership="none">
+            <doc xml:space="preserve">a new #GstAggregatorPad.</doc>
             <type name="AggregatorPad" c:type="GstAggregatorPad*"/>
           </return-value>
           <parameters>
             <parameter name="self" transfer-ownership="none">
+              <doc xml:space="preserve">the #GstAggregator</doc>
               <type name="Aggregator" c:type="GstAggregator*"/>
             </parameter>
             <parameter name="templ" transfer-ownership="none">
+              <doc xml:space="preserve">the pad template to use</doc>
               <type name="Gst.PadTemplate" c:type="GstPadTemplate*"/>
             </parameter>
-            <parameter name="req_name" transfer-ownership="none">
+            <parameter name="req_name" transfer-ownership="none" nullable="1" allow-none="1">
+              <doc xml:space="preserve">requested pad name</doc>
               <type name="utf8" c:type="const gchar*"/>
             </parameter>
-            <parameter name="caps" transfer-ownership="none">
+            <parameter name="caps" transfer-ownership="none" nullable="1" allow-none="1">
+              <doc xml:space="preserve">caps for the pad</doc>
               <type name="Gst.Caps" c:type="const GstCaps*"/>
             </parameter>
           </parameters>
@@ -2082,12 +2114,14 @@ _finish_buffer from inside that function.</doc>
           </return-value>
           <parameters>
             <parameter name="self" transfer-ownership="none">
+              <doc xml:space="preserve">the #GstAggregator</doc>
               <type name="Aggregator" c:type="GstAggregator*"/>
             </parameter>
             <parameter name="caps" transfer-ownership="none">
+              <doc xml:space="preserve">the new source pad #GstCaps</doc>
               <type name="Gst.Caps" c:type="GstCaps*"/>
             </parameter>
-            <parameter name="ret" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
+            <parameter name="ret" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1">
               <type name="Gst.Caps" c:type="GstCaps**"/>
             </parameter>
           </parameters>
@@ -2100,13 +2134,16 @@ _finish_buffer from inside that function.</doc>
                   @caps. @caps is not guaranteed to be writable.</doc>
         <callback name="fixate_src_caps">
           <return-value transfer-ownership="full">
+            <doc xml:space="preserve">the fixated caps #GstCaps.</doc>
             <type name="Gst.Caps" c:type="GstCaps*"/>
           </return-value>
           <parameters>
             <parameter name="self" transfer-ownership="none">
+              <doc xml:space="preserve">the #GstAggregator</doc>
               <type name="Aggregator" c:type="GstAggregator*"/>
             </parameter>
-            <parameter name="caps" transfer-ownership="none">
+            <parameter name="caps" transfer-ownership="full">
+              <doc xml:space="preserve">a #GstCaps to fixate</doc>
               <type name="Gst.Caps" c:type="GstCaps*"/>
             </parameter>
           </parameters>
@@ -2198,12 +2235,15 @@ _finish_buffer from inside that function.</doc>
           </return-value>
           <parameters>
             <parameter name="aggregator" transfer-ownership="none">
+              <doc xml:space="preserve">the #GstAggregator</doc>
               <type name="Aggregator" c:type="GstAggregator*"/>
             </parameter>
             <parameter name="aggregator_pad" transfer-ownership="none">
+              <doc xml:space="preserve">a #GstAggregatorPad</doc>
               <type name="AggregatorPad" c:type="GstAggregatorPad*"/>
             </parameter>
-            <parameter name="event" transfer-ownership="none">
+            <parameter name="event" transfer-ownership="full">
+              <doc xml:space="preserve">a #GstEvent</doc>
               <type name="Gst.Event" c:type="GstEvent*"/>
             </parameter>
           </parameters>
@@ -2258,9 +2298,11 @@ _finish_buffer from inside that function.</doc>
           </return-value>
           <parameters>
             <parameter name="aggregator" transfer-ownership="none">
+              <doc xml:space="preserve">the #GstAggregator</doc>
               <type name="Aggregator" c:type="GstAggregator*"/>
             </parameter>
             <parameter name="aggregator_pad" transfer-ownership="none">
+              <doc xml:space="preserve">a #GstAggregatorPad</doc>
               <type name="AggregatorPad" c:type="GstAggregatorPad*"/>
             </parameter>
           </parameters>

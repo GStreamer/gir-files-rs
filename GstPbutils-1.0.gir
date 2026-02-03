@@ -2751,11 +2751,11 @@ in debugging.</doc>
       <doc xml:space="preserve">The major version of GStreamer's gst-plugins-base libraries at compile time.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="PLUGINS_BASE_VERSION_MICRO" value="90" c:type="GST_PLUGINS_BASE_VERSION_MICRO">
+    <constant name="PLUGINS_BASE_VERSION_MICRO" value="0" c:type="GST_PLUGINS_BASE_VERSION_MICRO">
       <doc xml:space="preserve">The micro version of GStreamer's gst-plugins-base libraries at compile time.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="PLUGINS_BASE_VERSION_MINOR" value="27" c:type="GST_PLUGINS_BASE_VERSION_MINOR">
+    <constant name="PLUGINS_BASE_VERSION_MINOR" value="29" c:type="GST_PLUGINS_BASE_VERSION_MINOR">
       <doc xml:space="preserve">The minor version of GStreamer's gst-plugins-base libraries at compile time.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
@@ -3644,6 +3644,66 @@ invalid Opus caps.</doc>
         <parameter name="output_gain" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
           <doc xml:space="preserve">Output gain or 0</doc>
           <type name="gint16" c:type="gint16*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="codec_utils_vp9_estimate_level_idc_from_caps" c:identifier="gst_codec_utils_vp9_estimate_level_idc_from_caps" version="1.30">
+      <doc xml:space="preserve">Estimates the vp9 level as defined in
+https://www.webmproject.org/vp9/mp4/#vp-codec-configuration-box, using
+the resolution and, if available, frame rate found in the structure passed
+in.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">The estimated vp9 level indicator, and 0 if it could not be
+estimated.</doc>
+        <type name="guint8" c:type="guint8"/>
+      </return-value>
+      <parameters>
+        <parameter name="caps" transfer-ownership="none">
+          <doc xml:space="preserve">a video/x-vp9 #GstCaps</doc>
+          <type name="Gst.Caps" c:type="const GstCaps*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="codec_utils_vp9_get_level" c:identifier="gst_codec_utils_vp9_get_level" version="1.30">
+      <doc xml:space="preserve">Converts the level indication in the vpcC record into a string.</doc>
+      <return-value transfer-ownership="none" nullable="1">
+        <doc xml:space="preserve">The level as a const string and %NULL if the level could not be
+determined.</doc>
+        <type name="utf8" c:type="const gchar*"/>
+      </return-value>
+      <parameters>
+        <parameter name="level_idc" transfer-ownership="none">
+          <doc xml:space="preserve">vp9 level value from the vpcC record</doc>
+          <type name="guint8" c:type="guint8"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="codec_utils_vp9_get_level_idc" c:identifier="gst_codec_utils_vp9_get_level_idc" version="1.30">
+      <doc xml:space="preserve">Transform a level string from the caps into the level_idc</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">The level indication or 0 if the level is unknown.</doc>
+        <type name="guint8" c:type="guint8"/>
+      </return-value>
+      <parameters>
+        <parameter name="level" transfer-ownership="none">
+          <doc xml:space="preserve">A vp9 level string from caps</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="codec_utils_vpx_create_vpcc_from_caps" c:identifier="gst_codec_utils_vpx_create_vpcc_from_caps" version="1.30">
+      <doc xml:space="preserve">Creates a vpcC record for VP8/VP9 as per the VP Codec ISO Media File Format
+Binding definition found at
+https://www.webmproject.org/vp9/mp4/#vp-codec-configuration-box</doc>
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">Buffer containing the vpcC record, or
+%NULL if the record could not be created.</doc>
+        <type name="Gst.Buffer" c:type="GstBuffer*"/>
+      </return-value>
+      <parameters>
+        <parameter name="caps" transfer-ownership="none">
+          <doc xml:space="preserve">a video/x-vp8 or video/x-vp9 #GstCaps</doc>
+          <type name="Gst.Caps" c:type="GstCaps*"/>
         </parameter>
       </parameters>
     </function>
