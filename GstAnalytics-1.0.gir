@@ -280,24 +280,6 @@ according to the semantic tag meaning.</doc>
           </instance-parameter>
         </parameters>
       </method>
-      <method name="has_semantic_tag" c:identifier="gst_analytics_group_mtd_has_semantic_tag" version="1.30">
-        <doc xml:space="preserve">Check if the group's semantic tag matches @tag. An empty or unset tag never
-matches.</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">%TRUE if the group's semantic tag equals @tag.</doc>
-          <type name="gboolean" c:type="gboolean"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="handle" transfer-ownership="none">
-            <doc xml:space="preserve">handle</doc>
-            <type name="GroupMtd" c:type="const GstAnalyticsGroupMtd*"/>
-          </instance-parameter>
-          <parameter name="tag" transfer-ownership="none">
-            <doc xml:space="preserve">tag string to compare against</doc>
-            <type name="utf8" c:type="const gchar*"/>
-          </parameter>
-        </parameters>
-      </method>
       <method name="iterate" c:identifier="gst_analytics_group_mtd_iterate" version="1.30">
         <doc xml:space="preserve">Iterate over members in the group. If @type is specified, only members
 matching that type are returned. Initialize @state to NULL to start iteration.</doc>
@@ -325,44 +307,6 @@ matching that type are returned. Initialize @state to NULL to start iteration.</
             <doc xml:space="preserve">Handle updated to iterated
    group member.</doc>
             <type name="Mtd" c:type="GstAnalyticsMtd*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="semantic_tag_has_prefix" c:identifier="gst_analytics_group_mtd_semantic_tag_has_prefix" version="1.30">
-        <doc xml:space="preserve">Check if the group's semantic tag starts with @prefix. An empty or unset tag
-never matches.</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">%TRUE if the group's semantic tag starts with @prefix.</doc>
-          <type name="gboolean" c:type="gboolean"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="handle" transfer-ownership="none">
-            <doc xml:space="preserve">handle</doc>
-            <type name="GroupMtd" c:type="const GstAnalyticsGroupMtd*"/>
-          </instance-parameter>
-          <parameter name="prefix" transfer-ownership="none">
-            <doc xml:space="preserve">prefix string to test against</doc>
-            <type name="utf8" c:type="const gchar*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="set_semantic_tag" c:identifier="gst_analytics_group_mtd_set_semantic_tag" version="1.30">
-        <doc xml:space="preserve">Set grouping semantic tag. This gives a context to understand the grouping.
-For example "hand-21-kp", "human-pose-17-kp" that give a specific context
-allowing to understand the grouping semantic. Pass %NULL to clear the tag.</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">TRUE is semantic_tag was set successfully</doc>
-          <type name="gboolean" c:type="gboolean"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="handle" transfer-ownership="none">
-            <doc xml:space="preserve">handle of #GstAnalyticsMtd where to set semantic_tag</doc>
-            <type name="GroupMtd" c:type="GstAnalyticsGroupMtd*"/>
-          </instance-parameter>
-          <parameter name="tag" transfer-ownership="none" nullable="1" allow-none="1">
-            <doc xml:space="preserve">string representing a semantic type of grouping, or %NULL
-  to clear the tag</doc>
-            <type name="utf8" c:type="const char*"/>
           </parameter>
         </parameters>
       </method>
@@ -1016,6 +960,21 @@ Get analysis result type.</doc>
           </instance-parameter>
         </parameters>
       </method>
+      <method name="get_semantic_tag" c:identifier="gst_analytics_mtd_get_semantic_tag" version="1.30">
+        <doc xml:space="preserve">Get the semantic tag of the analytics metadata.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">A copy of the semantic tag string. Returns an
+   empty string if no tag has been set. The caller must free the returned
+   string with g_free() when no longer needed.</doc>
+          <type name="utf8" c:type="gchar*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="instance" transfer-ownership="none">
+            <doc xml:space="preserve">Instance of #GstAnalyticsMtd</doc>
+            <type name="Mtd" c:type="const GstAnalyticsMtd*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
       <method name="get_size" c:identifier="gst_analytics_mtd_get_size" version="1.24">
         <doc xml:space="preserve">Get instance size</doc>
         <return-value transfer-ownership="none">
@@ -1027,6 +986,61 @@ Get analysis result type.</doc>
             <doc xml:space="preserve">Instance of #GstAnalyticsMtd</doc>
             <type name="Mtd" c:type="const GstAnalyticsMtd*"/>
           </instance-parameter>
+        </parameters>
+      </method>
+      <method name="has_semantic_tag" c:identifier="gst_analytics_mtd_has_semantic_tag" version="1.30">
+        <doc xml:space="preserve">Check if the metadata's semantic tag matches @tag. An empty or unset tag
+never matches.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if the metadata's semantic tag equals @tag.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="instance" transfer-ownership="none">
+            <doc xml:space="preserve">Instance of #GstAnalyticsMtd</doc>
+            <type name="Mtd" c:type="const GstAnalyticsMtd*"/>
+          </instance-parameter>
+          <parameter name="tag" transfer-ownership="none">
+            <doc xml:space="preserve">tag string to compare against</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="semantic_tag_has_prefix" c:identifier="gst_analytics_mtd_semantic_tag_has_prefix" version="1.30">
+        <doc xml:space="preserve">Check if the metadata's semantic tag starts with @prefix. An empty or unset
+tag never matches.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if the metadata's semantic tag starts with @prefix.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="instance" transfer-ownership="none">
+            <doc xml:space="preserve">Instance of #GstAnalyticsMtd</doc>
+            <type name="Mtd" c:type="const GstAnalyticsMtd*"/>
+          </instance-parameter>
+          <parameter name="prefix" transfer-ownership="none">
+            <doc xml:space="preserve">prefix string to test against</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_semantic_tag" c:identifier="gst_analytics_mtd_set_semantic_tag" version="1.30">
+        <doc xml:space="preserve">Set semantic tag on any analytics metadata. This gives context to understand
+the metadata. Pass %NULL to clear the tag.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if the semantic tag was set successfully.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="instance" transfer-ownership="none">
+            <doc xml:space="preserve">Instance of #GstAnalyticsMtd</doc>
+            <type name="Mtd" c:type="GstAnalyticsMtd*"/>
+          </instance-parameter>
+          <parameter name="tag" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">string representing a semantic type, or %NULL to clear
+  the tag</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
         </parameters>
       </method>
       <function name="type_get_name" c:identifier="gst_analytics_mtd_type_get_name" version="1.24">

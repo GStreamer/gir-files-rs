@@ -1257,7 +1257,7 @@ name</doc>
         <doc xml:space="preserve">Looks for all elements inside the bin with the given element factory name.
 The function recurses inside child bins. The iterator will yield a series of
 #GstElement.</doc>
-        <return-value transfer-ownership="full" nullable="1">
+        <return-value transfer-ownership="full">
           <doc xml:space="preserve">a #GstIterator of #GstElement
     for all elements in the bin with the given element factory name</doc>
           <type name="Iterator" c:type="GstIterator*"/>
@@ -1278,7 +1278,7 @@ The function recurses inside child bins. The iterator will yield a series of
 interface. You can safely cast all returned elements to the given interface.
 The function recurses inside child bins. The iterator will yield a series
 of #GstElement.</doc>
-        <return-value transfer-ownership="full" nullable="1">
+        <return-value transfer-ownership="full">
           <doc xml:space="preserve">a #GstIterator of #GstElement
     for all elements in the bin implementing the given interface</doc>
           <type name="Iterator" c:type="GstIterator*"/>
@@ -1296,7 +1296,7 @@ of #GstElement.</doc>
       </method>
       <method name="iterate_elements" c:identifier="gst_bin_iterate_elements">
         <doc xml:space="preserve">Gets an iterator for the elements in this bin.</doc>
-        <return-value transfer-ownership="full" nullable="1">
+        <return-value transfer-ownership="full">
           <doc xml:space="preserve">a #GstIterator of #GstElement</doc>
           <type name="Iterator" c:type="GstIterator*"/>
         </return-value>
@@ -1310,7 +1310,7 @@ of #GstElement.</doc>
       <method name="iterate_recurse" c:identifier="gst_bin_iterate_recurse">
         <doc xml:space="preserve">Gets an iterator for the elements in this bin.
 This iterator recurses into GstBin children.</doc>
-        <return-value transfer-ownership="full" nullable="1">
+        <return-value transfer-ownership="full">
           <doc xml:space="preserve">a #GstIterator of #GstElement</doc>
           <type name="Iterator" c:type="GstIterator*"/>
         </return-value>
@@ -1324,7 +1324,7 @@ This iterator recurses into GstBin children.</doc>
       <method name="iterate_sinks" c:identifier="gst_bin_iterate_sinks">
         <doc xml:space="preserve">Gets an iterator for all elements in the bin that have the
 #GST_ELEMENT_FLAG_SINK flag set.</doc>
-        <return-value transfer-ownership="full" nullable="1">
+        <return-value transfer-ownership="full">
           <doc xml:space="preserve">a #GstIterator of #GstElement</doc>
           <type name="Iterator" c:type="GstIterator*"/>
         </return-value>
@@ -1342,7 +1342,7 @@ the most downstream elements (sinks) to the sources.
 
 This function is used internally to perform the state changes
 of the bin elements and for clock selection.</doc>
-        <return-value transfer-ownership="full" nullable="1">
+        <return-value transfer-ownership="full">
           <doc xml:space="preserve">a #GstIterator of #GstElement</doc>
           <type name="Iterator" c:type="GstIterator*"/>
         </return-value>
@@ -1356,7 +1356,7 @@ of the bin elements and for clock selection.</doc>
       <method name="iterate_sources" c:identifier="gst_bin_iterate_sources">
         <doc xml:space="preserve">Gets an iterator for all elements in the bin that have the
 #GST_ELEMENT_FLAG_SOURCE flag set.</doc>
-        <return-value transfer-ownership="full" nullable="1">
+        <return-value transfer-ownership="full">
           <doc xml:space="preserve">a #GstIterator of #GstElement</doc>
           <type name="Iterator" c:type="GstIterator*"/>
         </return-value>
@@ -11792,20 +11792,11 @@ character, a newline character will be added automatically.</doc>
     <function-macro name="DEBUG_BIN_TO_DOT_FILE" c:identifier="GST_DEBUG_BIN_TO_DOT_FILE" introspectable="0">
       <doc xml:space="preserve">To aid debugging applications one can use this method to write out the whole
 network of gstreamer elements that form the pipeline into a dot file.
-This file can be processed with graphviz to get an image, like this:
 
-``` shell
-dot -Tpng -oimage.png graph_lowlevel.dot
-```
+The macro is only active if the GStreamer debugging subsystem is
+enabled (i.e., no use of `meson setup -Dgst_debug=false`)
 
-There is also a utility called [xdot] which allows you to view the dot file
-directly without converting it first.
-
-The macro is only active if the environment variable `GST_DEBUG_DUMP_DOT_DIR`
-is set to a basepath (e.g. `/tmp`), and the GStreamer debugging subsystem is
-enabled (i.e., no use of `./configure --disable-gst-debug`)
-
-[xdot]: https://pypi.org/project/xdot/</doc>
+See gst_debug_bin_to_dot_file() for more details.</doc>
       <parameters>
         <parameter name="bin">
           <doc xml:space="preserve">the top-level pipeline that should be analyzed</doc>
@@ -35882,7 +35873,7 @@ the nano version from the string and do this check that way if needed.</doc>
           </instance-parameter>
         </parameters>
       </method>
-      <method name="get_rank" c:identifier="gst_plugin_feature_get_rank">
+      <method name="get_rank" c:identifier="gst_plugin_feature_get_rank" glib:get-property="rank">
         <doc xml:space="preserve">Gets the rank of a plugin feature.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">The rank of the feature</doc>
@@ -35920,7 +35911,7 @@ feature, or %NULL on error</doc>
           </instance-parameter>
         </parameters>
       </method>
-      <method name="set_rank" c:identifier="gst_plugin_feature_set_rank">
+      <method name="set_rank" c:identifier="gst_plugin_feature_set_rank" glib:set-property="rank">
         <doc xml:space="preserve">Specifies a rank for a plugin feature, so that autoplugging uses
 the most appropriate feature.</doc>
         <return-value transfer-ownership="none">
@@ -35937,6 +35928,11 @@ the most appropriate feature.</doc>
           </parameter>
         </parameters>
       </method>
+      <property name="rank" version="1.30" writable="1" transfer-ownership="none" setter="set_rank" getter="get_rank" default-value="0">
+        <doc xml:space="preserve">The rank of the plugin feature, used in autoplugging to select
+the most appropriate feature.</doc>
+        <type name="gint" c:type="gint"/>
+      </property>
     </class>
     <record name="PluginFeatureClass" c:type="GstPluginFeatureClass" disguised="1" opaque="1" glib:is-gtype-struct-for="PluginFeature"/>
     <callback name="PluginFeatureFilter" c:type="GstPluginFeatureFilter">
@@ -39838,6 +39834,8 @@ references would be
    on a given PTP clock.
  * `timestamp/x-unix`: for timestamps based on the UNIX epoch according to
    the local clock.
+ * `timestamp/x-system-monotonic`: for timestamps based on the system
+   monotonic clock.
 
 Since 1.24 it can be serialized using gst_meta_serialize() and
 gst_meta_deserialize().
@@ -51542,7 +51540,7 @@ determine a order for the two provided values.</doc>
       <doc xml:space="preserve">The major version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MICRO" value="0" c:type="GST_VERSION_MICRO">
+    <constant name="VERSION_MICRO" value="1" c:type="GST_VERSION_MICRO">
       <doc xml:space="preserve">The micro version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
@@ -53390,7 +53388,8 @@ Only one logger at a time is possible.</doc>
     <function name="debug_bin_to_dot_data" c:identifier="gst_debug_bin_to_dot_data">
       <doc xml:space="preserve">To aid debugging applications one can use this method to obtain the whole
 network of gstreamer elements that form the pipeline into a dot file.
-This data can be processed with graphviz to get an image.</doc>
+
+See gst_debug_bin_to_dot_file() for more details.</doc>
       <return-value transfer-ownership="full">
         <doc xml:space="preserve">a string containing the pipeline in graphviz
 dot format.</doc>
@@ -53410,11 +53409,28 @@ dot format.</doc>
     <function name="debug_bin_to_dot_file" c:identifier="gst_debug_bin_to_dot_file">
       <doc xml:space="preserve">To aid debugging applications one can use this method to write out the whole
 network of gstreamer elements that form the pipeline into a dot file.
-This file can be processed with graphviz to get an image.
+This file can be processed with graphviz to get an image, like this:
 
 ``` shell
- dot -Tpng -oimage.png graph_lowlevel.dot
-```</doc>
+dot -Tpng -oimage.png graph_lowlevel.dot
+```
+
+There is also the interactive [gst-dots-viewer](https://gstreamer.freedesktop.org/documentation/coretracers/dots.html)
+tool, and [xdot](https://pypi.org/project/xdot/) which allows you to view the
+dot file directly without converting it first.
+
+If @file_name is NULL, the output filename will be based on the application
+name as returned by g_get_application_name(), or "unnamed" if the application
+name cannot be determined.
+
+The file will be written to the directory specified by the
+`GST_DEBUG_DUMP_DOT_DIR` environment variable, and the `.dot` extension will be
+added. If `GST_DEBUG_DUMP_DOT_DIR` was not defined at the time
+gst_init() was called, the file will not be generated. Note that the
+directory must already exist, it will not be created by this function.
+
+gst_debug_bin_to_dot_data() can be used if it is desired to generate the
+file even when `GST_DEBUG_DUMP_DOT_DIR` is not set.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -53427,7 +53443,7 @@ This file can be processed with graphviz to get an image.
           <doc xml:space="preserve">type of #GstDebugGraphDetails to use</doc>
           <type name="DebugGraphDetails" c:type="GstDebugGraphDetails"/>
         </parameter>
-        <parameter name="file_name" transfer-ownership="none">
+        <parameter name="file_name" transfer-ownership="none" nullable="1" allow-none="1">
           <doc xml:space="preserve">output base filename (e.g. "myplayer")</doc>
           <type name="filename" c:type="const gchar*"/>
         </parameter>
@@ -53448,7 +53464,7 @@ to the filename, so that it can be used to take multiple snapshots.</doc>
           <doc xml:space="preserve">type of #GstDebugGraphDetails to use</doc>
           <type name="DebugGraphDetails" c:type="GstDebugGraphDetails"/>
         </parameter>
-        <parameter name="file_name" transfer-ownership="none">
+        <parameter name="file_name" transfer-ownership="none" nullable="1" allow-none="1">
           <doc xml:space="preserve">output base filename (e.g. "myplayer")</doc>
           <type name="filename" c:type="const gchar*"/>
         </parameter>

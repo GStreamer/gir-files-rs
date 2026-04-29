@@ -2751,7 +2751,7 @@ in debugging.</doc>
       <doc xml:space="preserve">The major version of GStreamer's gst-plugins-base libraries at compile time.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="PLUGINS_BASE_VERSION_MICRO" value="0" c:type="GST_PLUGINS_BASE_VERSION_MICRO">
+    <constant name="PLUGINS_BASE_VERSION_MICRO" value="1" c:type="GST_PLUGINS_BASE_VERSION_MICRO">
       <doc xml:space="preserve">The micro version of GStreamer's gst-plugins-base libraries at compile time.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
@@ -3688,6 +3688,91 @@ determined.</doc>
         <parameter name="level" transfer-ownership="none">
           <doc xml:space="preserve">A vp9 level string from caps</doc>
           <type name="utf8" c:type="const gchar*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="codec_utils_vpx_caps_get_config" c:identifier="gst_codec_utils_vpx_caps_get_config" version="1.30">
+      <doc xml:space="preserve">Parses VP8/VP9 caps and extracts normalized VPX configuration fields.
+Unlike gst_codec_utils_vpx_caps_set_format_fields(), this getter includes
+the colorimetry-derived fields needed to build a full vpcC record.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if extraction succeeded, %FALSE otherwise.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="caps" transfer-ownership="none">
+          <doc xml:space="preserve">a video/x-vp8 or video/x-vp9 #GstCaps</doc>
+          <type name="Gst.Caps" c:type="GstCaps*"/>
+        </parameter>
+        <parameter name="vpx_version" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">VPX version described by @caps (8 or 9)</doc>
+          <type name="gint" c:type="gint*"/>
+        </parameter>
+        <parameter name="profile" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">profile value</doc>
+          <type name="guint8" c:type="guint8*"/>
+        </parameter>
+        <parameter name="level" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">level value</doc>
+          <type name="guint8" c:type="guint8*"/>
+        </parameter>
+        <parameter name="bit_depth" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">bit depth value</doc>
+          <type name="guint8" c:type="guint8*"/>
+        </parameter>
+        <parameter name="chroma_subsampling" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">chroma subsampling value</doc>
+          <type name="guint8" c:type="guint8*"/>
+        </parameter>
+        <parameter name="video_full_range" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">whether full-range signaling is set</doc>
+          <type name="gboolean" c:type="gboolean*"/>
+        </parameter>
+        <parameter name="colour_primaries" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">ISO color primaries value</doc>
+          <type name="guint8" c:type="guint8*"/>
+        </parameter>
+        <parameter name="transfer_characteristics" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">ISO transfer characteristics value</doc>
+          <type name="guint8" c:type="guint8*"/>
+        </parameter>
+        <parameter name="matrix_coefficients" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">ISO matrix coefficients value</doc>
+          <type name="guint8" c:type="guint8*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="codec_utils_vpx_caps_set_format_fields" c:identifier="gst_codec_utils_vpx_caps_set_format_fields" version="1.30">
+      <doc xml:space="preserve">Sets VPX format fields in @caps from parsed VPX configuration values.
+This setter handles the VPX format-field subset shared between VP9
+CodecPrivate and vpcC signaling.
+Any field set to -1 is treated as unknown and not written.
+For VP8 caps, only profile 0, 8-bit depth, and chroma subsampling 1 are
+accepted.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if provided values were valid, %FALSE otherwise.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="caps" transfer-ownership="none">
+          <doc xml:space="preserve">the #GstCaps to set VPX fields on (video/x-vp8 or video/x-vp9)</doc>
+          <type name="Gst.Caps" c:type="GstCaps*"/>
+        </parameter>
+        <parameter name="profile" transfer-ownership="none">
+          <doc xml:space="preserve">VPX profile, or -1 if unknown</doc>
+          <type name="gint" c:type="gint"/>
+        </parameter>
+        <parameter name="level" transfer-ownership="none">
+          <doc xml:space="preserve">VP9 level idc, or -1 if unknown</doc>
+          <type name="gint" c:type="gint"/>
+        </parameter>
+        <parameter name="bit_depth" transfer-ownership="none">
+          <doc xml:space="preserve">VPX bit depth, or -1 if unknown</doc>
+          <type name="gint" c:type="gint"/>
+        </parameter>
+        <parameter name="chroma_subsampling" transfer-ownership="none">
+          <doc xml:space="preserve">VPX chroma subsampling (0-3), or -1 if unknown</doc>
+          <type name="gint" c:type="gint"/>
         </parameter>
       </parameters>
     </function>
