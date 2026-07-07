@@ -196,3 +196,9 @@ xmlstarlet ed -L \
     -d '//_:function[starts-with(@name, "d3d12_frame")]' \
     GstD3D12-1.0.gir
 
+xmlstarlet ed --inplace \
+    --insert '//_:type[not(@name) and @c:type="AHardwareBuffer**"]' \
+    --type attr --name 'name' --value 'gpointer' \
+    --update '//_:type[@c:type="AHardwareBuffer**"]/@c:type' \
+    --value 'gpointer*' \
+    GstAllocators-1.0.gir

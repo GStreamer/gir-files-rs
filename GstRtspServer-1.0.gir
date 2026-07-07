@@ -5199,17 +5199,19 @@ launch parameter.</doc>
           </parameter>
         </parameters>
       </virtual-method>
-      <virtual-method name="create_pipeline" introspectable="0">
-        <doc xml:space="preserve">create a new pipeline or re-use an existing one and
-      add the #GstRTSPMedia's element created by @construct to the pipeline.</doc>
-        <return-value>
+      <virtual-method name="create_pipeline">
+        <doc xml:space="preserve">Create a new pipeline and assign it to media.</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">the #GstElement pipeline.</doc>
           <type name="Gst.Element" c:type="GstElement*"/>
         </return-value>
         <parameters>
           <instance-parameter name="factory" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstRTSPMediaFactory</doc>
             <type name="RTSPMediaFactory" c:type="GstRTSPMediaFactory*"/>
           </instance-parameter>
           <parameter name="media" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstRTSPMedia</doc>
             <type name="RTSPMedia" c:type="GstRTSPMedia*"/>
           </parameter>
         </parameters>
@@ -6226,18 +6228,21 @@ This options is only relevant when ensure-keyunit-on-start is enabled.</doc>
           </parameters>
         </callback>
       </field>
-      <field name="create_pipeline" introspectable="0">
+      <field name="create_pipeline">
         <doc xml:space="preserve">create a new pipeline or re-use an existing one and
       add the #GstRTSPMedia's element created by @construct to the pipeline.</doc>
-        <callback name="create_pipeline" introspectable="0">
-          <return-value>
+        <callback name="create_pipeline">
+          <return-value transfer-ownership="none" nullable="1">
+            <doc xml:space="preserve">the #GstElement pipeline.</doc>
             <type name="Gst.Element" c:type="GstElement*"/>
           </return-value>
           <parameters>
             <parameter name="factory" transfer-ownership="none">
+              <doc xml:space="preserve">a #GstRTSPMediaFactory</doc>
               <type name="RTSPMediaFactory" c:type="GstRTSPMediaFactory*"/>
             </parameter>
             <parameter name="media" transfer-ownership="none">
+              <doc xml:space="preserve">a #GstRTSPMedia</doc>
               <type name="RTSPMedia" c:type="GstRTSPMedia*"/>
             </parameter>
           </parameters>

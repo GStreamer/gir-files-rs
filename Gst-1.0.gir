@@ -60,6 +60,12 @@ See also #GstBufferMapInfo.</doc>
       <doc-deprecated xml:space="preserve">Use #GstMapInfo instead.</doc-deprecated>
       <type name="MapInfo" c:type="GstMapInfo"/>
     </alias>
+    <alias name="TraceSpanId" c:type="GstTraceSpanId">
+      <doc xml:space="preserve">Opaque identifier for an in-flight trace span. Returned by
+gst_trace_span_begin() and passed to
+gst_trace_span_end().</doc>
+      <type name="guint64" c:type="guint64"/>
+    </alias>
     <function-macro name="ALLOCATOR" c:identifier="GST_ALLOCATOR" introspectable="0">
       <parameters>
         <parameter name="obj">
@@ -12055,6 +12061,47 @@ Use this variant of #GST_DEBUG_FUNCPTR if you do not need to use @ptr.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <function-macro name="DEFINE_TRACE_FORMAT" c:identifier="GST_DEFINE_TRACE_FORMAT" version="1.30" introspectable="0">
+      <doc xml:space="preserve">Defines a `static` getter that lazily registers the format on first call
+and caches it for the lifetime of the process. Subsequent calls return the
+cached #GstTraceFormat.
+
+Pass the getter to the scope macros to time a block.
+
+``` c
+GST_DEFINE_TRACE_FORMAT (decode_frame_span,
+    "codec", STRING,
+    "frame", UINT64)
+
+static void
+decode_frame (MyDecoder * self, guint64 frame)
+{
+  GST_TRACE_SCOPE_BEGIN (decode_frame_span,
+      STRING (self-&gt;codec),
+      UINT64 (frame));
+
+  // ... decode the frame ...
+
+  GST_TRACE_SCOPE_END (decode_frame_span);
+}
+```
+
+When the span does not match a lexical scope, hold the #GstTraceSpanId
+returned by gst_trace_span_begin() and close it later with
+gst_trace_span_end(). In both cases the field values are only evaluated
+while a tracer is listening.</doc>
+      <parameters>
+        <parameter name="getter">
+          <doc xml:space="preserve">identifier of the getter function to define; its name is also used
+  verbatim as the span name surfaced to tracers</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">at least one (field-name, short-field-type) pair, where the type is a
+  #GstTracerFieldType name without the `GST_TRACER_FIELD_TYPE_` prefix (e.g.
+  `STRING`, `UINT64`); the %NULL terminator is added automatically</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
     <function-macro name="DEVICE" c:identifier="GST_DEVICE" introspectable="0">
       <parameters>
         <parameter name="obj">
@@ -13526,7 +13573,10 @@ Filters must be added before the #GstDeviceMonitor is started.</doc>
       </method>
       <method name="get_devices" c:identifier="gst_device_monitor_get_devices" version="1.4">
         <doc xml:space="preserve">Gets a list of devices from all of the relevant monitors. This may actually
-probe the hardware if the monitor is not currently started.</doc>
+probe the hardware if the monitor is not currently started.
+
+Since 1.28.3, this function will block until the monitor has finished
+starting if gst_device_monitor_start() has been called.</doc>
         <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a #GList of
   #GstDevice</doc>
@@ -15093,8 +15143,8 @@ As an example, you may define the element named "stream-filter"
 with the namespace `my` as following:
 
 ```
-#define _pre_register_init \
-  my_stream_filter_pre_register (plugin);
+#define _pre_register_init  *   my_stream_filter_pre_register (plugin);
+;
 GST_ELEMENT_REGISTER_DEFINE_WITH_CODE (stream_filter, "stream-filter", GST_RANK_PRIMARY, MY_TYPE_STREAM_FILTER, _pre_register_init)
 ```</doc>
       <parameters>
@@ -35252,7 +35302,10 @@ of the external dependencies change. This is useful for plugins which wrap
 other plugin systems, e.g. a plugin which wraps a plugin-based visualisation
 library and makes visualisations available as GStreamer elements, or a
 codec loader which exposes elements and/or caps dependent on what external
-codec libraries are currently installed.</doc>
+codec libraries are currently installed.
+
+It is an error to register dependencies for any plugin that has been marked
+as only have a static set of features via gst_plugin_set_static_features_flag()</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -35307,7 +35360,10 @@ codec libraries are currently installed.
 
 Convenience wrapper function for gst_plugin_add_dependency() which
 takes simple strings as arguments instead of string arrays, with multiple
-arguments separated by predefined delimiters (see above).</doc>
+arguments separated by predefined delimiters (see above).
+
+It is an error to register dependencies for any plugin that has been marked
+as only have a static set of features via gst_plugin_set_static_features_flag().</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -35324,7 +35380,7 @@ arguments separated by predefined delimiters (see above).</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
           <parameter name="paths" transfer-ownership="none" nullable="1" allow-none="1">
-            <doc xml:space="preserve">one ore more directory paths (separated by ':' or ';' or ','),
+            <doc xml:space="preserve">one or more directory paths (separated by ':' or ';' or ','),
      or %NULL. Example: "/usr/lib/mystuff/plugins"</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
@@ -35477,6 +35533,22 @@ stored. This is the case when the registry is getting rebuilt.</doc>
           </instance-parameter>
         </parameters>
       </method>
+      <method name="get_registry" c:identifier="gst_plugin_get_registry" version="1.30">
+        <doc xml:space="preserve">Get the #GstRegistry this plugin belongs to, for use when registering
+associated #GstPluginFeature during plugin registration. Usually
+this is just the default registry, but may differ during pre-built
+registry creation. If passed NULL, returns the default registry</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">The #GstRegistry to use for plugin feature registration</doc>
+          <type name="Registry" c:type="GstRegistry*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="plugin" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">The plugin to retrieve a registry from, or NULL</doc>
+            <type name="Plugin" c:type="GstPlugin*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
       <method name="get_release_date_string" c:identifier="gst_plugin_get_release_date_string">
         <doc xml:space="preserve">Get the release date (and possibly time) in form of a string, if available.
 
@@ -35619,6 +35691,26 @@ The cache is flushed every time the registry is rebuilt.</doc>
             <doc xml:space="preserve">a structure containing the data to cache</doc>
             <type name="Structure" c:type="GstStructure*"/>
           </parameter>
+        </parameters>
+      </method>
+      <method name="set_static_features_flag" c:identifier="gst_plugin_set_static_features_flag" version="1.30">
+        <doc xml:space="preserve">Marks this plugin as having no external dependencies, and
+a static set of plugin features, rendering it suitable
+for inclusion in a static build-time registry. Shipping a static
+build-time registry speeds up application startup by avoiding
+scanning of these plugins at run-time.
+
+It is an error to call this function after any gst_plugin_add_dependency()
+or gst_plugin_add_dependency_simple() call, or to call those functions
+once this flag is set.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="plugin" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstPlugin</doc>
+            <type name="Plugin" c:type="GstPlugin*"/>
+          </instance-parameter>
         </parameters>
       </method>
     </class>
@@ -35973,12 +36065,16 @@ to get a list of plugins that match certain criteria.</doc>
       </parameters>
     </callback>
     <bitfield name="PluginFlags" glib:type-name="GstPluginFlags" glib:get-type="gst_plugin_flags_get_type" c:type="GstPluginFlags">
-      <doc xml:space="preserve">The plugin loading state</doc>
+      <doc xml:space="preserve">The plugin loading state and registry flags.</doc>
       <member name="cached" value="16" c:identifier="GST_PLUGIN_FLAG_CACHED" glib:nick="cached" glib:name="GST_PLUGIN_FLAG_CACHED">
         <doc xml:space="preserve">Temporarily loaded plugins</doc>
       </member>
       <member name="blacklisted" value="32" c:identifier="GST_PLUGIN_FLAG_BLACKLISTED" glib:nick="blacklisted" glib:name="GST_PLUGIN_FLAG_BLACKLISTED">
         <doc xml:space="preserve">The plugin won't be scanned (again)</doc>
+      </member>
+      <member name="static_features" value="64" c:identifier="GST_PLUGIN_FLAG_STATIC_FEATURES" version="1.30" glib:nick="static-features" glib:name="GST_PLUGIN_FLAG_STATIC_FEATURES">
+        <doc xml:space="preserve">The plugin has no external dependencies and a static set of features,
+rendering it suitable for storing in a static build-time registry.</doc>
       </member>
     </bitfield>
     <callback name="PluginInitFullFunc" c:type="GstPluginInitFullFunc">
@@ -36581,6 +36677,69 @@ or no value for the given @tag</doc>
           </instance-parameter>
         </parameters>
       </virtual-method>
+      <virtual-method name="get_property" invoker="get_property" version="1.30">
+        <doc xml:space="preserve">Gets the value of a property from a preset.
+
+If @prop contains an alternative suffix in brackets (e.g.
+"bitrate[1920x1080]"), the alternative value is read using
+GKeyFile's locale string mechanism. Otherwise the base property
+value is read.
+
+On success, @value is initialized to the property's type and
+filled with the deserialized value from the preset file. The
+caller must call g_value_unset() on @value when done.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if the property value was retrieved, %FALSE on error</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="preset" transfer-ownership="none">
+            <doc xml:space="preserve">a #GObject that implements #GstPreset</doc>
+            <type name="Preset" c:type="GstPreset*"/>
+          </instance-parameter>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:space="preserve">preset name</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="prop" transfer-ownership="none">
+            <doc xml:space="preserve">property name, optionally with an alternative suffix
+  (e.g. "bitrate" or "bitrate[1920x1080]")</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="value" direction="out" caller-allocates="1" transfer-ownership="none">
+            <doc xml:space="preserve">#GValue to store the property value</doc>
+            <type name="GObject.Value" c:type="GValue*"/>
+          </parameter>
+        </parameters>
+      </virtual-method>
+      <virtual-method name="get_property_alternatives" invoker="get_property_alternatives" version="1.30">
+        <doc xml:space="preserve">Gets the list of alternative suffixes defined for a property in a
+preset. These are the bracket-enclosed parts of keys like
+"bitrate[1920x1080]" or "bitrate[3840x2160@48]".</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">
+  a %NULL-terminated array of alternative names (e.g.
+  ["1920x1080", "3840x2160@48", ...]), or %NULL if no
+  alternatives exist. Free with g_strfreev().</doc>
+          <array c:type="gchar**">
+            <type name="utf8"/>
+          </array>
+        </return-value>
+        <parameters>
+          <instance-parameter name="preset" transfer-ownership="none">
+            <doc xml:space="preserve">a #GObject that implements #GstPreset</doc>
+            <type name="Preset" c:type="GstPreset*"/>
+          </instance-parameter>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:space="preserve">preset name</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="prop" transfer-ownership="none">
+            <doc xml:space="preserve">base property name (e.g. "bitrate")</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </virtual-method>
       <virtual-method name="get_property_names" invoker="get_property_names">
         <doc xml:space="preserve">Get a the names of the GObject properties that can be used for presets.</doc>
         <return-value transfer-ownership="full">
@@ -36739,6 +36898,68 @@ or no value for the given @tag</doc>
             <doc xml:space="preserve">a #GObject that implements #GstPreset</doc>
             <type name="Preset" c:type="GstPreset*"/>
           </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_property" c:identifier="gst_preset_get_property" version="1.30">
+        <doc xml:space="preserve">Gets the value of a property from a preset.
+
+If @prop contains an alternative suffix in brackets (e.g.
+"bitrate[1920x1080]"), the alternative value is read using
+GKeyFile's locale string mechanism. Otherwise the base property
+value is read.
+
+On success, @value is initialized to the property's type and
+filled with the deserialized value from the preset file. The
+caller must call g_value_unset() on @value when done.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if the property value was retrieved, %FALSE on error</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="preset" transfer-ownership="none">
+            <doc xml:space="preserve">a #GObject that implements #GstPreset</doc>
+            <type name="Preset" c:type="GstPreset*"/>
+          </instance-parameter>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:space="preserve">preset name</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="prop" transfer-ownership="none">
+            <doc xml:space="preserve">property name, optionally with an alternative suffix
+  (e.g. "bitrate" or "bitrate[1920x1080]")</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="value" transfer-ownership="none">
+            <type name="GObject.Value" c:type="GValue*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_property_alternatives" c:identifier="gst_preset_get_property_alternatives" version="1.30">
+        <doc xml:space="preserve">Gets the list of alternative suffixes defined for a property in a
+preset. These are the bracket-enclosed parts of keys like
+"bitrate[1920x1080]" or "bitrate[3840x2160@48]".</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">
+  a %NULL-terminated array of alternative names (e.g.
+  ["1920x1080", "3840x2160@48", ...]), or %NULL if no
+  alternatives exist. Free with g_strfreev().</doc>
+          <array c:type="gchar**">
+            <type name="utf8"/>
+          </array>
+        </return-value>
+        <parameters>
+          <instance-parameter name="preset" transfer-ownership="none">
+            <doc xml:space="preserve">a #GObject that implements #GstPreset</doc>
+            <type name="Preset" c:type="GstPreset*"/>
+          </instance-parameter>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:space="preserve">preset name</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="prop" transfer-ownership="none">
+            <doc xml:space="preserve">base property name (e.g. "bitrate")</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
         </parameters>
       </method>
       <method name="get_property_names" c:identifier="gst_preset_get_property_names">
@@ -37032,8 +37253,62 @@ or no value for the given @tag</doc>
           </parameters>
         </callback>
       </field>
+      <field name="get_property">
+        <callback name="get_property">
+          <return-value transfer-ownership="none">
+            <doc xml:space="preserve">%TRUE if the property value was retrieved, %FALSE on error</doc>
+            <type name="gboolean" c:type="gboolean"/>
+          </return-value>
+          <parameters>
+            <parameter name="preset" transfer-ownership="none">
+              <doc xml:space="preserve">a #GObject that implements #GstPreset</doc>
+              <type name="Preset" c:type="GstPreset*"/>
+            </parameter>
+            <parameter name="name" transfer-ownership="none">
+              <doc xml:space="preserve">preset name</doc>
+              <type name="utf8" c:type="const gchar*"/>
+            </parameter>
+            <parameter name="prop" transfer-ownership="none">
+              <doc xml:space="preserve">property name, optionally with an alternative suffix
+  (e.g. "bitrate" or "bitrate[1920x1080]")</doc>
+              <type name="utf8" c:type="const gchar*"/>
+            </parameter>
+            <parameter name="value" direction="out" caller-allocates="1" transfer-ownership="none">
+              <doc xml:space="preserve">#GValue to store the property value</doc>
+              <type name="GObject.Value" c:type="GValue*"/>
+            </parameter>
+          </parameters>
+        </callback>
+      </field>
+      <field name="get_property_alternatives">
+        <callback name="get_property_alternatives">
+          <return-value transfer-ownership="full" nullable="1">
+            <doc xml:space="preserve">
+  a %NULL-terminated array of alternative names (e.g.
+  ["1920x1080", "3840x2160@48", ...]), or %NULL if no
+  alternatives exist. Free with g_strfreev().</doc>
+            <array c:type="gchar**">
+              <type name="utf8"/>
+            </array>
+          </return-value>
+          <parameters>
+            <parameter name="preset" transfer-ownership="none">
+              <doc xml:space="preserve">a #GObject that implements #GstPreset</doc>
+              <type name="Preset" c:type="GstPreset*"/>
+            </parameter>
+            <parameter name="name" transfer-ownership="none">
+              <doc xml:space="preserve">preset name</doc>
+              <type name="utf8" c:type="const gchar*"/>
+            </parameter>
+            <parameter name="prop" transfer-ownership="none">
+              <doc xml:space="preserve">base property name (e.g. "bitrate")</doc>
+              <type name="utf8" c:type="const gchar*"/>
+            </parameter>
+          </parameters>
+        </callback>
+      </field>
       <field name="_gst_reserved" readable="0" private="1">
-        <array zero-terminated="0" fixed-size="4">
+        <array zero-terminated="0" fixed-size="2">
           <type name="gpointer" c:type="gpointer"/>
         </array>
       </field>
@@ -40638,8 +40913,8 @@ This can be used in pad templates.</doc>
 structure.
 Example:
 |[&lt;!-- language="C" --&gt;
-static GstStaticPadTemplate my_src_template = \
-  GST_STATIC_PAD_TEMPLATE("src", GST_PAD_SRC, GST_PAD_ALWAYS,
+static GstStaticPadTemplate my_src_template =  *   GST_STATIC_PAD_TEMPLATE("src", GST_PAD_SRC, GST_PAD_ALWAYS,
+,
                           GST_STATIC_CAPS_ANY);
 ]|</doc>
       <parameters>
@@ -45481,10 +45756,35 @@ implements the async notification.
 Subclasses can however override all of the important methods for sync and
 async notifications to implement their own callback methods or blocking
 wait operations.</doc>
+      <constructor name="new" c:identifier="gst_system_clock_new" version="1.30">
+        <doc xml:space="preserve">Creates a new instance of the system clock. Unlike gst_system_clock_obtain()
+this allows to apply custom calibration to it via
+gst_clock_set_calibration(), set a master clock via gst_clock_set_master() or
+change the `clock-type` property without changing the behaviour of the
+default system clock for the whole process.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">the new system clock instance.</doc>
+          <type name="Clock" c:type="GstClock*"/>
+        </return-value>
+        <parameters>
+          <parameter name="name" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">name of the new clock</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="clock_type" transfer-ownership="none">
+            <doc xml:space="preserve">#GstClockType for the new clock</doc>
+            <type name="ClockType" c:type="GstClockType"/>
+          </parameter>
+        </parameters>
+      </constructor>
       <function name="obtain" c:identifier="gst_system_clock_obtain">
         <doc xml:space="preserve">Get a handle to the default system clock. The refcount of the
 clock will be increased so you need to unref the clock after
-usage.</doc>
+usage.
+
+Changing the calibration via gst_clock_set_calibration(), setting a master
+clock via gst_clock_set_master() or changing the `clock-type` property on the
+returned clock will change the behaviour for the whole process.</doc>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">the default clock.
 
@@ -46346,6 +46646,60 @@ character, a newline character will be added automatically.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <function-macro name="TRACE_BEGIN" c:identifier="GST_TRACE_BEGIN" version="1.30" introspectable="0">
+      <doc xml:space="preserve">Opens a span and returns its #GstTraceSpanId. When @format has no
+listening tracer the values are not evaluated and %GST_TRACE_SPAN_ID_NONE
+is returned. The caller closes the span with gst_trace_span_end()
+or gst_trace_span_end_and_clear() at the desired point; use this
+when the span lifetime does not match a lexical scope (see GST_TRACE_FUNC()
+for the auto-closed variant).</doc>
+      <parameters>
+        <parameter name="format">
+          <doc xml:space="preserve">a #GstTraceFormat (typically the result of a getter declared
+  with GST_DEFINE_TRACE_FORMAT())</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">one or more GST_TRACE_VALUE_* entries, in the field order declared
+  on @format</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="TRACE_EVENT" c:identifier="GST_TRACE_EVENT" version="1.30" introspectable="0">
+      <doc xml:space="preserve">Emits a point event for @format. Unlike GST_TRACE_BEGIN(), an
+event has no duration and no matching end; it is the structured
+equivalent of the legacy #GstTracerRecord log entry and is emitted whenever
+the GST_TRACER debug level is enabled. As with gst_tracer_record_log() the
+values are always evaluated, so keep them cheap.</doc>
+      <parameters>
+        <parameter name="format">
+          <doc xml:space="preserve">a #GstTraceFormat (typically the result of a getter declared
+  with GST_DEFINE_TRACE_FORMAT())</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">one or more GST_TRACE_VALUE_* entries, in the field order declared
+  on @format</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="TRACE_FUNC" c:identifier="GST_TRACE_FUNC" version="1.30" introspectable="0">
+      <doc xml:space="preserve">Opens a span like GST_TRACE_SCOPE_BEGIN() but closes it automatically when
+the enclosing block exits via `return`, `goto`, or fall-through, so no
+GST_TRACE_SCOPE_END() call is needed.
+
+Implemented with `__attribute__((cleanup))`. On compilers that do not
+support the attribute (stock MSVC) this macro expands to nothing and its
+arguments are not evaluated; use the GST_TRACE_SCOPE_BEGIN() /
+GST_TRACE_SCOPE_END() pair there instead.</doc>
+      <parameters>
+        <parameter name="format">
+          <doc xml:space="preserve">a span format getter declared with GST_DEFINE_TRACE_FORMAT()</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">one or more GST_TRACE_VALUE_* entries, in the field order declared
+  on @format</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
     <function-macro name="TRACE_ID" c:identifier="GST_TRACE_ID" version="1.22" introspectable="0">
       <doc xml:space="preserve">Output a tracing message for the given identifier in the default category.
 
@@ -46412,6 +46766,129 @@ character, a newline character will be added automatically.</doc>
         </parameter>
         <parameter name="...">
           <doc xml:space="preserve">format string and optional arguments</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="TRACE_SCOPE_BEGIN" c:identifier="GST_TRACE_SCOPE_BEGIN" version="1.30" introspectable="0">
+      <doc xml:space="preserve">Opens a span and stores its #GstTraceSpanId in a local variable named after
+@format, so the matching GST_TRACE_SCOPE_END() can close it without the
+caller declaring a span-id variable. When no tracer is listening the values
+are not evaluated and %GST_TRACE_SPAN_ID_NONE is stored.
+
+Calling GST_TRACE_SCOPE_BEGIN() twice for the same @format in the same scope
+is not allowed, since the variable name is derived from @format.
+
+The span remains open until the matching GST_TRACE_SCOPE_END() is called</doc>
+      <parameters>
+        <parameter name="format">
+          <doc xml:space="preserve">a span format getter declared with GST_DEFINE_TRACE_FORMAT()</doc>
+        </parameter>
+        <parameter name="...">
+          <doc xml:space="preserve">one or more GST_TRACE_VALUE_* entries, in the field order declared
+  on @format</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="TRACE_SCOPE_END" c:identifier="GST_TRACE_SCOPE_END" version="1.30" introspectable="0">
+      <doc xml:space="preserve">Closes the span opened by GST_TRACE_SCOPE_BEGIN() for @format and resets the
+variable to %GST_TRACE_SPAN_ID_NONE.</doc>
+      <parameters>
+        <parameter name="format">
+          <doc xml:space="preserve">the span format getter passed to the matching
+  GST_TRACE_SCOPE_BEGIN()</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <constant name="TRACE_SPAN_ID_NONE" value="0" c:type="GST_TRACE_SPAN_ID_NONE" version="1.30">
+      <doc xml:space="preserve">Sentinel #GstTraceSpanId value meaning "no span". Returned by
+gst_trace_span_begin() when no tracer is listening, and accepted
+as a no-op by gst_trace_span_end().</doc>
+      <type name="TraceSpanId" c:type="GstTraceSpanId"/>
+    </constant>
+    <function-macro name="TRACE_VALUES" c:identifier="GST_TRACE_VALUES" version="1.30" introspectable="0">
+      <doc xml:space="preserve">Builds a positional `GstTraceValue` array suitable for
+gst_trace_span_begin(). Values are positional and must match the
+field order declared on the corresponding #GstTraceFormat.</doc>
+      <parameters>
+        <parameter name="...">
+          <doc xml:space="preserve">one or more short value entries, e.g. `STRING (s)`, `UINT (n)`,
+  `OBJECT (o)`; each names a `GST_TRACE_VALUE_*` constructor without the
+  `GST_TRACE_VALUE_` prefix</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="TRACE_VALUE_BOOLEAN" c:identifier="GST_TRACE_VALUE_BOOLEAN" version="1.30" introspectable="0">
+      <doc xml:space="preserve">Builds a `GstTraceValue` holding @x for use inside GST_TRACE_VALUES().</doc>
+      <parameters>
+        <parameter name="x">
+          <doc xml:space="preserve">a #gboolean value</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="TRACE_VALUE_CLOCK_TIME" c:identifier="GST_TRACE_VALUE_CLOCK_TIME" version="1.30" introspectable="0">
+      <parameters>
+        <parameter name="x">
+          <doc xml:space="preserve">a #GstClockTime value</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="TRACE_VALUE_DOUBLE" c:identifier="GST_TRACE_VALUE_DOUBLE" version="1.30" introspectable="0">
+      <parameters>
+        <parameter name="x">
+          <doc xml:space="preserve">a #gdouble value</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="TRACE_VALUE_INT" c:identifier="GST_TRACE_VALUE_INT" version="1.30" introspectable="0">
+      <parameters>
+        <parameter name="x">
+          <doc xml:space="preserve">a #gint value</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="TRACE_VALUE_INT64" c:identifier="GST_TRACE_VALUE_INT64" version="1.30" introspectable="0">
+      <parameters>
+        <parameter name="x">
+          <doc xml:space="preserve">a #gint64 value</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="TRACE_VALUE_OBJECT" c:identifier="GST_TRACE_VALUE_OBJECT" version="1.30" introspectable="0">
+      <doc xml:space="preserve">@x must outlive the trace call.</doc>
+      <parameters>
+        <parameter name="x">
+          <doc xml:space="preserve">a borrowed #GObject</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="TRACE_VALUE_STRING" c:identifier="GST_TRACE_VALUE_STRING" version="1.30" introspectable="0">
+      <doc xml:space="preserve">@x must outlive the trace call. %NULL is passed through unchanged so tracers
+can distinguish unset from empty strings.</doc>
+      <parameters>
+        <parameter name="x">
+          <doc xml:space="preserve">a borrowed #gchar pointer; %NULL means the field is unset</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="TRACE_VALUE_STRUCTURE" c:identifier="GST_TRACE_VALUE_STRUCTURE" version="1.30" introspectable="0">
+      <doc xml:space="preserve">@x must outlive the trace call.</doc>
+      <parameters>
+        <parameter name="x">
+          <doc xml:space="preserve">a borrowed #GstStructure</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="TRACE_VALUE_UINT" c:identifier="GST_TRACE_VALUE_UINT" version="1.30" introspectable="0">
+      <parameters>
+        <parameter name="x">
+          <doc xml:space="preserve">a #guint value</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="TRACE_VALUE_UINT64" c:identifier="GST_TRACE_VALUE_UINT64" version="1.30" introspectable="0">
+      <parameters>
+        <parameter name="x">
+          <doc xml:space="preserve">a #guint64 value</doc>
         </parameter>
       </parameters>
     </function-macro>
@@ -49494,6 +49971,404 @@ unreffed before setting a new one.</doc>
         <type name="GObject.TypeInterface" c:type="GTypeInterface"/>
       </field>
     </record>
+    <record name="TraceField" c:type="GstTraceField" disguised="1" opaque="1" version="1.30">
+      <doc xml:space="preserve">Transient field descriptor created by gst_trace_field_new() and added
+to a #GstTraceFormatBuilder.</doc>
+      <method name="free" c:identifier="gst_trace_field_free" version="1.30">
+        <doc xml:space="preserve">Frees a field that has not been added to a builder.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="field" transfer-ownership="full" nullable="1" allow-none="1">
+            <doc xml:space="preserve">a #GstTraceField</doc>
+            <type name="TraceField" c:type="GstTraceField*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="set_description" c:identifier="gst_trace_field_set_description" version="1.30">
+        <doc xml:space="preserve">Sets the description metadata on @field. Tracers and documentation
+generators surface this string when describing the field.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">@field for chaining</doc>
+          <type name="TraceField" c:type="GstTraceField*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="field" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstTraceField</doc>
+            <type name="TraceField" c:type="GstTraceField*"/>
+          </instance-parameter>
+          <parameter name="description" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">a human-readable description; %NULL clears any
+  previously set description</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_flags" c:identifier="gst_trace_field_set_flags" version="1.30">
+        <doc xml:space="preserve">Sets metadata flags on @field. %GST_TRACER_VALUE_FLAGS_OPTIONAL marks the
+field as optional: when emitting an event, the field's value must be
+preceded by a #gboolean value telling whether it is present.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">@field for chaining</doc>
+          <type name="TraceField" c:type="GstTraceField*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="field" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstTraceField</doc>
+            <type name="TraceField" c:type="GstTraceField*"/>
+          </instance-parameter>
+          <parameter name="flags" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstTracerValueFlags describing the field</doc>
+            <type name="TracerValueFlags" c:type="GstTracerValueFlags"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_scope" c:identifier="gst_trace_field_set_scope" version="1.30">
+        <doc xml:space="preserve">Declares which entity (process, thread, element or pad) the field's value
+relates to. Post-processing tools such as `gst-stats` use this to group
+measurements.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">@field for chaining</doc>
+          <type name="TraceField" c:type="GstTraceField*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="field" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstTraceField</doc>
+            <type name="TraceField" c:type="GstTraceField*"/>
+          </instance-parameter>
+          <parameter name="scope" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstTracerValueScope the field relates to</doc>
+            <type name="TracerValueScope" c:type="GstTracerValueScope"/>
+          </parameter>
+        </parameters>
+      </method>
+      <function name="new" c:identifier="gst_trace_field_new" version="1.30" introspectable="0">
+        <doc xml:space="preserve">Creates a transient field descriptor that can be configured with chainable
+setters and then consumed by
+gst_trace_format_builder_add_field_full().</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a new #GstTraceField</doc>
+          <type name="TraceField" c:type="GstTraceField*"/>
+        </return-value>
+        <parameters>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:space="preserve">the field name</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="type" transfer-ownership="none">
+            <doc xml:space="preserve">the field #GstTracerFieldType</doc>
+            <type name="TracerFieldType" c:type="GstTracerFieldType"/>
+          </parameter>
+        </parameters>
+      </function>
+    </record>
+    <record name="TraceFormat" c:type="GstTraceFormat" disguised="1" opaque="1" version="1.30">
+      <doc xml:space="preserve">Opaque registered format describing the fields of a trace span.
+Obtain one via gst_trace_format_register() or
+GST_DEFINE_TRACE_FORMAT() and pass it to
+gst_trace_span_begin().</doc>
+      <method name="get_description" c:identifier="gst_trace_format_get_description" version="1.30">
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">the description set on the builder, or
+  %NULL if none was set</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="format" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstTraceFormat</doc>
+            <type name="TraceFormat" c:type="GstTraceFormat*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_field_description" c:identifier="gst_trace_format_get_field_description" version="1.30">
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">the description declared for the field
+  at @index, or %NULL if no description was set (or @index is out of range)</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="format" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstTraceFormat</doc>
+            <type name="TraceFormat" c:type="GstTraceFormat*"/>
+          </instance-parameter>
+          <parameter name="index" transfer-ownership="none">
+            <doc xml:space="preserve">a field index</doc>
+            <type name="guint" c:type="guint"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_field_name" c:identifier="gst_trace_format_get_field_name" version="1.30">
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the name of the field at @index, or %NULL if
+  @index is out of range</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="format" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstTraceFormat</doc>
+            <type name="TraceFormat" c:type="GstTraceFormat*"/>
+          </instance-parameter>
+          <parameter name="index" transfer-ownership="none">
+            <doc xml:space="preserve">a field index</doc>
+            <type name="guint" c:type="guint"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_field_structure" c:identifier="gst_trace_format_get_field_structure" version="1.30">
+        <doc xml:space="preserve">Returns the raw #GstStructure describing the field at @index. The structure
+carries the field's type (`"type"`, a #GstTracerFieldType stored as #gint)
+and any optional metadata declared via
+gst_trace_format_builder_add_field_full() (e.g. `"description"`).</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">the field structure, or %NULL if
+  @index is out of range</doc>
+          <type name="Structure" c:type="const GstStructure*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="format" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstTraceFormat</doc>
+            <type name="TraceFormat" c:type="GstTraceFormat*"/>
+          </instance-parameter>
+          <parameter name="index" transfer-ownership="none">
+            <doc xml:space="preserve">a field index</doc>
+            <type name="guint" c:type="guint"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_field_type" c:identifier="gst_trace_format_get_field_type" version="1.30">
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the #GstTracerFieldType of the field at @index (defaults to
+  %GST_TRACER_FIELD_TYPE_BOOLEAN if @index is out of range)</doc>
+          <type name="TracerFieldType" c:type="GstTracerFieldType"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="format" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstTraceFormat</doc>
+            <type name="TraceFormat" c:type="GstTraceFormat*"/>
+          </instance-parameter>
+          <parameter name="index" transfer-ownership="none">
+            <doc xml:space="preserve">a field index</doc>
+            <type name="guint" c:type="guint"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_n_fields" c:identifier="gst_trace_format_get_n_fields" version="1.30">
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the number of fields declared on @format</doc>
+          <type name="guint" c:type="guint"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="format" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstTraceFormat</doc>
+            <type name="TraceFormat" c:type="GstTraceFormat*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_name" c:identifier="gst_trace_format_get_name" version="1.30">
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the registered span name</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="format" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstTraceFormat</doc>
+            <type name="TraceFormat" c:type="GstTraceFormat*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="is_enabled" c:identifier="gst_trace_format_is_enabled" version="1.30">
+        <doc xml:space="preserve">Cheap check that lets callers skip preparing span values when no tracer
+is active. Returns %TRUE whenever any tracer is registered, regardless
+of which hooks it listens for.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if any tracer is active</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="format" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstTraceFormat</doc>
+            <type name="TraceFormat" c:type="GstTraceFormat*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <function name="register" c:identifier="gst_trace_format_register" version="1.30" introspectable="0">
+        <doc xml:space="preserve">Convenience wrapper around #GstTraceFormatBuilder for the common case
+where only the field names and types are declared. Equivalent to creating
+a builder, calling gst_trace_format_builder_add_field() for each pair
+and then gst_trace_format_builder_register().</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the registered #GstTraceFormat</doc>
+          <type name="TraceFormat" c:type="GstTraceFormat*"/>
+        </return-value>
+        <parameters>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:space="preserve">the span name</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="..." transfer-ownership="none">
+            <doc xml:space="preserve">%NULL-terminated list of (field-name, #GType) pairs</doc>
+            <varargs/>
+          </parameter>
+        </parameters>
+      </function>
+    </record>
+    <record name="TraceFormatBuilder" c:type="GstTraceFormatBuilder" disguised="1" opaque="1" version="1.30">
+      <doc xml:space="preserve">Opaque, chainable builder used to assemble a #GstTraceFormat field by
+field; consumed by gst_trace_format_builder_register().</doc>
+      <method name="add_field" c:identifier="gst_trace_format_builder_add_field" version="1.30">
+        <doc xml:space="preserve">Adds a positional field to the format. @type must be one of %G_TYPE_BOOLEAN,
+%G_TYPE_INT, %G_TYPE_UINT, %G_TYPE_INT64, %G_TYPE_UINT64, %G_TYPE_DOUBLE,
+%G_TYPE_STRING or %G_TYPE_POINTER, matching the `GstTraceValue` union
+member callers will pass to gst_trace_span_begin(). Duplicate
+field names are rejected.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">@builder for chaining</doc>
+          <type name="TraceFormatBuilder" c:type="GstTraceFormatBuilder*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="builder" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstTraceFormatBuilder</doc>
+            <type name="TraceFormatBuilder" c:type="GstTraceFormatBuilder*"/>
+          </instance-parameter>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:space="preserve">the field name</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="type" transfer-ownership="none">
+            <doc xml:space="preserve">the field #GType</doc>
+            <type name="TracerFieldType" c:type="GstTracerFieldType"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="add_field_full" c:identifier="gst_trace_format_builder_add_field_full" version="1.30">
+        <doc xml:space="preserve">Adds a positional field with optional metadata to the format. The field is
+consumed and freed by this call; do not use @field afterwards.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">@builder for chaining</doc>
+          <type name="TraceFormatBuilder" c:type="GstTraceFormatBuilder*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="builder" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstTraceFormatBuilder</doc>
+            <type name="TraceFormatBuilder" c:type="GstTraceFormatBuilder*"/>
+          </instance-parameter>
+          <parameter name="field" transfer-ownership="full">
+            <doc xml:space="preserve">a #GstTraceField built via gst_trace_field_new()
+  and optionally configured with chainable setters such as
+  gst_trace_field_set_description()</doc>
+            <type name="TraceField" c:type="GstTraceField*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="free" c:identifier="gst_trace_format_builder_free" version="1.30">
+        <doc xml:space="preserve">Frees an unregistered builder.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="builder" transfer-ownership="full" nullable="1" allow-none="1">
+            <doc xml:space="preserve">a #GstTraceFormatBuilder</doc>
+            <type name="TraceFormatBuilder" c:type="GstTraceFormatBuilder*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="register" c:identifier="gst_trace_format_builder_register" version="1.30">
+        <doc xml:space="preserve">Registers the format declared by @builder and consumes the builder.
+The returned format is valid until gst_deinit().</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the registered #GstTraceFormat</doc>
+          <type name="TraceFormat" c:type="GstTraceFormat*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="builder" transfer-ownership="full">
+            <doc xml:space="preserve">a #GstTraceFormatBuilder</doc>
+            <type name="TraceFormatBuilder" c:type="GstTraceFormatBuilder*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="set_description" c:identifier="gst_trace_format_builder_set_description" version="1.30">
+        <doc xml:space="preserve">Sets a human-readable description on the format being built. Replaces any
+previous description.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">@builder for chaining</doc>
+          <type name="TraceFormatBuilder" c:type="GstTraceFormatBuilder*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="builder" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstTraceFormatBuilder</doc>
+            <type name="TraceFormatBuilder" c:type="GstTraceFormatBuilder*"/>
+          </instance-parameter>
+          <parameter name="description" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">a human-readable description</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <function name="new" c:identifier="gst_trace_format_builder_new" version="1.30" introspectable="0">
+        <doc xml:space="preserve">Creates a new builder for a span format. The builder is used to
+declare the span's field schema before registering it with
+gst_trace_format_builder_register().</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a new #GstTraceFormatBuilder</doc>
+          <type name="TraceFormatBuilder" c:type="GstTraceFormatBuilder*"/>
+        </return-value>
+        <parameters>
+          <parameter name="name" transfer-ownership="none">
+            <doc xml:space="preserve">the span name</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </function>
+    </record>
+    <union name="TraceValue" c:type="GstTraceValue" version="1.30">
+      <doc xml:space="preserve">A single borrowed value for a trace span row.
+
+Values are positional and interpreted according to the format description
+used when registering the corresponding #GstTraceFormat. The value order
+matches the field order declared on the builder.</doc>
+      <field name="v_boolean" writable="1">
+        <doc xml:space="preserve">a #gboolean</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </field>
+      <field name="v_int" writable="1">
+        <doc xml:space="preserve">a #gint</doc>
+        <type name="gint" c:type="gint"/>
+      </field>
+      <field name="v_uint" writable="1">
+        <doc xml:space="preserve">a #guint</doc>
+        <type name="guint" c:type="guint"/>
+      </field>
+      <field name="v_int64" writable="1">
+        <doc xml:space="preserve">a #gint64</doc>
+        <type name="gint64" c:type="gint64"/>
+      </field>
+      <field name="v_uint64" writable="1">
+        <doc xml:space="preserve">a #guint64 (also carries %GST_TRACER_FIELD_TYPE_CLOCK_TIME)</doc>
+        <type name="guint64" c:type="guint64"/>
+      </field>
+      <field name="v_double" writable="1">
+        <doc xml:space="preserve">a #gdouble</doc>
+        <type name="gdouble" c:type="gdouble"/>
+      </field>
+      <field name="v_string" writable="1">
+        <doc xml:space="preserve">a borrowed string (may be %NULL)</doc>
+        <type name="utf8" c:type="const gchar*"/>
+      </field>
+      <field name="v_structure" writable="1">
+        <doc xml:space="preserve">a borrowed #GstStructure (may be %NULL)</doc>
+        <type name="Structure" c:type="GstStructure*"/>
+      </field>
+      <field name="v_object" writable="1">
+        <doc xml:space="preserve">a borrowed #GObject (may be %NULL)</doc>
+        <type name="GObject.Object" c:type="GObject*"/>
+      </field>
+      <field name="_gst_reserved" readable="0" private="1">
+        <array zero-terminated="0" fixed-size="4">
+          <type name="gpointer" c:type="gpointer"/>
+        </array>
+      </field>
+    </union>
     <class name="Tracer" c:symbol-prefix="tracer" c:type="GstTracer" version="1.8" parent="Object" abstract="1" glib:type-name="GstTracer" glib:get-type="gst_tracer_get_type" glib:type-struct="TracerClass">
       <doc xml:space="preserve">Tracing modules will subclass #GstTracer and register through
 gst_tracer_register(). Modules can attach to various hook-types - see
@@ -49618,11 +50493,47 @@ the factory is not loaded.</doc>
       </method>
     </class>
     <record name="TracerFactoryClass" c:type="GstTracerFactoryClass" disguised="1" opaque="1" glib:is-gtype-struct-for="TracerFactory"/>
+    <enumeration name="TracerFieldType" version="1.30" glib:type-name="GstTracerFieldType" glib:get-type="gst_tracer_field_type_get_type" c:type="GstTracerFieldType">
+      <doc xml:space="preserve">The type of a trace format field. This is a deliberately small, self
+contained set rather than a #GType so the tracer stream stays independent
+of the GObject type system.</doc>
+      <member name="boolean" value="0" c:identifier="GST_TRACER_FIELD_TYPE_BOOLEAN" glib:nick="boolean" glib:name="GST_TRACER_FIELD_TYPE_BOOLEAN">
+        <doc xml:space="preserve">a #gboolean</doc>
+      </member>
+      <member name="int" value="1" c:identifier="GST_TRACER_FIELD_TYPE_INT" glib:nick="int" glib:name="GST_TRACER_FIELD_TYPE_INT">
+        <doc xml:space="preserve">a #gint</doc>
+      </member>
+      <member name="uint" value="2" c:identifier="GST_TRACER_FIELD_TYPE_UINT" glib:nick="uint" glib:name="GST_TRACER_FIELD_TYPE_UINT">
+        <doc xml:space="preserve">a #guint</doc>
+      </member>
+      <member name="int64" value="3" c:identifier="GST_TRACER_FIELD_TYPE_INT64" glib:nick="int64" glib:name="GST_TRACER_FIELD_TYPE_INT64">
+        <doc xml:space="preserve">a #gint64</doc>
+      </member>
+      <member name="uint64" value="4" c:identifier="GST_TRACER_FIELD_TYPE_UINT64" glib:nick="uint64" glib:name="GST_TRACER_FIELD_TYPE_UINT64">
+        <doc xml:space="preserve">a #guint64</doc>
+      </member>
+      <member name="double" value="5" c:identifier="GST_TRACER_FIELD_TYPE_DOUBLE" glib:nick="double" glib:name="GST_TRACER_FIELD_TYPE_DOUBLE">
+        <doc xml:space="preserve">a #gdouble</doc>
+      </member>
+      <member name="string" value="6" c:identifier="GST_TRACER_FIELD_TYPE_STRING" glib:nick="string" glib:name="GST_TRACER_FIELD_TYPE_STRING">
+        <doc xml:space="preserve">a borrowed string (may be %NULL)</doc>
+      </member>
+      <member name="clock_time" value="7" c:identifier="GST_TRACER_FIELD_TYPE_CLOCK_TIME" glib:nick="clock-time" glib:name="GST_TRACER_FIELD_TYPE_CLOCK_TIME">
+        <doc xml:space="preserve">a #GstClockTime</doc>
+      </member>
+      <member name="structure" value="8" c:identifier="GST_TRACER_FIELD_TYPE_STRUCTURE" glib:nick="structure" glib:name="GST_TRACER_FIELD_TYPE_STRUCTURE">
+        <doc xml:space="preserve">a borrowed #GstStructure (may be %NULL)</doc>
+      </member>
+      <member name="object" value="9" c:identifier="GST_TRACER_FIELD_TYPE_OBJECT" glib:nick="object" glib:name="GST_TRACER_FIELD_TYPE_OBJECT">
+        <doc xml:space="preserve">a borrowed #GObject (may be %NULL)</doc>
+      </member>
+    </enumeration>
     <record name="TracerPrivate" c:type="GstTracerPrivate" disguised="1" opaque="1"/>
-    <class name="TracerRecord" c:symbol-prefix="tracer_record" c:type="GstTracerRecord" version="1.8" parent="Object" glib:type-name="GstTracerRecord" glib:get-type="gst_tracer_record_get_type" glib:type-struct="TracerRecordClass">
+    <class name="TracerRecord" c:symbol-prefix="tracer_record" c:type="GstTracerRecord" version="1.8" deprecated="1" deprecated-version="1.30" parent="Object" glib:type-name="GstTracerRecord" glib:get-type="gst_tracer_record_get_type" glib:type-struct="TracerRecordClass">
       <doc xml:space="preserve">Tracing modules will create instances of this class to announce the data they
 will log and create a log formatter.</doc>
-      <constructor name="new" c:identifier="gst_tracer_record_new" version="1.8" introspectable="0">
+      <doc-deprecated xml:space="preserve">Use #GstTraceFormat and gst_trace_event() instead.</doc-deprecated>
+      <constructor name="new" c:identifier="gst_tracer_record_new" version="1.8" introspectable="0" deprecated="1" deprecated-version="1.30">
         <doc xml:space="preserve">Create a new tracer record. The record instance can be used to efficiently
 log entries using gst_tracer_record_log().
 %NULL terminator required after the last argument.
@@ -49639,9 +50550,9 @@ the optional field, that if %TRUE signals that the optional field is valid
 and %FALSE signals that the optional field should be ignored. One must still
 log a placeholder value for the optional field though. Please also note, that
 pointer type values must not be NULL - the underlying serialisation can not
-handle that right now.
-
-&gt; Please note that this is still under discussion and subject to change.</doc>
+handle that right now.</doc>
+        <doc-deprecated xml:space="preserve">Build a #GstTraceFormat with
+  gst_trace_format_builder_new() / gst_trace_format_register() instead.</doc-deprecated>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">a new #GstTracerRecord</doc>
           <type name="TracerRecord" c:type="GstTracerRecord*"/>
@@ -49661,13 +50572,12 @@ handle that right now.
           </parameter>
         </parameters>
       </constructor>
-      <method name="log" c:identifier="gst_tracer_record_log" version="1.8" introspectable="0">
+      <method name="log" c:identifier="gst_tracer_record_log" version="1.8" introspectable="0" deprecated="1" deprecated-version="1.30">
         <doc xml:space="preserve">Serialzes the trace event into the log.
 
 Right now this is using the gstreamer debug log with the level TRACE (7) and
-the category "GST_TRACER".
-
-&gt; Please note that this is still under discussion and subject to change.</doc>
+the category "GST_TRACER".</doc>
+        <doc-deprecated xml:space="preserve">Use gst_trace_event() instead.</doc-deprecated>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -49697,13 +50607,13 @@ logs to understand the values.</doc>
       </member>
       <member name="aggregated" value="2" c:identifier="GST_TRACER_VALUE_FLAGS_AGGREGATED" glib:nick="aggregated" glib:name="GST_TRACER_VALUE_FLAGS_AGGREGATED">
         <doc xml:space="preserve">the value is a combined figure, since the
-  start of tracing. Examples are averages or timestamps.</doc>
+  start of tracing. Examples are averages or accumulated durations.</doc>
       </member>
     </bitfield>
     <enumeration name="TracerValueScope" version="1.8" glib:type-name="GstTracerValueScope" glib:get-type="gst_tracer_value_scope_get_type" c:type="GstTracerValueScope">
       <doc xml:space="preserve">Tracing record will contain fields that contain a measured value or extra
 meta-data. One such meta data are values that tell where a measurement was
-taken. This enumerating declares to which scope such a meta data field
+taken. This enumeration declares to which scope such a meta data field
 relates to. If it is e.g. %GST_TRACER_VALUE_SCOPE_PAD, then each of the log
 events may contain values for different #GstPads.</doc>
       <member name="process" value="0" c:identifier="GST_TRACER_VALUE_SCOPE_PROCESS" glib:nick="process" glib:name="GST_TRACER_VALUE_SCOPE_PROCESS">
@@ -51540,7 +52450,7 @@ determine a order for the two provided values.</doc>
       <doc xml:space="preserve">The major version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MICRO" value="1" c:type="GST_VERSION_MICRO">
+    <constant name="VERSION_MICRO" value="2" c:type="GST_VERSION_MICRO">
       <doc xml:space="preserve">The micro version of GStreamer at compile time:</doc>
       <type name="gint" c:type="gint"/>
     </constant>
@@ -53279,6 +54189,12 @@ Either @new_context or the #GstContext pointed to by @old_context may be %NULL.<
     <function name="cpuid_supports_arm_neon64" c:identifier="gst_cpuid_supports_arm_neon64" version="1.28">
       <return-value transfer-ownership="none">
         <doc xml:space="preserve">%TRUE if NEON (64-bit) is supported by the CPU, %FALSE otherwise.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+    </function>
+    <function name="cpuid_supports_riscv_v" c:identifier="gst_cpuid_supports_riscv_v" version="1.30">
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if RISC-V Vector extension is supported by the CPU, %FALSE otherwise.</doc>
         <type name="gboolean" c:type="gboolean"/>
       </return-value>
     </function>
@@ -57113,6 +58029,103 @@ even from dynamically loaded plugins.)</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <function name="trace_event" c:identifier="gst_trace_event" version="1.30">
+      <doc xml:space="preserve">Emits a point event for @format: a single timestamped record with no
+duration, the counterpart to the begin/end pair of gst_trace_span_begin()
+and the structured replacement for gst_tracer_record_log().
+
+The event is delivered to tracers through the "event" hook; the `log` tracer
+renders it to the GST_TRACER debug log. Values are positional and must match
+@format; keep their computation cheap as they are built whenever tracing is
+enabled.</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="format" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstTraceFormat describing the fields of the event</doc>
+          <type name="TraceFormat" c:type="GstTraceFormat*"/>
+        </parameter>
+        <parameter name="values" transfer-ownership="none" nullable="1" allow-none="1">
+          <doc xml:space="preserve">the positional values for @format's fields, in
+  declaration order; %NULL logs all fields as unset</doc>
+          <array zero-terminated="0" c:type="const GstTraceValue*">
+            <type name="TraceValue" c:type="GstTraceValue"/>
+          </array>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="trace_format_register" c:identifier="gst_trace_format_register" moved-to="TraceFormat.register" version="1.30" introspectable="0">
+      <doc xml:space="preserve">Convenience wrapper around #GstTraceFormatBuilder for the common case
+where only the field names and types are declared. Equivalent to creating
+a builder, calling gst_trace_format_builder_add_field() for each pair
+and then gst_trace_format_builder_register().</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">the registered #GstTraceFormat</doc>
+        <type name="TraceFormat" c:type="GstTraceFormat*"/>
+      </return-value>
+      <parameters>
+        <parameter name="name" transfer-ownership="none">
+          <doc xml:space="preserve">the span name</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </parameter>
+        <parameter name="..." transfer-ownership="none">
+          <doc xml:space="preserve">%NULL-terminated list of (field-name, #GType) pairs</doc>
+          <varargs/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="trace_span_begin" c:identifier="gst_trace_span_begin" version="1.30">
+      <doc xml:space="preserve">Emits a span begin hook for @format.
+
+Values are borrowed for the duration of the hook call. The number of
+@values must match the fields of the structure used to register @format.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">a span id to pass to gst_trace_span_end(), or
+%GST_TRACE_SPAN_ID_NONE if no tracer is listening for spans</doc>
+        <type name="TraceSpanId" c:type="GstTraceSpanId"/>
+      </return-value>
+      <parameters>
+        <parameter name="format" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstTraceFormat</doc>
+          <type name="TraceFormat" c:type="GstTraceFormat*"/>
+        </parameter>
+        <parameter name="values" transfer-ownership="none" nullable="1" allow-none="1">
+          <doc xml:space="preserve">positional values matching @format</doc>
+          <array zero-terminated="0" c:type="const GstTraceValue*">
+            <type name="TraceValue" c:type="GstTraceValue"/>
+          </array>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="trace_span_end" c:identifier="gst_trace_span_end" version="1.30">
+      <doc xml:space="preserve">Emits a span end hook. Passing %GST_TRACE_SPAN_ID_NONE is allowed and
+is a no-op.</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="span_id" transfer-ownership="none">
+          <doc xml:space="preserve">a span id returned by gst_trace_span_begin()</doc>
+          <type name="TraceSpanId" c:type="GstTraceSpanId"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="trace_span_end_and_clear" c:identifier="gst_trace_span_end_and_clear" version="1.30">
+      <doc xml:space="preserve">Ends the span pointed to by @span_id and resets it to
+%GST_TRACE_SPAN_ID_NONE. Safe to call when @span_id already holds
+%GST_TRACE_SPAN_ID_NONE. Intended for spans stored on long-lived state
+(struct fields) where the slot must be cleared after closing the span.</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="span_id" direction="inout" caller-allocates="0" transfer-ownership="full">
+          <doc xml:space="preserve">a pointer to a #GstTraceSpanId; may not be %NULL</doc>
+          <type name="TraceSpanId" c:type="GstTraceSpanId*"/>
+        </parameter>
+      </parameters>
+    </function>
     <function name="tracing_get_active_tracers" c:identifier="gst_tracing_get_active_tracers" version="1.18">
       <doc xml:space="preserve">Get a list of all active tracer objects owned by the tracing framework for
 the entirety of the run-time of the process or till gst_deinit() is called.</doc>
@@ -59060,6 +60073,22 @@ Note that this means subtraction as in sets, not as in mathematics.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <function name="value_take_structure" c:identifier="gst_value_take_structure" version="1.30">
+      <doc xml:space="preserve">Sets the contents of @value to @structure. Takes ownership of the structure</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="value" transfer-ownership="none">
+          <doc xml:space="preserve">a GValue initialized to GST_TYPE_STRUCTURE</doc>
+          <type name="GObject.Value" c:type="GValue*"/>
+        </parameter>
+        <parameter name="structure" transfer-ownership="full">
+          <doc xml:space="preserve">the structure to set the value to</doc>
+          <type name="Structure" c:type="GstStructure*"/>
+        </parameter>
+      </parameters>
+    </function>
     <function name="value_union" c:identifier="gst_value_union">
       <doc xml:space="preserve">Creates a GValue corresponding to the union of @value1 and @value2.</doc>
       <return-value transfer-ownership="none">

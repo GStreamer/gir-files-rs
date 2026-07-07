@@ -14,6 +14,13 @@ and/or use gtk-doc annotations.  -->
     <alias name="VulkanHandleTypedef" c:type="GstVulkanHandleTypedef">
       <type name="guint64" c:type="uint64_t"/>
     </alias>
+    <constant name="BUFFER_POOL_OPTION_VULKAN_IMAGE_MULTIPLANAR_YUV" value="GstBufferPoolOptionVulkanImageMultiplanarYUV" c:type="GST_BUFFER_POOL_OPTION_VULKAN_IMAGE_MULTIPLANAR_YUV" version="1.30">
+      <doc xml:space="preserve">Opt-in for a single multi-planar VkImage (e.g. NV12) instead of
+per-plane images when the format and usage allow it. Use for
+zero-copy interop without Vulkan Video usage bits; unsupported
+combinations fall back to per-plane allocation.</doc>
+      <type name="utf8" c:type="gchar*"/>
+    </constant>
     <constant name="CAPS_FEATURE_MEMORY_VULKAN_BUFFER" value="memory:VulkanBuffer" c:type="GST_CAPS_FEATURE_MEMORY_VULKAN_BUFFER" version="1.18">
       <type name="utf8" c:type="gchar*"/>
     </constant>
@@ -260,6 +267,15 @@ and/or use gtk-doc annotations.  -->
         </parameter>
       </parameters>
     </function-macro>
+    <function-macro name="VULKAN_API_VERSION_ARGS" c:identifier="GST_VULKAN_API_VERSION_ARGS" version="1.30" introspectable="0">
+      <parameters>
+        <parameter name="v">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <constant name="VULKAN_API_VERSION_FORMAT" value="u.%u.%u" c:type="GST_VULKAN_API_VERSION_FORMAT" version="1.30">
+      <type name="utf8" c:type="gchar*"/>
+    </constant>
     <function-macro name="VULKAN_BUFFER_MEMORY_ALLOCATOR" c:identifier="GST_VULKAN_BUFFER_MEMORY_ALLOCATOR" introspectable="0">
       <parameters>
         <parameter name="obj">
@@ -632,6 +648,23 @@ and/or use gtk-doc annotations.  -->
         </parameter>
       </parameters>
     </function-macro>
+    <constant name="VULKAN_REQUESTED_DEVICE_EXTENSIONS_CONTEXT_TYPE_STR" value="gst.vulkan.requested-device-extensions" c:type="GST_VULKAN_REQUESTED_DEVICE_EXTENSIONS_CONTEXT_TYPE_STR" version="1.30">
+      <doc xml:space="preserve">Context type for negotiating Vulkan **device** extensions at runtime.
+The #GstStructure contains a `G_TYPE_STRV` field `extensions` and must be
+anchored on a #GstVulkanInstance (same field name as
+gst_context_set_vulkan_instance(), %GST_VULKAN_INSTANCE_CONTEXT_TYPE_STR)
+so answerers can inspect physical devices, filter requested device extension
+names, and so merge logic can ignore unrelated fragments when instances
+disagree.</doc>
+      <type name="utf8" c:type="gchar*"/>
+    </constant>
+    <constant name="VULKAN_REQUESTED_INSTANCE_EXTENSIONS_CONTEXT_TYPE_STR" value="gst.vulkan.requested-instance-extensions" c:type="GST_VULKAN_REQUESTED_INSTANCE_EXTENSIONS_CONTEXT_TYPE_STR" version="1.30">
+      <doc xml:space="preserve">Context type for negotiating Vulkan **instance** extensions at runtime.
+The #GstStructure holds a `G_TYPE_STRV` field `extensions`. Merge helpers
+ignore any %GST_VULKAN_INSTANCE_CONTEXT_TYPE_STR field for this type so
+negotiation stays decoupled from a specific #GstVulkanInstance.</doc>
+      <type name="utf8" c:type="gchar*"/>
+    </constant>
     <function-macro name="VULKAN_SWAPPER" c:identifier="GST_VULKAN_SWAPPER" introspectable="0">
       <parameters>
         <parameter name="o">
@@ -671,6 +704,15 @@ and/or use gtk-doc annotations.  -->
         </parameter>
       </parameters>
     </function-macro>
+    <function-macro name="VULKAN_UUID_ARGS" c:identifier="GST_VULKAN_UUID_ARGS" version="1.30" introspectable="0">
+      <parameters>
+        <parameter name="uuid">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <constant name="VULKAN_UUID_FORMAT" value="02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x" c:type="GST_VULKAN_UUID_FORMAT" version="1.30">
+      <type name="utf8" c:type="gchar*"/>
+    </constant>
     <function-macro name="VULKAN_VIDEO_FILTER" c:identifier="GST_VULKAN_VIDEO_FILTER" introspectable="0">
       <parameters>
         <parameter name="obj">
@@ -2508,6 +2550,29 @@ See also: gst_vulkan_full_screen_quad_set_blend_factors().</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="set_immutable_sampler" c:identifier="gst_vulkan_full_screen_quad_set_immutable_sampler" version="1.30">
+        <doc xml:space="preserve">Sets the immutable sampler used for input image descriptors. The sampler is
+fixed in the descriptor set layout instead of being provided when updating
+the descriptor set.
+
+This is required, for example, for samplers with
+`VkSamplerYcbcrConversion`, whose conversion state must be fixed at pipeline
+creation time.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">whether the sampler was set.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstVulkanFullScreenQuad</doc>
+            <type name="VulkanFullScreenQuad" c:type="GstVulkanFullScreenQuad*"/>
+          </instance-parameter>
+          <parameter name="sampler" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstVulkanHandle</doc>
+            <type name="VulkanHandle" c:type="GstVulkanHandle*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="set_index_buffer" c:identifier="gst_vulkan_full_screen_quad_set_index_buffer" version="1.18" throws="1">
         <doc xml:space="preserve">See also gst_vulkan_full_screen_quad_set_vertex_buffer()</doc>
         <return-value transfer-ownership="none">
@@ -2567,7 +2632,7 @@ See also: gst_vulkan_full_screen_quad_set_blend_factors().</doc>
       </method>
       <method name="set_output_buffer" c:identifier="gst_vulkan_full_screen_quad_set_output_buffer" version="1.18" throws="1">
         <return-value transfer-ownership="none">
-          <doc xml:space="preserve">whether the input buffer could be changed</doc>
+          <doc xml:space="preserve">whether the output buffer could be changed</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
@@ -2578,6 +2643,24 @@ See also: gst_vulkan_full_screen_quad_set_blend_factors().</doc>
           <parameter name="buffer" transfer-ownership="none" nullable="1" allow-none="1">
             <doc xml:space="preserve">the output #GstBuffer to set</doc>
             <type name="Gst.Buffer" c:type="GstBuffer*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_sampler" c:identifier="gst_vulkan_full_screen_quad_set_sampler" version="1.30">
+        <doc xml:space="preserve">Sets the sampler used for input image descriptors. The sampler is provided
+when updating the descriptor set.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">whether the sampler was set.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:space="preserve">the #GstVulkanFullScreenQuad</doc>
+            <type name="VulkanFullScreenQuad" c:type="GstVulkanFullScreenQuad*"/>
+          </instance-parameter>
+          <parameter name="sampler" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstVulkanHandle</doc>
+            <type name="VulkanHandle" c:type="GstVulkanHandle*"/>
           </parameter>
         </parameters>
       </method>
@@ -2603,7 +2686,7 @@ See also: gst_vulkan_full_screen_quad_set_blend_factors().</doc>
       </method>
       <method name="set_uniform_buffer" c:identifier="gst_vulkan_full_screen_quad_set_uniform_buffer" version="1.18" throws="1">
         <return-value transfer-ownership="none">
-          <doc xml:space="preserve">whether the shaders could be set</doc>
+          <doc xml:space="preserve">whether the uniform buffer could be set</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
@@ -2619,7 +2702,7 @@ See also: gst_vulkan_full_screen_quad_set_blend_factors().</doc>
       </method>
       <method name="set_vertex_buffer" c:identifier="gst_vulkan_full_screen_quad_set_vertex_buffer" version="1.18" throws="1">
         <return-value transfer-ownership="none">
-          <doc xml:space="preserve">whether the index data could be set</doc>
+          <doc xml:space="preserve">whether the vertex data could be set</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
@@ -2877,6 +2960,22 @@ more specific implementations (#GstVulkanCommandBuffer, #GstVulkanCommandPool).<
         <parameters>
           <instance-parameter name="handle" transfer-ownership="none">
             <doc xml:space="preserve">a #GstVulkanHandle containing a vulkan `VkSampler`</doc>
+            <type name="VulkanHandle" c:type="GstVulkanHandle*"/>
+          </instance-parameter>
+          <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">callback user data</doc>
+            <type name="gpointer" c:type="gpointer"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="free_sampler_ycbcr_conversion" c:identifier="gst_vulkan_handle_free_sampler_ycbcr_conversion" version="1.30">
+        <doc xml:space="preserve">Frees the sampler YCbCr conversion in @handle</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="handle" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstVulkanHandle containing a vulkan `VkSamplerYcbcrConversion`</doc>
             <type name="VulkanHandle" c:type="GstVulkanHandle*"/>
           </instance-parameter>
           <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1">
@@ -3599,6 +3698,35 @@ multiple times.  This must be called before any other #GstVulkanImageMemory oper
           <parameter name="usage" transfer-ownership="none">
             <doc xml:space="preserve">usage flags of @image</doc>
             <type name="Vulkan.ImageUsageFlags" c:type="VkImageUsageFlags"/>
+          </parameter>
+          <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">user data for @notify</doc>
+            <type name="gpointer" c:type="gpointer"/>
+          </parameter>
+          <parameter name="notify" transfer-ownership="none" scope="async">
+            <doc xml:space="preserve">a #GDestroyNotify when @image is no longer needed</doc>
+            <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+          </parameter>
+        </parameters>
+      </function>
+      <function name="wrapped_with_image_info" c:identifier="gst_vulkan_image_memory_wrapped_with_image_info" version="1.30">
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">a new #GstVulkanImageMemory wrapping
+  @image</doc>
+          <type name="Gst.Memory" c:type="GstMemory*"/>
+        </return-value>
+        <parameters>
+          <parameter name="device" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstVulkanDevice</doc>
+            <type name="VulkanDevice" c:type="GstVulkanDevice*"/>
+          </parameter>
+          <parameter name="image" transfer-ownership="none">
+            <doc xml:space="preserve">a `VkImage`</doc>
+            <type name="Vulkan.Image" c:type="VkImage"/>
+          </parameter>
+          <parameter name="image_info" transfer-ownership="none">
+            <doc xml:space="preserve">the `VkImageCreateInfo` used to create @image</doc>
+            <type name="Vulkan.ImageCreateInfo" c:type="const VkImageCreateInfo*"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1">
             <doc xml:space="preserve">user data for @notify</doc>
@@ -6619,6 +6747,38 @@ gst_vulkan_command_buffer_lock().</doc>
         </parameter>
       </parameters>
     </function>
+    <function name="vulkan_element_get_merged_requested_device_extensions_context" c:identifier="gst_vulkan_element_get_merged_requested_device_extensions_context" version="1.30">
+      <doc xml:space="preserve">Like gst_vulkan_element_get_merged_requested_instance_extensions_context(),
+but for %GST_VULKAN_REQUESTED_DEVICE_EXTENSIONS_CONTEXT_TYPE_STR. The result
+is only non-%NULL if the merge includes a #GstVulkanInstance anchor
+(extension-only device requests are ignored).</doc>
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">merged context, or %NULL</doc>
+        <type name="Gst.Context" c:type="GstContext*"/>
+      </return-value>
+      <parameters>
+        <parameter name="element" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstElement</doc>
+          <type name="Gst.Element" c:type="GstElement*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="vulkan_element_get_merged_requested_instance_extensions_context" c:identifier="gst_vulkan_element_get_merged_requested_instance_extensions_context" version="1.30">
+      <doc xml:space="preserve">Merges every %GST_VULKAN_REQUESTED_INSTANCE_EXTENSIONS_CONTEXT_TYPE_STR
+context already set on @element into a single #GstContext (extension names
+only; see gst_vulkan_requested_extensions_merge_from_element()).</doc>
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">merged context, or %NULL if no
+instance extension names were found</doc>
+        <type name="Gst.Context" c:type="GstContext*"/>
+      </return-value>
+      <parameters>
+        <parameter name="element" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstElement</doc>
+          <type name="Gst.Element" c:type="GstElement*"/>
+        </parameter>
+      </parameters>
+    </function>
     <function name="vulkan_ensure_element_data" c:identifier="gst_vulkan_ensure_element_data" version="1.18">
       <doc xml:space="preserve">Perform the steps necessary for retrieving a #GstVulkanInstance and
 (optionally) an #GstVulkanDisplay from the surrounding elements or from
@@ -7040,6 +7200,35 @@ multiple times.  This must be called before any other #GstVulkanImageMemory oper
         </parameter>
       </parameters>
     </function>
+    <function name="vulkan_image_memory_wrapped_with_image_info" c:identifier="gst_vulkan_image_memory_wrapped_with_image_info" moved-to="VulkanImageMemory.wrapped_with_image_info" version="1.30">
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">a new #GstVulkanImageMemory wrapping
+  @image</doc>
+        <type name="Gst.Memory" c:type="GstMemory*"/>
+      </return-value>
+      <parameters>
+        <parameter name="device" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstVulkanDevice</doc>
+          <type name="VulkanDevice" c:type="GstVulkanDevice*"/>
+        </parameter>
+        <parameter name="image" transfer-ownership="none">
+          <doc xml:space="preserve">a `VkImage`</doc>
+          <type name="Vulkan.Image" c:type="VkImage"/>
+        </parameter>
+        <parameter name="image_info" transfer-ownership="none">
+          <doc xml:space="preserve">the `VkImageCreateInfo` used to create @image</doc>
+          <type name="Vulkan.ImageCreateInfo" c:type="const VkImageCreateInfo*"/>
+        </parameter>
+        <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1">
+          <doc xml:space="preserve">user data for @notify</doc>
+          <type name="gpointer" c:type="gpointer"/>
+        </parameter>
+        <parameter name="notify" transfer-ownership="none" scope="async">
+          <doc xml:space="preserve">a #GDestroyNotify when @image is no longer needed</doc>
+          <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+        </parameter>
+      </parameters>
+    </function>
     <function name="vulkan_local_context_query" c:identifier="gst_vulkan_local_context_query" version="1.18">
       <doc xml:space="preserve">Performs the steps necessary for executing a context query between only
 other elements in the pipeline</doc>
@@ -7148,6 +7337,185 @@ multiple times.  This must be called before any other #GstVulkanMemory operation
         </parameter>
       </parameters>
     </function>
+    <function name="vulkan_requested_device_extensions_context_new" c:identifier="gst_vulkan_requested_device_extensions_context_new" version="1.30">
+      <return-value transfer-ownership="full">
+        <doc xml:space="preserve">new device-extension request #GstContext</doc>
+        <type name="Gst.Context" c:type="GstContext*"/>
+      </return-value>
+    </function>
+    <function name="vulkan_requested_extensions_context_add" c:identifier="gst_vulkan_requested_extensions_context_add" version="1.30">
+      <doc xml:space="preserve">Appends @extension_name to `extensions`, ignoring duplicates.</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="context" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstContext of type
+  %GST_VULKAN_REQUESTED_INSTANCE_EXTENSIONS_CONTEXT_TYPE_STR or
+  %GST_VULKAN_REQUESTED_DEVICE_EXTENSIONS_CONTEXT_TYPE_STR</doc>
+          <type name="Gst.Context" c:type="GstContext*"/>
+        </parameter>
+        <parameter name="extension_name" transfer-ownership="none">
+          <doc xml:space="preserve">Vulkan extension name to request</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="vulkan_requested_extensions_context_dup_extensions" c:identifier="gst_vulkan_requested_extensions_context_dup_extensions" version="1.30">
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">a copy of
+the `extensions` %NULL-terminated list, or %NULL if unset/empty.</doc>
+        <array c:type="gchar**">
+          <type name="utf8"/>
+        </array>
+      </return-value>
+      <parameters>
+        <parameter name="context" transfer-ownership="none">
+          <doc xml:space="preserve">a requested-extensions #GstContext</doc>
+          <type name="Gst.Context" c:type="GstContext*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="vulkan_requested_extensions_context_get_vulkan_instance" c:identifier="gst_vulkan_requested_extensions_context_get_vulkan_instance" version="1.30">
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if @instance was present in @context</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="context" transfer-ownership="none">
+          <doc xml:space="preserve">a requested-extension #GstContext</doc>
+          <type name="Gst.Context" c:type="GstContext*"/>
+        </parameter>
+        <parameter name="instance" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1" optional="1" allow-none="1">
+          <doc xml:space="preserve">location for the result</doc>
+          <type name="VulkanInstance" c:type="GstVulkanInstance**"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="vulkan_requested_extensions_context_set_vulkan_instance" c:identifier="gst_vulkan_requested_extensions_context_set_vulkan_instance" version="1.30">
+      <doc xml:space="preserve">Sets or clears the embedded #GstVulkanInstance on @context, using
+%GST_VULKAN_INSTANCE_CONTEXT_TYPE_STR in the #GstStructure (same as
+gst_context_set_vulkan_instance()). This is only meaningful for contexts of
+type %GST_VULKAN_REQUESTED_DEVICE_EXTENSIONS_CONTEXT_TYPE_STR (the instance
+type ignores the field when merging).</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="context" transfer-ownership="none">
+          <doc xml:space="preserve">a requested-extension #GstContext</doc>
+          <type name="Gst.Context" c:type="GstContext*"/>
+        </parameter>
+        <parameter name="instance" transfer-ownership="none" nullable="1" allow-none="1">
+          <doc xml:space="preserve">#GstVulkanInstance, or %NULL to clear</doc>
+          <type name="VulkanInstance" c:type="GstVulkanInstance*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="vulkan_requested_extensions_global_context_query" c:identifier="gst_vulkan_requested_extensions_global_context_query" version="1.30">
+      <doc xml:space="preserve">Runs the local query (merging both peer directions), always posts
+%GST_MESSAGE_NEED_CONTEXT so the application or parent bin can contribute
+extension names, re-merges local contexts after that message, then
+gst_element_set_context() and %GST_MESSAGE_HAVE_CONTEXT when the merge contains
+extension names.</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="element" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstElement</doc>
+          <type name="Gst.Element" c:type="GstElement*"/>
+        </parameter>
+        <parameter name="context_type" transfer-ownership="none">
+          <doc xml:space="preserve">%GST_VULKAN_REQUESTED_INSTANCE_EXTENSIONS_CONTEXT_TYPE_STR</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="vulkan_requested_extensions_handle_context_query" c:identifier="gst_vulkan_requested_extensions_handle_context_query" version="1.30">
+      <doc xml:space="preserve">Handles #GST_QUERY_CONTEXT for either requested-extensions context type.</doc>
+      <return-value transfer-ownership="none">
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="element" transfer-ownership="none">
+          <type name="Gst.Element" c:type="GstElement*"/>
+        </parameter>
+        <parameter name="query" transfer-ownership="none">
+          <type name="Gst.Query" c:type="GstQuery*"/>
+        </parameter>
+        <parameter name="continue_direction" transfer-ownership="none">
+          <type name="Gst.PadDirection" c:type="GstPadDirection"/>
+        </parameter>
+        <parameter name="instance" transfer-ownership="none">
+          <type name="VulkanInstance" c:type="GstVulkanInstance*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="vulkan_requested_extensions_local_context_query" c:identifier="gst_vulkan_requested_extensions_local_context_query" version="1.30">
+      <doc xml:space="preserve">Like gst_vulkan_local_context_query(), but merges requested-extension contexts
+from both peer directions and from contexts already set on @element.</doc>
+      <return-value transfer-ownership="full" nullable="1">
+        <doc xml:space="preserve">a #GST_QUERY_CONTEXT carrying the merged
+context when actionable, or %NULL. Does not post bus messages or call
+gst_element_set_context().</doc>
+        <type name="Gst.Query" c:type="GstQuery*"/>
+      </return-value>
+      <parameters>
+        <parameter name="element" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstElement</doc>
+          <type name="Gst.Element" c:type="GstElement*"/>
+        </parameter>
+        <parameter name="context_type" transfer-ownership="none">
+          <doc xml:space="preserve">%GST_VULKAN_REQUESTED_INSTANCE_EXTENSIONS_CONTEXT_TYPE_STR or
+  %GST_VULKAN_REQUESTED_DEVICE_EXTENSIONS_CONTEXT_TYPE_STR</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </parameter>
+        <parameter name="instance" transfer-ownership="none" nullable="1" allow-none="1">
+          <doc xml:space="preserve">the #GstVulkanInstance for device negotiation; required
+    when @context_type is
+    %GST_VULKAN_REQUESTED_DEVICE_EXTENSIONS_CONTEXT_TYPE_STR, otherwise
+    ignored (%NULL)</doc>
+          <type name="VulkanInstance" c:type="GstVulkanInstance*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="vulkan_requested_extensions_merge_from_element" c:identifier="gst_vulkan_requested_extensions_merge_from_element" version="1.30">
+      <doc xml:space="preserve">Merges every attached context matching @dst's type into @dst (extension
+names, and for device contexts only, the embedded #GstVulkanInstance when
+@dst does not carry one yet). For device contexts, extension-only sources
+are ignored until an instance anchor exists, and contexts naming different
+non-NULL #GstVulkanInstance objects do not contribute to @dst.</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="element" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstElement</doc>
+          <type name="Gst.Element" c:type="GstElement*"/>
+        </parameter>
+        <parameter name="dst" transfer-ownership="none">
+          <doc xml:space="preserve">writable #GstContext, instance or device requested-extensions type</doc>
+          <type name="Gst.Context" c:type="GstContext*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="vulkan_requested_instance_extensions_context_new" c:identifier="gst_vulkan_requested_instance_extensions_context_new" version="1.30">
+      <return-value transfer-ownership="full">
+        <doc xml:space="preserve">new instance-extension request #GstContext</doc>
+        <type name="Gst.Context" c:type="GstContext*"/>
+      </return-value>
+    </function>
+    <function name="vulkan_resolve_mode_flags_to_string" c:identifier="gst_vulkan_resolve_mode_flags_to_string" version="1.30">
+      <return-value transfer-ownership="full">
+        <type name="utf8" c:type="gchar*"/>
+      </return-value>
+      <parameters>
+        <parameter name="resolve_mode" transfer-ownership="none">
+          <type name="Vulkan.ResolveModeFlags" c:type="VkResolveModeFlags"/>
+        </parameter>
+      </parameters>
+    </function>
     <function name="vulkan_result_to_string" c:identifier="gst_vulkan_result_to_string" version="1.22" introspectable="0">
       <return-value transfer-ownership="none">
         <doc xml:space="preserve">a message that corresponds to @result</doc>
@@ -7187,6 +7555,26 @@ multiple times.  This must be called before any other #GstVulkanMemory operation
       <parameters>
         <parameter name="sample_count_bits" transfer-ownership="none">
           <type name="Vulkan.SampleCountFlags" c:type="VkSampleCountFlags"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="vulkan_shader_stage_flags_to_string" c:identifier="gst_vulkan_shader_stage_flags_to_string" version="1.30">
+      <return-value transfer-ownership="full">
+        <type name="utf8" c:type="gchar*"/>
+      </return-value>
+      <parameters>
+        <parameter name="shader_flags" transfer-ownership="none">
+          <type name="Vulkan.ShaderStageFlags" c:type="VkShaderStageFlags"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="vulkan_subgroup_feature_flags_to_string" c:identifier="gst_vulkan_subgroup_feature_flags_to_string" version="1.30">
+      <return-value transfer-ownership="full">
+        <type name="utf8" c:type="gchar*"/>
+      </return-value>
+      <parameters>
+        <parameter name="subgroup_feature" transfer-ownership="none">
+          <type name="Vulkan.SubgroupFeatureFlags" c:type="VkSubgroupFeatureFlags"/>
         </parameter>
       </parameters>
     </function>

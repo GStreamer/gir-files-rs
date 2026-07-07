@@ -4617,8 +4617,8 @@ Intended for use within implementations of
         </parameters>
       </virtual-method>
       <method name="get_framebuffer" c:identifier="gst_gl_mixer_get_framebuffer" version="1.24">
-        <return-value transfer-ownership="full">
-          <doc xml:space="preserve">(nullable): The #GstGLFramebuffer in use by this @mix</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">The #GstGLFramebuffer in use by this @mix</doc>
           <type name="GLFramebuffer" c:type="GstGLFramebuffer*"/>
         </return-value>
         <parameters>
