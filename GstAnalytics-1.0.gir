@@ -132,12 +132,12 @@ from the parent buffer of this meta.</doc>
       <doc xml:space="preserve">Handle containing data required to use gst_analytics_cls_mtd APIs. This type
 is generally expected to be allocated on the stack.</doc>
       <field name="id" writable="1">
-        <doc xml:space="preserve">Instance identifier</doc>
+        <doc xml:space="preserve">Instance identifier.</doc>
         <type name="guint" c:type="guint"/>
       </field>
       <field name="meta" writable="1">
         <doc xml:space="preserve">Instance of #GstAnalyticsRelationMeta where the analytics-metadata
-identified by @id is stored</doc>
+identified by @id is stored.</doc>
         <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
       </field>
       <method name="get_index_by_quark" c:identifier="gst_analytics_cls_mtd_get_index_by_quark" version="1.24">
@@ -220,12 +220,12 @@ and the @semantic_tag allow to define a specific group meaning.
 For example with a semantic_tag = "posture/hand-21-kp", first
 member represent the "wrist", second is the thumb first joint.</doc>
       <field name="id" writable="1">
-        <doc xml:space="preserve">Instance identifier</doc>
+        <doc xml:space="preserve">Instance identifier.</doc>
         <type name="guint" c:type="guint"/>
       </field>
       <field name="meta" writable="1">
         <doc xml:space="preserve">Instance of #GstAnalyticsRelationMeta where the analytics-metadata
-identified by @id is stored</doc>
+identified by @id is stored.</doc>
         <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
       </field>
       <method name="add_member" c:identifier="gst_analytics_group_mtd_add_member" version="1.30">
@@ -468,12 +468,12 @@ gst_analytics_relation_meta_set_relation(rmeta,
     GST_ANALYTICS_REL_TYPE_CONTAINED_BY, keypoint.id, od_mtd.id);
 ]|</doc>
       <field name="id" writable="1">
-        <doc xml:space="preserve">Instance identifier</doc>
+        <doc xml:space="preserve">Instance identifier.</doc>
         <type name="guint" c:type="guint"/>
       </field>
       <field name="meta" writable="1">
         <doc xml:space="preserve">Instance of #GstAnalyticsRelationMeta where the analytics-metadata
-identified by @id is stored</doc>
+identified by @id is stored.</doc>
         <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
       </field>
       <method name="get_confidence" c:identifier="gst_analytics_keypoint_mtd_get_confidence" version="1.30">
@@ -926,12 +926,12 @@ when no longer needed.</doc>
       <doc xml:space="preserve">Handle containing data required to use gst_analytics_mtd API. This type
 is generally expected to be allocated on the stack.</doc>
       <field name="id" writable="1">
-        <doc xml:space="preserve">Instance identifier</doc>
+        <doc xml:space="preserve">Instance identifier.</doc>
         <type name="guint" c:type="guint"/>
       </field>
       <field name="meta" writable="1">
         <doc xml:space="preserve">Instance of #GstAnalyticsRelationMeta where the analytics-metadata
-identified by @id is stored</doc>
+identified by @id is stored.</doc>
         <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
       </field>
       <method name="get_id" c:identifier="gst_analytics_mtd_get_id" version="1.24">
@@ -1119,12 +1119,12 @@ resources it was using.</doc>
       <doc xml:space="preserve">Handle containing data required to use gst_analytics_od_mtd APIs. This type
 is generally expected to be allocated on the stack.</doc>
       <field name="id" writable="1">
-        <doc xml:space="preserve">Instance identifier</doc>
+        <doc xml:space="preserve">Instance identifier.</doc>
         <type name="guint" c:type="guint"/>
       </field>
       <field name="meta" writable="1">
         <doc xml:space="preserve">Instance of #GstAnalyticsRelationMeta where the analytics-metadata
-identified by @id is stored</doc>
+identified by @id is stored.</doc>
         <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
       </field>
       <method name="get_confidence_lvl" c:identifier="gst_analytics_od_mtd_get_confidence_lvl" version="1.24">
@@ -1727,6 +1727,33 @@ must have a #GstVideoMeta attached</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="add_text_mtd" c:identifier="gst_analytics_relation_meta_add_text_mtd" version="1.30">
+        <doc xml:space="preserve">Adds text metadata to @meta. If location information is needed, it can be
+represented by separate metadata such as #GstAnalyticsODMtd and associated
+with @text_mtd using @meta.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE on success, otherwise %FALSE</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="meta" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstAnalyticsRelationMeta</doc>
+            <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
+          </instance-parameter>
+          <parameter name="text" transfer-ownership="none">
+            <doc xml:space="preserve">UTF-8 text</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="confidence" transfer-ownership="none">
+            <doc xml:space="preserve">confidence level of @text</doc>
+            <type name="gfloat" c:type="gfloat"/>
+          </parameter>
+          <parameter name="text_mtd" direction="out" caller-allocates="1" transfer-ownership="none">
+            <doc xml:space="preserve">location for the newly added #GstAnalyticsTextMtd</doc>
+            <type name="TextMtd" c:type="GstAnalyticsTextMtd*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="add_tracking_mtd" c:identifier="gst_analytics_relation_meta_add_tracking_mtd" version="1.24">
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">Added successfully</doc>
@@ -2036,6 +2063,27 @@ otherwise this method return FALSE and @rlt is invalid.</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="get_text_mtd" c:identifier="gst_analytics_relation_meta_get_text_mtd" version="1.30">
+        <doc xml:space="preserve">Gets the #GstAnalyticsTextMtd identified by @an_meta_id from @meta.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if the metadata was found, otherwise %FALSE</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="meta" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstAnalyticsRelationMeta</doc>
+            <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
+          </instance-parameter>
+          <parameter name="an_meta_id" transfer-ownership="none">
+            <doc xml:space="preserve">the identifier of the metadata</doc>
+            <type name="guint" c:type="guint"/>
+          </parameter>
+          <parameter name="rlt" direction="out" caller-allocates="1" transfer-ownership="none">
+            <doc xml:space="preserve">location for the #GstAnalyticsTextMtd</doc>
+            <type name="TextMtd" c:type="GstAnalyticsTextMtd*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="get_tracking_mtd" c:identifier="gst_analytics_relation_meta_get_tracking_mtd" version="1.24">
         <doc xml:space="preserve">Fill @rlt if a analytics-meta with id == @an_meta_id exist in @meta instance,
 otherwise this method return FALSE and @rlt is invalid.</doc>
@@ -2167,6 +2215,7 @@ Ids must have been obtained a call to
  region_ids is fill during segmentation post-processing
 
  region_ids:
+
  |region-index | region-id |
  |-------------|-----------|
  | 0           | 0         |
@@ -2216,7 +2265,8 @@ Ids must have been obtained a call to
  a semantic segmentation is performed, therefore region-id-12 and region-id-7
  are now represented by the same region-id-12
 
- region_ids: (here
+ region_ids:
+
  |region-index | region-id |
  |-------------|-----------|
  | 0           | 0         |
@@ -2262,17 +2312,31 @@ Ids must have been obtained a call to
 
  Since: 1.26</doc>
       <field name="id" writable="1">
-        <doc xml:space="preserve">Instance identifier</doc>
+        <doc xml:space="preserve">Instance identifier.</doc>
         <type name="guint" c:type="guint"/>
       </field>
       <field name="meta" writable="1">
         <doc xml:space="preserve">Instance of #GstAnalyticsRelationMeta where the analytics-metadata
-identified by @id is stored</doc>
+identified by @id is stored.</doc>
         <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
       </field>
       <method name="get_mask" c:identifier="gst_analytics_segmentation_mtd_get_mask" version="1.26">
-        <doc xml:space="preserve">Get segmentation mask data.</doc>
-        <return-value transfer-ownership="full">
+        <doc xml:space="preserve">Get segmentation mask data.
+
+The mask location (@masks_loc_x, @masks_loc_y, @masks_loc_w, @masks_loc_h) is
+the rectangle, in image pixel coordinates, that the mask covers. A mask that
+spans the whole image reports @masks_loc_w and @masks_loc_h equal to the image
+width and height (see gst_analytics_relation_meta_add_segmentation_mtd());
+there is no special "whole frame" zero value, so a zero @masks_loc_w or
+@masks_loc_h denotes a degenerate (empty) location.
+
+The mask's own pixel dimensions, stride and format are not conveyed by this
+rectangle: they come from the #GstVideoMeta attached to the returned buffer,
+which the producer is required to attach (see
+gst_analytics_relation_meta_add_segmentation_mtd()). Read them with
+gst_buffer_get_video_meta(); the mask is a single-plane GRAY8 or GRAY16 image
+whose pixel values are region ids.</doc>
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">Segmentation mask data stored in a #GstBuffer</doc>
           <type name="Gst.Buffer" c:type="GstBuffer*"/>
         </return-value>
@@ -2832,12 +2896,12 @@ analytics-meta with additional parameters describing the tensor.
 
 Since 1.28</doc>
       <field name="id" writable="1">
-        <doc xml:space="preserve">Instance identifier</doc>
+        <doc xml:space="preserve">Instance identifier.</doc>
         <type name="guint" c:type="guint"/>
       </field>
       <field name="meta" writable="1">
         <doc xml:space="preserve">Instance of #GstAnalyticsRelationMeta where the analytics-metadata
-identified by @id is stored</doc>
+identified by @id is stored.</doc>
         <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
       </field>
       <method name="get_tensor" c:identifier="gst_analytics_tensor_mtd_get_tensor" version="1.28">
@@ -2861,15 +2925,79 @@ identified by @id is stored</doc>
         </return-value>
       </function>
     </record>
-    <record name="TrackingMtd" c:type="GstAnalyticsTrackingMtd" version="1.24">
-      <doc xml:space="preserve">Store information on results of object tracking</doc>
+    <record name="TextMtd" c:type="GstAnalyticsTextMtd" version="1.30">
+      <doc xml:space="preserve">This type of metadata stores UTF-8 text and its confidence level.
+It can be used for image/video-to-text and audio-to-text inference.
+
+#GstAnalyticsTextMtd only stores text-related information. Additional
+information such as a bounding box can be represented by other metadata
+types such as #GstAnalyticsODMtd and associated with the text metadata
+using #GstAnalyticsRelationMeta.</doc>
       <field name="id" writable="1">
-        <doc xml:space="preserve">Instance identifier</doc>
+        <doc xml:space="preserve">Instance identifier.</doc>
         <type name="guint" c:type="guint"/>
       </field>
       <field name="meta" writable="1">
         <doc xml:space="preserve">Instance of #GstAnalyticsRelationMeta where the analytics-metadata
-identified by @id is stored</doc>
+identified by @id is stored.</doc>
+        <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
+      </field>
+      <method name="get_confidence" c:identifier="gst_analytics_text_mtd_get_confidence" version="1.30">
+        <doc xml:space="preserve">Gets the confidence level of the text stored in @mtd.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the confidence level</doc>
+          <type name="gfloat" c:type="gfloat"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="mtd" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstAnalyticsTextMtd</doc>
+            <type name="TextMtd" c:type="const GstAnalyticsTextMtd*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_length" c:identifier="gst_analytics_text_mtd_get_length" version="1.30">
+        <doc xml:space="preserve">Gets the length in bytes of the UTF-8 text stored in @mtd, excluding the
+terminating nul byte.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the length of the text in bytes</doc>
+          <type name="gsize" c:type="gsize"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="mtd" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstAnalyticsTextMtd</doc>
+            <type name="TextMtd" c:type="const GstAnalyticsTextMtd*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_text" c:identifier="gst_analytics_text_mtd_get_text" version="1.30">
+        <doc xml:space="preserve">Gets the text stored in @mtd.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the UTF-8 text stored in @mtd</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="mtd" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstAnalyticsTextMtd</doc>
+            <type name="TextMtd" c:type="const GstAnalyticsTextMtd*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <function name="get_mtd_type" c:identifier="gst_analytics_text_mtd_get_mtd_type" version="1.30">
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the #GstAnalyticsMtdType of #GstAnalyticsTextMtd</doc>
+          <type name="MtdType" c:type="GstAnalyticsMtdType"/>
+        </return-value>
+      </function>
+    </record>
+    <record name="TrackingMtd" c:type="GstAnalyticsTrackingMtd" version="1.24">
+      <doc xml:space="preserve">Store information on results of object tracking</doc>
+      <field name="id" writable="1">
+        <doc xml:space="preserve">Instance identifier.</doc>
+        <type name="guint" c:type="guint"/>
+      </field>
+      <field name="meta" writable="1">
+        <doc xml:space="preserve">Instance of #GstAnalyticsRelationMeta where the analytics-metadata
+identified by @id is stored.</doc>
         <type name="RelationMeta" c:type="GstAnalyticsRelationMeta*"/>
       </field>
       <method name="get_info" c:identifier="gst_analytics_tracking_mtd_get_info" version="1.24">
@@ -3285,6 +3413,12 @@ metadata type.</doc>
       <doc xml:space="preserve">Get an id that represent tensor metadata type</doc>
       <return-value transfer-ownership="none">
         <doc xml:space="preserve">Opaque id of the #GstAnalyticsMtd type</doc>
+        <type name="MtdType" c:type="GstAnalyticsMtdType"/>
+      </return-value>
+    </function>
+    <function name="text_mtd_get_mtd_type" c:identifier="gst_analytics_text_mtd_get_mtd_type" moved-to="TextMtd.get_mtd_type" version="1.30">
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">the #GstAnalyticsMtdType of #GstAnalyticsTextMtd</doc>
         <type name="MtdType" c:type="GstAnalyticsMtdType"/>
       </return-value>
     </function>
