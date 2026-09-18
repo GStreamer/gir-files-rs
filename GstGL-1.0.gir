@@ -1390,7 +1390,7 @@ A #GstGLBufferPool is created with gst_gl_buffer_pool_new()
 %GST_BUFFER_POOL_OPTION_VIDEO_ALIGNMENT as well as the OpenGL specific
 %GST_BUFFER_POOL_OPTION_GL_SYNC_META buffer pool option.</doc>
       <constructor name="new" c:identifier="gst_gl_buffer_pool_new">
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="full">
           <doc xml:space="preserve">a #GstBufferPool that allocates buffers with #GstGLMemory</doc>
           <type name="Gst.BufferPool" c:type="GstBufferPool*"/>
         </return-value>
@@ -1728,7 +1728,7 @@ Environment variables:
                    functionality.</doc>
       <constructor name="new" c:identifier="gst_gl_context_new" version="1.4">
         <doc xml:space="preserve">Create a new #GstGLContext with the specified @display</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="full">
           <doc xml:space="preserve">a new #GstGLContext</doc>
           <type name="GLContext" c:type="GstGLContext*"/>
         </return-value>

@@ -202,3 +202,10 @@ xmlstarlet ed --inplace \
     --update '//_:type[@c:type="AHardwareBuffer**"]/@c:type' \
     --value 'gpointer*' \
     GstAllocators-1.0.gir
+
+xmlstarlet ed --inplace \
+    --insert '//_:type[not(@name) and @c:type="IOSurfaceRef*"]' \
+    --type attr --name 'name' --value 'gpointer' \
+    --update '//_:type[@c:type="IOSurfaceRef*"]/@c:type' \
+    --value 'gpointer*' \
+    GstAllocators-1.0.gir
