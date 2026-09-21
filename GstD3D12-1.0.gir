@@ -2,11 +2,12 @@
 <!-- This file was automatically generated from C sources - DO NOT EDIT!
 To affect the contents of this file, edit the original C definitions,
 and/or use gtk-doc annotations.  -->
-<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
+<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:doc="http://www.gtk.org/introspection/doc/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
   <include name="Gst" version="1.0"/>
   <include name="GstBase" version="1.0"/>
   <include name="GstVideo" version="1.0"/>
   <package name="gstreamer-d3d12-1.0"/>
+  <doc:format name="unknown"/>
   <namespace name="GstD3D12" version="1.0" shared-library="libgstd3d12-1.0-0.dll" c:identifier-prefixes="Gst" c:symbol-prefixes="gst">
     <constant name="CAPS_FEATURE_MEMORY_D3D12_MEMORY" value="memory:D3D12Memory" c:type="GST_CAPS_FEATURE_MEMORY_D3D12_MEMORY" version="1.26">
       <doc xml:space="preserve">Name of the caps feature for indicating the use of #GstD3D12Memory</doc>
@@ -428,6 +429,19 @@ This method is conceptually identical to gst_buffer_pool_set_active method.</doc
           </parameter>
         </parameters>
       </method>
+      <method name="get_cmd_list_type" c:identifier="gst_d3d12_cmd_alloc_pool_get_cmd_list_type" version="1.30" introspectable="0">
+        <doc xml:space="preserve">Gets the command list type configured for @pool.</doc>
+        <return-value>
+          <doc xml:space="preserve">the command list type</doc>
+          <type c:type="gint" name="gint"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="pool" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstD3D12CmdAllocPool</doc>
+            <type name="D3D12CmdAllocPool" c:type="GstD3D12CmdAllocPool*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
       <field name="parent">
         <type name="Gst.Object" c:type="GstObject"/>
       </field>
@@ -824,6 +838,13 @@ pipeline state object will be updated with default blend state</doc>
       <property name="max-mip-levels" writable="1" transfer-ownership="none" default-value="1">
         <type name="guint" c:type="guint"/>
       </property>
+      <property name="most-detailed-mip" version="1.30" writable="1" transfer-ownership="none" default-value="0">
+        <doc xml:space="preserve">Index of the most detailed mip level to start generating and sampling
+from, skipping the GPU-expensive high-resolution mip levels.
+
+Ignored when max-mip-levels is %G_MAXUINT16 (fast-path).</doc>
+        <type name="guint" c:type="guint"/>
+      </property>
       <property name="sampler-filter" writable="1" transfer-ownership="none" default-value="D3D12_FILTER_MIN_MAG_MIP_LINEAR">
         <type name="D3D12ConverterSamplerFilter"/>
       </property>
@@ -910,6 +931,21 @@ pipeline state object will be updated with default blend state</doc>
       <member name="min_mag_mip_linear" value="21" c:identifier="D3D12_FILTER_MIN_MAG_MIP_LINEAR" glib:nick="min-mag-mip-linear" glib:name="D3D12_FILTER_MIN_MAG_MIP_LINEAR">
       </member>
       <member name="anisotropic" value="85" c:identifier="D3D12_FILTER_ANISOTROPIC" glib:nick="anisotropic" glib:name="D3D12_FILTER_ANISOTROPIC">
+      </member>
+    </enumeration>
+    <enumeration name="D3D12DecoderSessionReuse" version="1.30" glib:type-name="GstD3D12DecoderSessionReuse" glib:get-type="gst_d3d12_decoder_session_reuse_get_type" c:type="GstD3D12DecoderSessionReuse">
+      <doc xml:space="preserve">Decoder session reuse mode</doc>
+      <member name="disabled" value="0" c:identifier="GST_D3D12_DECODER_SESSION_REUSE_DISABLED" glib:nick="disabled" glib:name="GST_D3D12_DECODER_SESSION_REUSE_DISABLED">
+        <doc xml:space="preserve">Decoder sessions are not reused</doc>
+      </member>
+      <member name="all" value="1" c:identifier="GST_D3D12_DECODER_SESSION_REUSE_ALL" glib:nick="all" glib:name="GST_D3D12_DECODER_SESSION_REUSE_ALL">
+        <doc xml:space="preserve">Complete decoder sessions, including
+  their textures, are kept alive and reused</doc>
+      </member>
+      <member name="without_textures" value="2" c:identifier="GST_D3D12_DECODER_SESSION_REUSE_WITHOUT_TEXTURES" glib:nick="without-textures" glib:name="GST_D3D12_DECODER_SESSION_REUSE_WITHOUT_TEXTURES">
+        <doc xml:space="preserve">Decoder sessions are kept
+  alive and reused, but the textures of a session are released while the
+  session is not in use</doc>
       </member>
     </enumeration>
     <record name="D3D12DescHeap" c:type="GstD3D12DescHeap" opaque="1" glib:type-name="GstD3D12DescHeap" glib:get-type="gst_d3d12_desc_heap_get_type" c:symbol-prefix="d3d12_desc_heap">
@@ -1037,6 +1073,40 @@ or %NULL when failed to create D3D12 device with given adapter luid.</doc>
           </parameter>
         </parameters>
       </constructor>
+      <method name="enqueue_make_resident" c:identifier="gst_d3d12_device_enqueue_make_resident" version="1.30" introspectable="0">
+        <doc xml:space="preserve">A utility wrapper around ID3D12Device3::EnqueueMakeResident using
+a fence managed by #GstD3D12Device.</doc>
+        <return-value>
+          <doc xml:space="preserve">an HRESULT code</doc>
+          <type c:type="gint" name="gint"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="device" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstD3D12Device</doc>
+            <type name="D3D12Device" c:type="GstD3D12Device*"/>
+          </instance-parameter>
+          <parameter name="flags" transfer-ownership="none">
+            <doc xml:space="preserve">a D3D12_RESIDENCY_FLAGS value</doc>
+            <type c:type="gint" name="gint"/>
+          </parameter>
+          <parameter name="num_objects" transfer-ownership="none">
+            <doc xml:space="preserve">the number of objects in @objects</doc>
+            <type name="guint" c:type="guint"/>
+          </parameter>
+          <parameter name="objects" transfer-ownership="none">
+            <doc xml:space="preserve">an array of ID3D12Pageable objects</doc>
+            <type c:type="gpointer*" name="gpointer"/>
+          </parameter>
+          <parameter name="fence" direction="out" caller-allocates="0" transfer-ownership="full">
+            <doc xml:space="preserve">a ID3D12Fence signalled when the residency operation completes</doc>
+            <type c:type="gpointer*" name="gpointer"/>
+          </parameter>
+          <parameter name="fence_value" direction="out" caller-allocates="0" transfer-ownership="full">
+            <doc xml:space="preserve">the fence value to wait for</doc>
+            <type name="guint64" c:type="guint64*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="execute_command_lists" c:identifier="gst_d3d12_device_execute_command_lists" version="1.26" introspectable="0">
         <doc xml:space="preserve">Exectues gst_d3d12_cmd_queue_execute_command_lists ()
 using a #GstD3D12CmdQueue corresponding to @queue_type</doc>
@@ -1219,6 +1289,41 @@ by device</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="prepare_graphics_cmd_list" c:identifier="gst_d3d12_device_prepare_graphics_cmd_list" version="1.30" introspectable="0">
+        <doc xml:space="preserve">Prepares @cl for command recording. If @cl points to %NULL, a new
+command list is created using the command list type configured for
+@ca_pool. Otherwise, the existing command list is reset. @initial_state
+is used as the initial pipeline state for the command list.
+
+The command allocator used for recording is acquired from @ca_pool
+and added to @fence_data.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if the command list was successfully prepared</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="device" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstD3D12Device</doc>
+            <type name="D3D12Device" c:type="GstD3D12Device*"/>
+          </instance-parameter>
+          <parameter name="cl" direction="inout" caller-allocates="0" transfer-ownership="full">
+            <doc xml:space="preserve">a pointer to an ID3D12GraphicsCommandList</doc>
+            <type c:type="gpointer*" name="gpointer"/>
+          </parameter>
+          <parameter name="ca_pool" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstD3D12CmdAllocPool</doc>
+            <type name="D3D12CmdAllocPool" c:type="GstD3D12CmdAllocPool*"/>
+          </parameter>
+          <parameter name="initial_state" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">an initial pipeline state object</doc>
+            <type c:type="gpointer" name="gpointer"/>
+          </parameter>
+          <parameter name="fence_data" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstD3D12FenceData</doc>
+            <type name="D3D12FenceData" c:type="GstD3D12FenceData*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="set_fence_notify" c:identifier="gst_d3d12_device_set_fence_notify" version="1.26" introspectable="0">
         <doc xml:space="preserve">Exectues gst_d3d12_cmd_queue_set_notify ()
 using a #GstD3D12CmdQueue corresponding to @queue_type</doc>
@@ -1263,6 +1368,36 @@ using a #GstD3D12CmdQueue corresponding to @queue_type</doc>
       </property>
       <property name="device-removed-reason" transfer-ownership="none" default-value="0">
         <type name="gint" c:type="gint"/>
+      </property>
+      <property name="memory-budget" version="1.30" transfer-ownership="none" default-value="0">
+        <doc xml:space="preserve">Current local video memory budget</doc>
+        <type name="guint64" c:type="guint64"/>
+      </property>
+      <property name="over-budget-factor" version="1.30" writable="1" transfer-ownership="none" default-value="0.800000">
+        <doc xml:space="preserve">The factor applied to the memory budget to determine whether
+the device is over budget. D3D12 elements may try to evict unused
+resources when the device is over budget</doc>
+        <type name="gdouble" c:type="gdouble"/>
+      </property>
+      <property name="resident-memory-size" version="1.30" transfer-ownership="none" default-value="0">
+        <doc xml:space="preserve">Currently resident video memory size</doc>
+        <type name="guint64" c:type="guint64"/>
+      </property>
+      <property name="reuse-decoder-session" version="1.30" writable="1" transfer-ownership="none" default-value="GST_D3D12_DECODER_SESSION_REUSE_DISABLED">
+        <doc xml:space="preserve">Keep video decoder sessions alive after decoder instances are destroyed,
+allowing compatible sessions to be reused by subsequent decoder instances.
+
+This avoids repeatedly creating and destroying D3D12 video decoder
+resources when compatible decoder instances are created sequentially.
+
+%GST_D3D12_DECODER_SESSION_REUSE_ALL keeps sessions that are not in use
+complete, textures included, so that reusing one needs no allocation.
+
+%GST_D3D12_DECODER_SESSION_REUSE_WITHOUT_TEXTURES keeps the decoder and
+its heap alive but releases the textures of sessions that are not in
+use. It suits use cases where the codec or resolution of the streams
+changes often.</doc>
+        <type name="D3D12DecoderSessionReuse"/>
       </property>
       <property name="vendor-id" transfer-ownership="none" default-value="0">
         <type name="guint" c:type="guint"/>
@@ -1469,6 +1604,19 @@ for the format to be used as a conversion output.</doc>
           <type name="gpointer" c:type="gpointer"/>
         </array>
       </field>
+      <method name="evict" c:identifier="gst_d3d12_memory_evict" version="1.30">
+        <doc xml:space="preserve">A wrapper around ID3D12Device::Evict</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if successful</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="mem" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstD3D12Memory</doc>
+            <type name="D3D12Memory" c:type="GstD3D12Memory*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
       <method name="get_d3d11_texture" c:identifier="gst_d3d12_memory_get_d3d11_texture" version="1.26" introspectable="0">
         <doc xml:space="preserve">Opens ID3D11Texture2D texture from ID3D12Resource</doc>
         <return-value transfer-ownership="none" nullable="1">
@@ -1658,6 +1806,20 @@ if the resource was allocated without unordered access view enabled</doc>
           </instance-parameter>
         </parameters>
       </method>
+      <method name="make_resident" c:identifier="gst_d3d12_memory_make_resident" version="1.30">
+        <doc xml:space="preserve">Make @mem resident via ID3D12Device3::EnqueueMakeResident or
+ID3D12Device::MakeResident</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if successful</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="mem" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstD3D12Memory</doc>
+            <type name="D3D12Memory" c:type="GstD3D12Memory*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
       <method name="set_fence" c:identifier="gst_d3d12_memory_set_fence" version="1.26" introspectable="0">
         <doc xml:space="preserve">Replace fence object of @mem with new @fence.
 This method will block calling thread for synchronization
@@ -1722,7 +1884,7 @@ if @wait is %TRUE and configured fence is different from new @fence</doc>
         </parameters>
       </method>
       <function name="init_once" c:identifier="gst_d3d12_memory_init_once" version="1.26">
-        <doc xml:space="preserve">Initializes the Direct3D12 Texture allocator. It is safe to call
+        <doc xml:space="preserve">Initializes the Direct3D12 resource allocator. It is safe to call
 this function multiple times. This must be called before any other
 GstD3D12Memory operation.</doc>
         <return-value transfer-ownership="none">
@@ -1817,6 +1979,113 @@ inactive.</doc>
       </field>
     </record>
     <record name="D3D12PoolAllocatorPrivate" c:type="GstD3D12PoolAllocatorPrivate" disguised="1" opaque="1"/>
+    <class name="D3D12StagingAllocator" c:symbol-prefix="d3d12_staging_allocator" c:type="GstD3D12StagingAllocator" version="1.28" parent="Gst.Allocator" glib:type-name="GstD3D12StagingAllocator" glib:get-type="gst_d3d12_staging_allocator_get_type" glib:type-struct="D3D12StagingAllocatorClass">
+      <doc xml:space="preserve">Opaque GstD3D12StagingAllocator struct</doc>
+      <method name="alloc" c:identifier="gst_d3d12_staging_allocator_alloc" version="1.28" introspectable="0">
+        <doc xml:space="preserve">Allocates staging resource allocated in custom heap
+D3D12_CPU_PAGE_PROPERTY_WRITE_BACK + D3D12_MEMORY_POOL_L0.</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">a newly allocated #GstD3D12StagingMemory
+or otherwise %NULL if allocation failed</doc>
+          <type name="Gst.Memory" c:type="GstMemory*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="allocator" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">a #GstD3D12StagingAllocator</doc>
+            <type name="D3D12StagingAllocator" c:type="GstD3D12StagingAllocator*"/>
+          </instance-parameter>
+          <parameter name="device" transfer-ownership="none">
+            <doc xml:space="preserve">a GstD3D12Device</doc>
+            <type name="D3D12Device" c:type="GstD3D12Device*"/>
+          </parameter>
+          <parameter name="num_layouts" transfer-ownership="none">
+            <doc xml:space="preserve">layout count</doc>
+            <type name="guint" c:type="guint"/>
+          </parameter>
+          <parameter name="layouts" transfer-ownership="none">
+            <doc xml:space="preserve">an array of D3D12_PLACED_SUBRESOURCE_FOOTPRINT</doc>
+            <type c:type="gconstpointer" name="gconstpointer"/>
+          </parameter>
+          <parameter name="total_bytes" transfer-ownership="none">
+            <doc xml:space="preserve">Total bytes to allocate</doc>
+            <type name="gsize" c:type="gsize"/>
+          </parameter>
+        </parameters>
+      </method>
+      <field name="allocator">
+        <type name="Gst.Allocator" c:type="GstAllocator"/>
+      </field>
+      <field name="priv" readable="0" private="1">
+        <type name="D3D12StagingAllocatorPrivate" c:type="GstD3D12StagingAllocatorPrivate*"/>
+      </field>
+      <field name="_gst_reserved" readable="0" private="1">
+        <array zero-terminated="0" fixed-size="4">
+          <type name="gpointer" c:type="gpointer"/>
+        </array>
+      </field>
+    </class>
+    <record name="D3D12StagingAllocatorClass" c:type="GstD3D12StagingAllocatorClass" glib:is-gtype-struct-for="D3D12StagingAllocator" version="1.28">
+      <doc xml:space="preserve">Opaque GstD3D12StagingAllocatorClass struct</doc>
+      <field name="allocator_class">
+        <type name="Gst.AllocatorClass" c:type="GstAllocatorClass"/>
+      </field>
+      <field name="_gst_reserved" readable="0" private="1">
+        <array zero-terminated="0" fixed-size="20">
+          <type name="gpointer" c:type="gpointer"/>
+        </array>
+      </field>
+    </record>
+    <record name="D3D12StagingAllocatorPrivate" c:type="GstD3D12StagingAllocatorPrivate" disguised="1" opaque="1"/>
+    <class name="D3D12StagingBufferPool" c:symbol-prefix="d3d12_staging_buffer_pool" c:type="GstD3D12StagingBufferPool" version="1.28" parent="Gst.BufferPool" glib:type-name="GstD3D12StagingBufferPool" glib:get-type="gst_d3d12_staging_buffer_pool_get_type" glib:type-struct="D3D12StagingBufferPoolClass">
+      <doc xml:space="preserve">Opaque GstD3D12StagingBufferPool struct</doc>
+      <constructor name="new" c:identifier="gst_d3d12_staging_buffer_pool_new" version="1.28">
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a #GstBufferPool that allocates buffers with
+#GstD3D12StagingMemory</doc>
+          <type name="Gst.BufferPool" c:type="GstBufferPool*"/>
+        </return-value>
+        <parameters>
+          <parameter name="device" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstD3D12Device to use</doc>
+            <type name="D3D12Device" c:type="GstD3D12Device*"/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <field name="parent">
+        <type name="Gst.BufferPool" c:type="GstBufferPool"/>
+      </field>
+      <field name="device">
+        <type name="D3D12Device" c:type="GstD3D12Device*"/>
+      </field>
+      <field name="priv" readable="0" private="1">
+        <type name="D3D12StagingBufferPoolPrivate" c:type="GstD3D12StagingBufferPoolPrivate*"/>
+      </field>
+    </class>
+    <record name="D3D12StagingBufferPoolClass" c:type="GstD3D12StagingBufferPoolClass" glib:is-gtype-struct-for="D3D12StagingBufferPool" version="1.28">
+      <doc xml:space="preserve">Opaque GstD3D12StagingBufferPoolClass struct</doc>
+      <field name="parent_class">
+        <type name="Gst.BufferPoolClass" c:type="GstBufferPoolClass"/>
+      </field>
+    </record>
+    <record name="D3D12StagingBufferPoolPrivate" c:type="GstD3D12StagingBufferPoolPrivate" disguised="1" opaque="1"/>
+    <record name="D3D12StagingMemory" c:type="GstD3D12StagingMemory" version="1.28">
+      <doc xml:space="preserve">Opaque GstD3D12StagingMemory struct</doc>
+      <field name="mem" writable="1">
+        <type name="Gst.Memory" c:type="GstMemory"/>
+      </field>
+      <field name="device" writable="1">
+        <type name="D3D12Device" c:type="GstD3D12Device*"/>
+      </field>
+      <field name="priv" readable="0" private="1">
+        <type name="D3D12StagingMemoryPrivate" c:type="GstD3D12StagingMemoryPrivate*"/>
+      </field>
+      <field name="_gst_reserved" readable="0" private="1">
+        <array zero-terminated="0" fixed-size="4">
+          <type name="gpointer" c:type="gpointer"/>
+        </array>
+      </field>
+    </record>
+    <record name="D3D12StagingMemoryPrivate" c:type="GstD3D12StagingMemoryPrivate" disguised="1" opaque="1"/>
     <function-macro name="D3D12_ALLOCATOR" c:identifier="GST_D3D12_ALLOCATOR" introspectable="0">
       <parameters>
         <parameter name="obj">
@@ -2097,6 +2366,64 @@ Default is #GST_D3D12_CONVERTER_ALPHA_MODE_UNSPECIFIED.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <function-macro name="D3D12_STAGING_ALLOCATOR" c:identifier="GST_D3D12_STAGING_ALLOCATOR" introspectable="0">
+      <parameters>
+        <parameter name="obj">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="D3D12_STAGING_ALLOCATOR_CAST" c:identifier="GST_D3D12_STAGING_ALLOCATOR_CAST" introspectable="0">
+      <parameters>
+        <parameter name="obj">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="D3D12_STAGING_ALLOCATOR_CLASS" c:identifier="GST_D3D12_STAGING_ALLOCATOR_CLASS" introspectable="0">
+      <parameters>
+        <parameter name="klass">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="D3D12_STAGING_ALLOCATOR_GET_CLASS" c:identifier="GST_D3D12_STAGING_ALLOCATOR_GET_CLASS" introspectable="0">
+      <parameters>
+        <parameter name="obj">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="D3D12_STAGING_BUFFER_POOL" c:identifier="GST_D3D12_STAGING_BUFFER_POOL" introspectable="0">
+      <parameters>
+        <parameter name="obj">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="D3D12_STAGING_BUFFER_POOL_CAST" c:identifier="GST_D3D12_STAGING_BUFFER_POOL_CAST" introspectable="0">
+      <parameters>
+        <parameter name="obj">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="D3D12_STAGING_BUFFER_POOL_CLASS" c:identifier="GST_D3D12_STAGING_BUFFER_POOL_CLASS" introspectable="0">
+      <parameters>
+        <parameter name="klass">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="D3D12_STAGING_BUFFER_POOL_GET_CLASS" c:identifier="GST_D3D12_STAGING_BUFFER_POOL_GET_CLASS" introspectable="0">
+      <parameters>
+        <parameter name="obj">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="D3D12_STAGING_MEMORY_CAST" c:identifier="GST_D3D12_STAGING_MEMORY_CAST" introspectable="0">
+      <parameters>
+        <parameter name="obj">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <constant name="D3D12_STAGING_MEMORY_NAME" value="D3D12StagingMemory" c:type="GST_D3D12_STAGING_MEMORY_NAME" version="1.28">
+      <doc xml:space="preserve">The name of the Direct3D12 staging memory</doc>
+      <type name="utf8" c:type="gchar*"/>
+    </constant>
     <function-macro name="IS_D3D12_ALLOCATOR" c:identifier="GST_IS_D3D12_ALLOCATOR" introspectable="0">
       <parameters>
         <parameter name="obj">
@@ -2205,6 +2532,30 @@ Default is #GST_D3D12_CONVERTER_ALPHA_MODE_UNSPECIFIED.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <function-macro name="IS_D3D12_STAGING_ALLOCATOR" c:identifier="GST_IS_D3D12_STAGING_ALLOCATOR" introspectable="0">
+      <parameters>
+        <parameter name="obj">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="IS_D3D12_STAGING_ALLOCATOR_CLASS" c:identifier="GST_IS_D3D12_STAGING_ALLOCATOR_CLASS" introspectable="0">
+      <parameters>
+        <parameter name="klass">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="IS_D3D12_STAGING_BUFFER_POOL" c:identifier="GST_IS_D3D12_STAGING_BUFFER_POOL" introspectable="0">
+      <parameters>
+        <parameter name="obj">
+        </parameter>
+      </parameters>
+    </function-macro>
+    <function-macro name="IS_D3D12_STAGING_BUFFER_POOL_CLASS" c:identifier="GST_IS_D3D12_STAGING_BUFFER_POOL_CLASS" introspectable="0">
+      <parameters>
+        <parameter name="klass">
+        </parameter>
+      </parameters>
+    </function-macro>
     <constant name="MAP_D3D12" value="131072" c:type="GST_MAP_D3D12" version="1.26">
       <doc xml:space="preserve">Flag indicating that we should map the D3D12 resource instead of to system memory.</doc>
       <type name="Gst.MapFlags" c:type="GstMapFlags"/>
@@ -2301,6 +2652,60 @@ Use gst_buffer_copy_into() method for metadata copy</doc>
         <parameter name="info" transfer-ownership="none">
           <doc xml:space="preserve">a #GstVideoInfo</doc>
           <type name="GstVideo.VideoInfo" c:type="const GstVideoInfo*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="d3d12_buffer_copy_into_full" c:identifier="gst_d3d12_buffer_copy_into_full" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Copy @src data into @dest using command queue specified by @queue_type.
+This method executes only memory copy.
+Use gst_buffer_copy_into() method for metadata copy</doc>
+      <return-value transfer-ownership="none">
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="dest" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstBuffer</doc>
+          <type name="Gst.Buffer" c:type="GstBuffer*"/>
+        </parameter>
+        <parameter name="src" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstBuffer</doc>
+          <type name="Gst.Buffer" c:type="GstBuffer*"/>
+        </parameter>
+        <parameter name="info" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstVideoInfo</doc>
+          <type name="GstVideo.VideoInfo" c:type="const GstVideoInfo*"/>
+        </parameter>
+        <parameter name="queue_type" transfer-ownership="none">
+          <doc xml:space="preserve">command queue type to use</doc>
+          <type c:type="gint" name="gint"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="d3d12_buffer_evict" c:identifier="gst_d3d12_buffer_evict" version="1.30">
+      <doc xml:space="preserve">Evicts all #GstD3D12Memory objects in @buffer.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if all memories in @buffer are #GstD3D12Memory
+and were evicted successfully</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="buffer" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstBuffer</doc>
+          <type name="Gst.Buffer" c:type="GstBuffer*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="d3d12_buffer_make_resident" c:identifier="gst_d3d12_buffer_make_resident" version="1.30">
+      <doc xml:space="preserve">Makes all #GstD3D12Memory objects in @buffer resident.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if all memories in @buffer are #GstD3D12Memory
+and were made resident successfully</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="buffer" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstBuffer</doc>
+          <type name="Gst.Buffer" c:type="GstBuffer*"/>
         </parameter>
       </parameters>
     </function>
@@ -2534,7 +2939,7 @@ windows.devices.display.core.interop.h Windows SDK header</doc>
       </parameters>
     </function>
     <function name="d3d12_memory_init_once" c:identifier="gst_d3d12_memory_init_once" moved-to="D3D12Memory.init_once" version="1.26">
-      <doc xml:space="preserve">Initializes the Direct3D12 Texture allocator. It is safe to call
+      <doc xml:space="preserve">Initializes the Direct3D12 resource allocator. It is safe to call
 this function multiple times. This must be called before any other
 GstD3D12Memory operation.</doc>
       <return-value transfer-ownership="none">
@@ -2551,9 +2956,106 @@ GstD3D12Memory operation.</doc>
         </parameter>
       </parameters>
     </function-macro>
+    <function name="d3d12_staging_memory_get_fence" c:identifier="gst_d3d12_staging_memory_get_fence" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Gets configured fence and fence value. Valid operations against returned
+fence object are ID3D12Fence::GetCompletedValue() and
+ID3D12Fence::SetEventOnCompletion(). Caller should not try to update
+completed value via ID3D12Fence::Signal() since the fence is likely
+owned by external component and shared only for read-only operations.</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if @mem has configured fence object</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="mem" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstD3D12StagingMemory</doc>
+          <type name="D3D12StagingMemory" c:type="GstD3D12StagingMemory*"/>
+        </parameter>
+        <parameter name="fence" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
+          <doc xml:space="preserve">a ID3D12Fence</doc>
+          <type c:type="gpointer*" name="gpointer"/>
+        </parameter>
+        <parameter name="fence_value" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
+          <doc xml:space="preserve">fence value</doc>
+          <type name="guint64" c:type="guint64*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="d3d12_staging_memory_get_layout" c:identifier="gst_d3d12_staging_memory_get_layout" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Gets copyable resource layout for @index</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if layout information is available for @index</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="mem" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstD3D12StagingMemory</doc>
+          <type name="D3D12StagingMemory" c:type="GstD3D12StagingMemory*"/>
+        </parameter>
+        <parameter name="index" transfer-ownership="none">
+          <doc xml:space="preserve">layout index</doc>
+          <type name="guint" c:type="guint"/>
+        </parameter>
+        <parameter name="layout" transfer-ownership="none">
+          <doc xml:space="preserve">D3D12_PLACED_SUBRESOURCE_FOOTPRINT</doc>
+          <type c:type="gpointer" name="gpointer"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="d3d12_staging_memory_set_fence" c:identifier="gst_d3d12_staging_memory_set_fence" version="1.28" introspectable="0">
+      <doc xml:space="preserve">Replace fence object of @mem with new @fence.
+This method will block calling thread for synchronization
+if @wait is %TRUE and configured fence is different from new @fence</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="mem" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstD3D12StagingMemory</doc>
+          <type name="D3D12StagingMemory" c:type="GstD3D12StagingMemory*"/>
+        </parameter>
+        <parameter name="fence" transfer-ownership="none" nullable="1" allow-none="1">
+          <doc xml:space="preserve">a ID3D12Fence</doc>
+          <type c:type="gpointer" name="gpointer"/>
+        </parameter>
+        <parameter name="fence_value" transfer-ownership="none">
+          <doc xml:space="preserve">fence value</doc>
+          <type name="guint64" c:type="guint64"/>
+        </parameter>
+        <parameter name="wait" transfer-ownership="none">
+          <doc xml:space="preserve">waits for previously configured fence if any</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="d3d12_staging_memory_sync" c:identifier="gst_d3d12_staging_memory_sync" version="1.28">
+      <doc xml:space="preserve">Wait for pending GPU operation</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if successful</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="mem" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstD3D12StagingMemory</doc>
+          <type name="D3D12StagingMemory" c:type="GstD3D12StagingMemory*"/>
+        </parameter>
+      </parameters>
+    </function>
     <function name="is_d3d12_memory" c:identifier="gst_is_d3d12_memory" version="1.26">
       <return-value transfer-ownership="none">
         <doc xml:space="preserve">%TRUE if @mem is allocated by #GstD3D12Allocator</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="mem" transfer-ownership="none">
+          <doc xml:space="preserve">a #GstMemory</doc>
+          <type name="Gst.Memory" c:type="GstMemory*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="is_d3d12_staging_memory" c:identifier="gst_is_d3d12_staging_memory" version="1.28">
+      <return-value transfer-ownership="none">
+        <doc xml:space="preserve">%TRUE if @mem is allocated by #GstD3D12StagingAllocator</doc>
         <type name="gboolean" c:type="gboolean"/>
       </return-value>
       <parameters>

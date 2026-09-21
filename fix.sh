@@ -192,6 +192,16 @@ xmlstarlet ed -L \
     -u '//_:type[@c:type="const D3D12_BLEND_DESC*"]/@c:type' -v "gconstpointer" \
     -i '///_:type[not(@name) and @c:type="HRESULT"]' -t 'attr' -n 'name' -v "gint" \
     -u '//_:type[@c:type="HRESULT"]/@c:type' -v "gint" \
+    -i '///_:type[not(@name) and @c:type="ID3D12GraphicsCommandList**"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="ID3D12GraphicsCommandList**"]/@c:type' -v "gpointer*" \
+    -i '///_:type[not(@name) and @c:type="ID3D12Pageable**"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="ID3D12Pageable**"]/@c:type' -v "gpointer*" \
+    -i '///_:type[not(@name) and @c:type="ID3D12PipelineState*"]' -t 'attr' -n 'name' -v "gpointer" \
+    -u '//_:type[@c:type="ID3D12PipelineState*"]/@c:type' -v "gpointer" \
+    -i '///_:type[not(@name) and @c:type="const D3D12_PLACED_SUBRESOURCE_FOOTPRINT*"]' -t 'attr' -n 'name' -v "gconstpointer" \
+    -u '//_:type[@c:type="const D3D12_PLACED_SUBRESOURCE_FOOTPRINT*"]/@c:type' -v "gconstpointer" \
+    -i '///_:type[not(@name) and @c:type="D3D12_RESIDENCY_FLAGS"]' -t 'attr' -n 'name' -v "gint" \
+    -u '//_:type[@c:type="D3D12_RESIDENCY_FLAGS"]/@c:type' -v "gint" \
     -d '//_:record[@name="D3D12Frame"]' \
     -d '//_:function[starts-with(@name, "d3d12_frame")]' \
     GstD3D12-1.0.gir
