@@ -219,3 +219,13 @@ xmlstarlet ed --inplace \
     --update '//_:type[@c:type="IOSurfaceRef*"]/@c:type' \
     --value 'gpointer*' \
     GstAllocators-1.0.gir
+
+# Normalize native HIP handles and enum types for Rust FFI.
+xmlstarlet ed -L \
+    -u '//_:type[@c:type="hipError_t"]/@c:type' -v "gint" \
+    -u '//_:type[@c:type="hipDeviceAttribute_t"]/@c:type' -v "gint" \
+    -u '//_:type[@c:type="HIPfilter_mode"]/@c:type' -v "gint" \
+    -u '//_:type[@c:type="HIPaddress_mode"]/@c:type' -v "gint" \
+    -u '//_:type[@c:type="hipStream_t"]/@c:type' -v "gpointer" \
+    -u '//_:type[@c:type="hipTextureObject_t*"]/@c:type' -v "gpointer*" \
+    GstHip-1.0.gir
