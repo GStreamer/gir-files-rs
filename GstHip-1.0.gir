@@ -663,7 +663,7 @@ otherwise %NULL</doc>
       </method>
       <method name="get_stream" c:identifier="gst_hip_device_get_stream" version="1.28">
         <doc xml:space="preserve">Gets per #GstHipDevice default #GstHipStream owned by @device</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="none">
           <doc xml:space="preserve">a #GstHipStream</doc>
           <type name="HipStream" c:type="GstHipStream*"/>
         </return-value>
@@ -1065,7 +1065,7 @@ before getting mapped device memory</doc>
             <doc xml:space="preserve">a #GstHipGraphicsResource</doc>
             <type name="HipGraphicsResource" c:type="GstHipGraphicsResource*"/>
           </instance-parameter>
-          <parameter name="dev_ptr" direction="out" caller-allocates="0" transfer-ownership="full" nullable="1" optional="1" allow-none="1">
+          <parameter name="dev_ptr" direction="out" caller-allocates="0" transfer-ownership="none" nullable="1" optional="1" allow-none="1">
             <doc xml:space="preserve">a pointer to mapped device memory</doc>
             <type name="gpointer" c:type="void**"/>
           </parameter>
