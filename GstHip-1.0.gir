@@ -1649,7 +1649,7 @@ The caller must keep the module alive until all submitted work has completed.</d
         <doc xml:space="preserve">Loads @blob as a module for @device without runtime compilation. The caller
 must provide a valid module image and keep it alive for the duration of this
 call. The module does not retain @blob after this call returns.</doc>
-        <return-value transfer-ownership="full" nullable="1">
+        <return-value transfer-ownership="full">
           <doc xml:space="preserve">a new module, or %NULL on failure</doc>
           <type name="HipKernelModule" c:type="GstHipKernelModule*"/>
         </return-value>
@@ -1667,7 +1667,7 @@ call. The module does not retain @blob after this call returns.</doc>
       <constructor name="new_from_source" c:identifier="gst_hip_kernel_module_new_from_source" version="1.30" throws="1">
         <doc xml:space="preserve">Compiles @source and loads a module for @device. Entry points should use C
 linkage. Source and options must be supported by the device's runtime compiler.</doc>
-        <return-value transfer-ownership="full" nullable="1">
+        <return-value transfer-ownership="full">
           <doc xml:space="preserve">a new module, or %NULL on failure</doc>
           <type name="HipKernelModule" c:type="GstHipKernelModule*"/>
         </return-value>
