@@ -261,6 +261,39 @@ asset request, or %NULL to ignore</doc>
           </parameter>
         </parameters>
       </function>
+      <function name="request_async_full" c:identifier="ges_asset_request_async_full" version="1.30" glib:finish-func="request_finish">
+        <doc xml:space="preserve">Same as ges_asset_request_async(), with @flags, see
+ges_asset_request_full(). Get the result with ges_asset_request_finish().</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="extractable_type" transfer-ownership="none">
+            <doc xml:space="preserve">The #GESExtractable type to retrieve an asset for</doc>
+            <type name="GType" c:type="GType"/>
+          </parameter>
+          <parameter name="id" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">The Identifier of the asset we want to retrieve</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="flags" transfer-ownership="none">
+            <doc xml:space="preserve">options for this request</doc>
+            <type name="AssetRequestFlags" c:type="GESAssetRequestFlags"/>
+          </parameter>
+          <parameter name="cancellable" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">optional %GCancellable object, %NULL to ignore.</doc>
+            <type name="Gio.Cancellable" c:type="GCancellable*"/>
+          </parameter>
+          <parameter name="callback" transfer-ownership="none" nullable="1" allow-none="1" scope="async" closure="5">
+            <doc xml:space="preserve">a #GAsyncReadyCallback to call when the initialization is finished</doc>
+            <type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+          </parameter>
+          <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">The user data to pass when @callback is called</doc>
+            <type name="gpointer" c:type="gpointer"/>
+          </parameter>
+        </parameters>
+      </function>
       <function name="request_finish" c:identifier="ges_asset_request_finish" throws="1">
         <doc xml:space="preserve">Fetches an asset requested by ges_asset_request_async(), which
 finalises the request.</doc>
@@ -273,6 +306,32 @@ occurred.</doc>
           <parameter name="res" transfer-ownership="none">
             <doc xml:space="preserve">The task result to fetch the asset from</doc>
             <type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+          </parameter>
+        </parameters>
+      </function>
+      <function name="request_full" c:identifier="ges_asset_request_full" version="1.30" throws="1">
+        <doc xml:space="preserve">Same as ges_asset_request(), with @flags. Pass
+%GES_ASSET_REQUEST_FLAG_NO_UNTRUSTED_BIN_DESCRIPTION when @id was read from
+content the application does not control, such as a project file: the asset
+is then only created if it uses elements marked untrusted-aware and sets no
+property marked %GST_PARAM_UNTRUSTED_SENSITIVE.</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">A reference to the wanted #GESAsset
+or %NULL</doc>
+          <type name="Asset" c:type="GESAsset*"/>
+        </return-value>
+        <parameters>
+          <parameter name="extractable_type" transfer-ownership="none">
+            <doc xml:space="preserve">The #GESExtractable object type to retrieve an asset for</doc>
+            <type name="GType" c:type="GType"/>
+          </parameter>
+          <parameter name="id" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">The Identifier of the asset we want to retrieve</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="flags" transfer-ownership="none">
+            <doc xml:space="preserve">options for this request</doc>
+            <type name="AssetRequestFlags" c:type="GESAssetRequestFlags"/>
           </parameter>
         </parameters>
       </function>
@@ -749,6 +808,19 @@ error</doc>
       </member>
     </enumeration>
     <record name="AssetPrivate" c:type="GESAssetPrivate" disguised="1" opaque="1"/>
+    <bitfield name="AssetRequestFlags" version="1.30" glib:type-name="GESAssetRequestFlags" glib:get-type="ges_asset_request_flags_get_type" c:type="GESAssetRequestFlags">
+      <member name="none" value="0" c:identifier="GES_ASSET_REQUEST_FLAG_NONE" glib:nick="none" glib:name="GES_ASSET_REQUEST_FLAG_NONE">
+        <doc xml:space="preserve">no flag</doc>
+      </member>
+      <member name="no_untrusted_bin_description" value="1" c:identifier="GES_ASSET_REQUEST_FLAG_NO_UNTRUSTED_BIN_DESCRIPTION" glib:nick="no-untrusted-bin-description" glib:name="GES_ASSET_REQUEST_FLAG_NO_UNTRUSTED_BIN_DESCRIPTION">
+        <doc xml:space="preserve">the id is a bin
+description that the application does not control, typically read from a
+project file. It may only use elements marked untrusted-aware and may not
+set properties marked %GST_PARAM_UNTRUSTED_SENSITIVE, the way
+%GST_PARSE_FLAG_NO_UNTRUSTED does. Only affects assets whose id is a bin
+description, which today means effect assets.</doc>
+      </member>
+    </bitfield>
     <class name="AudioSource" c:symbol-prefix="audio_source" c:type="GESAudioSource" parent="Source" abstract="1" glib:type-name="GESAudioSource" glib:get-type="ges_audio_source_get_type" glib:type-struct="AudioSourceClass">
       <doc xml:space="preserve">## Children Properties
 
@@ -3812,6 +3884,16 @@ the overlap conditions for the #GESTimeline. (Since: 1.18)</doc>
       </member>
       <member name="invalid_effect_bin_description" value="8" c:identifier="GES_ERROR_INVALID_EFFECT_BIN_DESCRIPTION">
       </member>
+      <member name="sensitive_property" value="9" c:identifier="GES_ERROR_SENSITIVE_PROPERTY" version="1.30">
+        <doc xml:space="preserve">An effect description tried to set a property marked
+%GST_PARAM_UNTRUSTED_SENSITIVE, which is refused when the effect is created
+from untrusted input (for example a loaded project file).</doc>
+      </member>
+      <member name="untrusted_element" value="10" c:identifier="GES_ERROR_UNTRUSTED_ELEMENT" version="1.30">
+        <doc xml:space="preserve">An effect description used an element that is not marked untrusted-aware,
+see gst_element_class_mark_as_untrusted_aware(), which is refused when the
+effect is created from untrusted input (for example a loaded project file).</doc>
+      </member>
     </enumeration>
     <interface name="Extractable" c:symbol-prefix="extractable" c:type="GESExtractable" glib:type-name="GESExtractable" glib:get-type="ges_extractable_get_type" glib:type-struct="ExtractableInterface">
       <doc xml:space="preserve">A #GObject that implements the #GESExtractable interface can be
@@ -4139,8 +4221,26 @@ on initiation of the asset, but before it begins to load its state.</doc>
           </parameters>
         </callback>
       </field>
+      <field name="check_id_full">
+        <callback name="check_id_full" throws="1">
+          <return-value transfer-ownership="full">
+            <type name="utf8" c:type="gchar*"/>
+          </return-value>
+          <parameters>
+            <parameter name="type" transfer-ownership="none">
+              <type name="GType" c:type="GType"/>
+            </parameter>
+            <parameter name="id" transfer-ownership="none">
+              <type name="utf8" c:type="const gchar*"/>
+            </parameter>
+            <parameter name="flags" transfer-ownership="none">
+              <type name="AssetRequestFlags" c:type="GESAssetRequestFlags"/>
+            </parameter>
+          </parameters>
+        </callback>
+      </field>
       <field name="_ges_reserved">
-        <array zero-terminated="0" fixed-size="4">
+        <array zero-terminated="0" fixed-size="3">
           <type name="gpointer" c:type="gpointer"/>
         </array>
       </field>
@@ -7792,6 +7892,44 @@ main (int argc, gchar ** argv)
             <doc xml:space="preserve">The asset with the wrong ID, you should us it and its content
 only to find out what the new location is.</doc>
             <type name="Asset"/>
+          </parameter>
+        </parameters>
+      </glib:signal>
+      <glib:signal name="untrusted-content" when="last" version="1.30">
+        <doc xml:space="preserve">Emitted each time the untrusted-input rules refuse something while
+loading a project: an effect or effect clip whose bin description uses an
+element that is not marked untrusted-aware or sets a property marked
+%GST_PARAM_UNTRUSTED_SENSITIVE, or such a property applied to an effect
+from the serialized project. Handle it to show @report to the user and
+answer whether that one thing is acceptable after all; when nothing
+accepts it, the load fails with @error.
+
+Accepting is remembered process-wide: an effect by its exact bin
+description, a property by the element type, the property and the value.
+What was accepted once is not asked about again, so the same value on
+another element of the same type goes through silently, while the same
+property with another value is a new decision.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE to accept the refused content anyway.</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <parameter name="id" transfer-ownership="none">
+            <doc xml:space="preserve">the id of the asset that was refused</doc>
+            <type name="utf8" c:type="gchar*"/>
+          </parameter>
+          <parameter name="extractable_type" transfer-ownership="none">
+            <doc xml:space="preserve">the #GType of the extractable the refusal is about</doc>
+            <type name="GType" c:type="GType"/>
+          </parameter>
+          <parameter name="report" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">a #GstStructure named `untrusted-content` describing
+what was refused, see gst_parse_context_get_untrusted_report()</doc>
+            <type name="Gst.Structure"/>
+          </parameter>
+          <parameter name="error" transfer-ownership="none">
+            <doc xml:space="preserve">the error explaining the refusal</doc>
+            <type name="GLib.Error"/>
           </parameter>
         </parameters>
       </glib:signal>
