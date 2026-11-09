@@ -9,6 +9,146 @@ and/or use gtk-doc annotations.  -->
   <c:include name="gst/video/video.h"/>
   <doc:format name="unknown"/>
   <namespace name="GstVideo" version="1.0" shared-library="libgstvideo-1.0.so.0" c:identifier-prefixes="Gst" c:symbol-prefixes="gst">
+    <constant name="ALPHA_DECODE_BIN_RANK_OFFSET" value="10" c:type="GST_ALPHA_DECODE_BIN_RANK_OFFSET" version="1.30">
+      <doc xml:space="preserve">Rank offset for alpha decode bin wrappers.
+
+When wrapping a decoder, use the original decoder rank plus this offset. The
+offset is large enough to let an alpha wrapper outrank small rank adjustments
+used by hardware decoders, while keeping lower-ranked wrappers below the
+primary rank threshold.</doc>
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <class name="AlphaDecodeBin" c:symbol-prefix="alpha_decode_bin" c:type="GstAlphaDecodeBin" version="1.30" parent="Gst.Bin" abstract="1" glib:type-name="GstAlphaDecodeBin" glib:get-type="gst_alpha_decode_bin_get_type" glib:type-struct="AlphaDecodeBinClass">
+      <doc xml:space="preserve">Base class for alpha decode bin wrapper elements.</doc>
+      <implements name="Gst.ChildProxy"/>
+      <virtual-method name="create_role_element" version="1.30" throws="1">
+        <doc xml:space="preserve">Called when constructing the internal pipeline to let subclasses create an
+element for the requested #GstAlphaDecodeBinRole. Subclasses can use
+@input_caps to select role elements for the encoded stream before data
+flow starts. If the vfunc returns %NULL without setting @error, the
+factory name configured with
+gst_alpha_decode_bin_class_set_role_factory_name() is used as fallback.
+If the vfunc returns %NULL and sets @error, construction fails. If the
+vfunc returns an element and sets @error, the error is logged as a warning
+and ignored.</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">a role element, or %NULL to use the
+    configured fallback factory</doc>
+          <type name="Gst.Element" c:type="GstElement*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstAlphaDecodeBin</doc>
+            <type name="AlphaDecodeBin" c:type="GstAlphaDecodeBin*"/>
+          </instance-parameter>
+          <parameter name="role" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstAlphaDecodeBinRole</doc>
+            <type name="AlphaDecodeBinRole" c:type="GstAlphaDecodeBinRole"/>
+          </parameter>
+          <parameter name="input_caps" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">upstream caps allowed on the alpha decode bin
+    sink pad</doc>
+            <type name="Gst.Caps" c:type="const GstCaps*"/>
+          </parameter>
+        </parameters>
+      </virtual-method>
+      <field name="parent_instance" version="1.30">
+        <doc xml:space="preserve">Parent instance.</doc>
+        <type name="Gst.Bin" c:type="GstBin"/>
+      </field>
+    </class>
+    <record name="AlphaDecodeBinClass" c:type="GstAlphaDecodeBinClass" glib:is-gtype-struct-for="AlphaDecodeBin" version="1.30">
+      <doc xml:space="preserve">Base class for bins that decode streams with encoded alpha data by
+demuxing, decoding the color and alpha streams separately, and combining the
+decoded output.
+
+Subclasses must add their own sink pad template. For each
+#GstAlphaDecodeBinRole, subclasses can either create an element from
+@create_role_element or configure a fallback factory name with
+gst_alpha_decode_bin_class_set_role_factory_name().</doc>
+      <field name="parent_class" version="1.30">
+        <doc xml:space="preserve">Parent class.</doc>
+        <type name="Gst.BinClass" c:type="GstBinClass"/>
+      </field>
+      <field name="create_role_element">
+        <callback name="create_role_element" throws="1">
+          <return-value transfer-ownership="full" nullable="1">
+            <doc xml:space="preserve">a role element, or %NULL to use the
+    configured fallback factory</doc>
+            <type name="Gst.Element" c:type="GstElement*"/>
+          </return-value>
+          <parameters>
+            <parameter name="self" transfer-ownership="none">
+              <doc xml:space="preserve">a #GstAlphaDecodeBin</doc>
+              <type name="AlphaDecodeBin" c:type="GstAlphaDecodeBin*"/>
+            </parameter>
+            <parameter name="role" transfer-ownership="none">
+              <doc xml:space="preserve">a #GstAlphaDecodeBinRole</doc>
+              <type name="AlphaDecodeBinRole" c:type="GstAlphaDecodeBinRole"/>
+            </parameter>
+            <parameter name="input_caps" transfer-ownership="none" nullable="1" allow-none="1">
+              <doc xml:space="preserve">upstream caps allowed on the alpha decode bin
+    sink pad</doc>
+              <type name="Gst.Caps" c:type="const GstCaps*"/>
+            </parameter>
+          </parameters>
+        </callback>
+      </field>
+      <field name="_gst_reserved" readable="0" private="1">
+        <array zero-terminated="0" fixed-size="4">
+          <type name="gpointer" c:type="gpointer"/>
+        </array>
+      </field>
+      <method name="set_role_factory_name" c:identifier="gst_alpha_decode_bin_class_set_role_factory_name" version="1.30">
+        <doc xml:space="preserve">Sets the element factory name to use for @role when constructing instances
+of @klass.
+
+This is usually called from a subclass' class init function. The configured
+factory name is used when the subclass does not implement
+#GstAlphaDecodeBinClass.create_role_element, or when that vfunc returns
+%NULL without setting an error.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="klass" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstAlphaDecodeBinClass</doc>
+            <type name="AlphaDecodeBinClass" c:type="GstAlphaDecodeBinClass*"/>
+          </instance-parameter>
+          <parameter name="role" transfer-ownership="none">
+            <doc xml:space="preserve">a #GstAlphaDecodeBinRole</doc>
+            <type name="AlphaDecodeBinRole" c:type="GstAlphaDecodeBinRole"/>
+          </parameter>
+          <parameter name="factory_name" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">element factory name to use for @role, or %NULL
+    to unset the configured factory</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </method>
+    </record>
+    <enumeration name="AlphaDecodeBinRole" version="1.30" glib:type-name="GstAlphaDecodeBinRole" glib:get-type="gst_alpha_decode_bin_role_get_type" c:type="GstAlphaDecodeBinRole">
+      <doc xml:space="preserve">The element roles used to construct a #GstAlphaDecodeBin subclass.</doc>
+      <member name="demux" value="0" c:identifier="GST_ALPHA_DECODE_BIN_ROLE_DEMUX" glib:nick="demux" glib:name="GST_ALPHA_DECODE_BIN_ROLE_DEMUX">
+        <doc xml:space="preserve">the element that separates the encoded
+    color stream from the encoded alpha stream</doc>
+      </member>
+      <member name="color_decoder" value="1" c:identifier="GST_ALPHA_DECODE_BIN_ROLE_COLOR_DECODER" glib:nick="color-decoder" glib:name="GST_ALPHA_DECODE_BIN_ROLE_COLOR_DECODER">
+        <doc xml:space="preserve">the decoder for the encoded color
+    stream</doc>
+      </member>
+      <member name="alpha_decoder" value="2" c:identifier="GST_ALPHA_DECODE_BIN_ROLE_ALPHA_DECODER" glib:nick="alpha-decoder" glib:name="GST_ALPHA_DECODE_BIN_ROLE_ALPHA_DECODER">
+        <doc xml:space="preserve">the decoder for the encoded alpha
+    stream</doc>
+      </member>
+      <member name="combine" value="3" c:identifier="GST_ALPHA_DECODE_BIN_ROLE_COMBINE" glib:nick="combine" glib:name="GST_ALPHA_DECODE_BIN_ROLE_COMBINE">
+        <doc xml:space="preserve">the element that combines decoded color
+    and alpha streams into one decoded stream</doc>
+      </member>
+      <member name="count" value="4" c:identifier="GST_ALPHA_DECODE_BIN_ROLE_COUNT" glib:nick="count" glib:name="GST_ALPHA_DECODE_BIN_ROLE_COUNT">
+        <doc xml:space="preserve">the number of alpha decode bin roles</doc>
+      </member>
+    </enumeration>
     <record name="AncillaryMeta" c:type="GstAncillaryMeta" version="1.24">
       <doc xml:space="preserve">#GstMeta for carrying SMPTE-291M Ancillary data. Note that all the ADF fields
    (@DID to @checksum) are 10bit values with parity/non-parity high-bits set.</doc>
@@ -8089,6 +8229,15 @@ This includes dropping output frames which are detected as late
 using the metrics reported by those events.</doc>
         <type name="gboolean" c:type="gboolean"/>
       </property>
+      <property name="qos-max-skip" version="1.30" writable="1" transfer-ownership="none" default-value="1000000000">
+        <doc xml:space="preserve">When downstream reports that frames are arriving late and
+#GstVideoDecoder:qos handling is enabled, the decoder will skip
+decoding or output of some video frames to catch up based on how
+late things are.
+This property places an upper limit on the length of time that
+will be skipped before sending at least 1 frame downstream.</doc>
+        <type name="guint64" c:type="guint64"/>
+      </property>
       <field name="element" readable="0" private="1">
         <type name="Gst.Element" c:type="GstElement"/>
       </field>
@@ -8677,6 +8826,86 @@ performance is achieved when @quantizer is a power of 2.
         <type name="VideoBufferPoolClass" c:type="GstVideoBufferPoolClass"/>
       </field>
     </record>
+    <class name="VideoDmabufSyncHandler" c:symbol-prefix="video_dmabuf_sync_handler" c:type="GstVideoDmabufSyncHandler" version="1.30" parent="Gst.Object" glib:type-name="GstVideoDmabufSyncHandler" glib:get-type="gst_video_dmabuf_sync_handler_get_type" glib:type-struct="VideoDmabufSyncHandlerClass">
+      <doc xml:space="preserve">Private instance object for #GstVideoDmabufSyncHandler.</doc>
+      <constructor name="new" c:identifier="gst_video_dmabuf_sync_handler_new" version="1.30" introspectable="0">
+        <doc xml:space="preserve">Create a new #GstVideoDmabufSyncHandler instance.</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">a #GstVideoDmabufSyncHandler or %NULL
+    if dmabufs are not supported.</doc>
+          <type name="VideoDmabufSyncHandler" c:type="GstVideoDmabufSyncHandler*"/>
+        </return-value>
+        <parameters>
+          <parameter name="release_buffer" transfer-ownership="none" closure="1">
+            <type name="VideoDmabufSyncHandlerReleaseBuffer" c:type="GstVideoDmabufSyncHandlerReleaseBuffer"/>
+          </parameter>
+          <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1">
+            <type name="gpointer" c:type="gpointer"/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <method name="release_buffer" c:identifier="gst_video_dmabuf_sync_handler_release_buffer">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="sync_handler" transfer-ownership="none">
+            <type name="VideoDmabufSyncHandler" c:type="GstVideoDmabufSyncHandler*"/>
+          </instance-parameter>
+          <parameter name="buffer" transfer-ownership="none" nullable="1" allow-none="1">
+            <type name="gpointer" c:type="gpointer"/>
+          </parameter>
+          <parameter name="memories" transfer-ownership="none">
+            <type name="Gst.Memory" c:type="GstMemory**"/>
+          </parameter>
+          <parameter name="n_memories" transfer-ownership="none">
+            <type name="guint" c:type="guint"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="start" c:identifier="gst_video_dmabuf_sync_handler_start">
+        <return-value transfer-ownership="none">
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="sync_handler" transfer-ownership="none">
+            <type name="VideoDmabufSyncHandler" c:type="GstVideoDmabufSyncHandler*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="stop" c:identifier="gst_video_dmabuf_sync_handler_stop">
+        <return-value transfer-ownership="none">
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="sync_handler" transfer-ownership="none">
+            <type name="VideoDmabufSyncHandler" c:type="GstVideoDmabufSyncHandler*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+    </class>
+    <record name="VideoDmabufSyncHandlerClass" c:type="GstVideoDmabufSyncHandlerClass" glib:is-gtype-struct-for="VideoDmabufSyncHandler">
+      <field name="parent_class">
+        <type name="Gst.ObjectClass" c:type="GstObjectClass"/>
+      </field>
+    </record>
+    <callback name="VideoDmabufSyncHandlerReleaseBuffer" c:type="GstVideoDmabufSyncHandlerReleaseBuffer" version="1.30">
+      <doc xml:space="preserve">@user_data privated data as configured in gst_video_dmabuf_sync_handler_new()
+@buffer the buffer that is released
+
+The prototype of a function that will be called to release a buffer.</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="user_data" transfer-ownership="none" nullable="1" allow-none="1" closure="0">
+          <type name="gpointer" c:type="gpointer"/>
+        </parameter>
+        <parameter name="buffer" transfer-ownership="none" nullable="1" allow-none="1">
+          <type name="gpointer" c:type="gpointer"/>
+        </parameter>
+      </parameters>
+    </callback>
     <class name="VideoEncoder" c:symbol-prefix="video_encoder" c:type="GstVideoEncoder" parent="Gst.Element" abstract="1" glib:type-name="GstVideoEncoder" glib:get-type="gst_video_encoder_get_type" glib:type-struct="VideoEncoderClass">
       <doc xml:space="preserve">This base class is for video encoders turning raw video into
 encoded video data.
@@ -16747,7 +16976,9 @@ parameters.</doc>
         </parameter>
         <parameter name="data" transfer-ownership="none">
           <doc xml:space="preserve">contains the dynamic HDR data</doc>
-          <type name="guint8" c:type="const guint8*"/>
+          <array length="3" zero-terminated="0" c:type="const guint8*">
+            <type name="guint8" c:type="guint8"/>
+          </array>
         </parameter>
         <parameter name="size" transfer-ownership="none">
           <doc xml:space="preserve">The size in bytes of @data</doc>
@@ -19789,7 +20020,9 @@ and SMPTE ST2094-40</doc>
       <parameters>
         <parameter name="data" transfer-ownership="none">
           <doc xml:space="preserve">HDR10+ data</doc>
-          <type name="guint8" c:type="const guint8*"/>
+          <array length="1" zero-terminated="0" c:type="const guint8*">
+            <type name="guint8" c:type="guint8"/>
+          </array>
         </parameter>
         <parameter name="size" transfer-ownership="none">
           <doc xml:space="preserve">size of data</doc>
